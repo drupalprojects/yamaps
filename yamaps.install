@@ -1,0 +1,61 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the yamaps module.
+ */
+
+/**
+ * Implements hook_field_schema().
+ */
+function yamaps_field_schema($field) {
+  return array(
+    'columns' => array(
+      'coords' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => 'yandex#map',
+      ),
+      'placemarks' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+      ),
+      'lines' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+      ),
+      'polygons' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+      ),
+      'routes' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+      ),
+    ),
+    'indexes' => array(),
+  );
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function yamaps_uninstall() {
+  variable_del('yamaps_block_controls');
+  variable_del('yamaps_block_traffic');
+  variable_del('yamaps_block_width');
+  variable_del('yamaps_block_height');
+  variable_del('yamaps_block_coords');
+  variable_del('yamaps_block_type');
+  variable_del('yamaps_block_placemarks');
+  variable_del('yamaps_block_lines');
+  variable_del('yamaps_block_polygons');
+  variable_del('yamaps_block_routes');
+}
