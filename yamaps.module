@@ -51,6 +51,17 @@ function yamaps_element_info() {
  */
 function yamaps_field_process($element, $form_state, $complete_form) {
   // Map information.
+  if ($entity = $element['#entity']) {
+    if (isset($entity->vid) && !$element['#value']) {
+      $entity_type = $element['#entity_type'];
+      $field_name = $element['#field_name'];
+      $instance = field_info_instance($entity_type, $field_name, $entity->type);
+      $field = field_info_field($field_name);
+      $default_value = field_get_default_value($entity_type, $entity, $field, $instance);
+      $element['#default_value'] = $element['#value'] = reset($default_value);
+    }
+  }
+
   $coords = isset($element['#value']['coords']) ? $element['#value']['coords'] : NULL;
   $coords_array = drupal_json_decode($coords);
   $type = isset($element['#value']['type']) ? $element['#value']['type'] : 'yandex#map';
