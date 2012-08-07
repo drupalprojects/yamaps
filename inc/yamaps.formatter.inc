@@ -17,8 +17,8 @@ function yamaps_field_formatter_info() {
       'settings' => array(
         'controls' => TRUE,
         'traffic' => TRUE,
-        'width' => 640,
-        'height' => 400,
+        'width' => '100%',
+        'height' => '400px',
       ),
     ),
     // Static map formatter.
@@ -26,9 +26,9 @@ function yamaps_field_formatter_info() {
       'label' => t('Static'),
       'field types' => array('field_yamaps'),
       'settings' => array(
-        'traffic' => FALSE,
-        'width' => 640,
-        'height' => 400,
+        's_traffic' => FALSE,
+        's_width' => 640,
+        's_height' => 400,
       ),
     ),
   );
@@ -55,41 +55,45 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#default_value' => $settings['traffic'],
       );
       $element['width'] = array(
-        '#title' => t('Map width (px)'),
+        '#title' => t('Map width'),
+        '#field_suffix' => ' ' . t('in pixels or in percentage'),
         '#type' => 'textfield',
         '#default_value' => $settings['width'],
         '#size' => 5,
-        '#element_validate' => array('element_validate_integer_positive'),
+        '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
         '#required' => TRUE,
       );
       $element['height'] = array(
-        '#title' => t('Map height (px)'),
+        '#title' => t('Map height'),
+        '#field_suffix' => ' ' . t('in pixels or in percentage'),
         '#type' => 'textfield',
         '#default_value' => $settings['height'],
         '#size' => 5,
-        '#element_validate' => array('element_validate_integer_positive'),
+        '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
         '#required' => TRUE,
       );
       break;
 
     case 'field_yamaps_formatter_static':
-      $element['traffic'] = array(
+      $element['s_traffic'] = array(
         '#title' => t('Show traffic'),
         '#type' => 'checkbox',
-        '#default_value' => $settings['traffic'],
+        '#default_value' => $settings['s_traffic'],
       );
-      $element['width'] = array(
-        '#title' => t('Map width (px)'),
+      $element['s_width'] = array(
+        '#title' => t('Map width'),
+        '#field_suffix' => ' ' . t('pixels'),
         '#type' => 'textfield',
-        '#default_value' => $settings['width'],
+        '#default_value' => $settings['s_width'],
         '#size' => 5,
         '#element_validate' => array('element_validate_integer_positive'),
         '#required' => TRUE,
       );
-      $element['height'] = array(
-        '#title' => t('Map height (px)'),
+      $element['s_height'] = array(
+        '#title' => t('Map height'),
+        '#field_suffix' => ' ' . t('pixels'),
         '#type' => 'textfield',
-        '#default_value' => $settings['height'],
+        '#default_value' => $settings['s_height'],
         '#size' => 5,
         '#element_validate' => array('element_validate_integer_positive'),
         '#required' => TRUE,
@@ -115,8 +119,8 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
       break;
 
     case 'field_yamaps_formatter_static':
-      $summary[] = t('Show traffic: @traffic', array('@traffic' => $settings['traffic'] ? t('Yes') : t('No')));
-      $summary[] = t('Map size: @width x @height', array('@width' => $settings['width'], '@height' => $settings['height']));
+      $summary[] = t('Show traffic: @traffic', array('@traffic' => $settings['s_traffic'] ? t('Yes') : t('No')));
+      $summary[] = t('Map size: @width x @height', array('@width' => $settings['s_width'] . 'px', '@height' => $settings['s_height'] . 'px'));
       break;
   }
 
@@ -160,7 +164,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           '#tag' => 'div',
           '#attributes' => array(
             'id' => $id,
-            'style' => 'width:' . $settings['width'] . 'px;height:' . $settings['height'] . 'px',
+            'style' => 'width:' . $settings['width'] . ';height:' . $settings['height'],
           ),
           '#value' => '',
         );
@@ -180,7 +184,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         $url = 'http://static-maps.yandex.ru/1.x/';
         $params['ll'] = end($coords['center']) . ',' . reset($coords['center']);
         $params['z'] = $coords['zoom'];
-        $params['size'] = $settings['width'] . ',' . $settings['height'];
+        $params['size'] = $settings['s_width'] . ',' . $settings['s_height'];
 
         // 2.x to 1.x types.
         $map_types = array(
@@ -191,7 +195,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           'yandex#publicMapHybrid' => 'sat,pskl',
         );
         $params['l'] = $map_types[$item['type'] ? $item['type'] : 'yandex#map'];
-        if ($settings['traffic']) {
+        if ($settings['s_traffic']) {
           $params['l'] .= ',trf';
         }
 
@@ -226,48 +230,56 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           'pink' => 'fd32fb',
         );
 
-        $pt = array();
-        foreach (drupal_json_decode($item['placemarks']) as $placemark) {
-          $pm = end($placemark['coords']) . ',' . reset($placemark['coords']) . ',';
-          $pm .= 'pm2';
-          $pm .= $colors21[$placemark['params']['color']];
-          $pm .= 'm';
-          $pt[] = $pm;
+        // Placemarks.
+        if ($item['placemarks']) {
+          $pt = array();
+          foreach (drupal_json_decode($item['placemarks']) as $placemark) {
+            $pm = end($placemark['coords']) . ',' . reset($placemark['coords']) . ',';
+            $pm .= 'pm2';
+            $pm .= $colors21[$placemark['params']['color']];
+            $pm .= 'm';
+            $pt[] = $pm;
+          }
+          $params['pt'] = implode('~', $pt);
         }
-        $params['pt'] = implode('~', $pt);
 
         // Lines and polygons.
         $pl = array();
-        foreach (drupal_json_decode($item['lines']) as $line) {
-          $opts = $line['params'];
-          $pm = 'c:' . $colors[$opts['strokeColor']] . dechex(255 * $opts['opacity']) . ',';
-          $pm .= 'w:' . $opts['strokeWidth'] . ',';
-          $c = array();
-          foreach ($line['coords'] as $coords) {
-            $c[] = end($coords);
-            $c[] = reset($coords);
-          }
-          $pm .= implode(',', $c);
-          $pl[] = $pm;
-        }
-
-        foreach (drupal_json_decode($item['polygons']) as $polygon) {
-          $opts = $polygon['params'];
-          $opa = dechex(255 * $opts['opacity']);
-          $pm = 'c:' . $colors[$opts['strokeColor']] . $opa . ',';
-          $pm .= 'f:' . $colors[$opts['fillColor']] . $opa . ',';
-          $pm .= 'w:' . $opts['strokeWidth'] . ',';
-          $c = array();
-          foreach ($polygon['coords'] as $coords_array) {
-            foreach ($coords_array as $coords) {
+        if ($item['lines']) {
+          foreach (drupal_json_decode($item['lines']) as $line) {
+            $opts = $line['params'];
+            $pm = 'c:' . $colors[$opts['strokeColor']] . dechex(255 * $opts['opacity']) . ',';
+            $pm .= 'w:' . $opts['strokeWidth'] . ',';
+            $c = array();
+            foreach ($line['coords'] as $coords) {
               $c[] = end($coords);
               $c[] = reset($coords);
             }
+            $pm .= implode(',', $c);
+            $pl[] = $pm;
           }
-          $pm .= implode(',', $c);
-          $pl[] = $pm;
         }
-        $params['pl'] = implode('~', $pl);
+        if ($item['polygons']) {
+          foreach (drupal_json_decode($item['polygons']) as $polygon) {
+            $opts = $polygon['params'];
+            $opa = dechex(255 * $opts['opacity']);
+            $pm = 'c:' . $colors[$opts['strokeColor']] . $opa . ',';
+            $pm .= 'f:' . $colors[$opts['fillColor']] . $opa . ',';
+            $pm .= 'w:' . $opts['strokeWidth'] . ',';
+            $c = array();
+            foreach ($polygon['coords'] as $coords_array) {
+              foreach ($coords_array as $coords) {
+                $c[] = end($coords);
+                $c[] = reset($coords);
+              }
+            }
+            $pm .= implode(',', $c);
+            $pl[] = $pm;
+          }
+        }
+        if (!empty($pl)) {
+          $params['pl'] = implode('~', $pl);
+        }
 
         // Return map container div with image.
         $element[$delta] = array(
@@ -275,12 +287,12 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           '#tag' => 'div',
           '#attributes' => array(
             'id' => $id,
-            'style' => 'width:' . $settings['width'] . 'px;height:' . $settings['height'] . 'px',
+            'style' => 'width:' . $settings['s_width'] . 'px;height:' . $settings['s_height'] . 'px',
           ),
           '#value' => theme('image', array(
             'path' => url($url, array('query' => $params, 'external' => TRUE)),
-            'width' => $settings['width'],
-            'height' => $settings['height'],
+            'width' => $settings['s_width'],
+            'height' => $settings['s_height'],
             'title' => t('Yandex.Map'),
           )),
         );

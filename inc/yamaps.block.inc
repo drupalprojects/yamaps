@@ -35,19 +35,21 @@ function yamaps_block_configure($delta = '') {
       '#default_value' => variable_get('yamaps_block_traffic', FALSE),
     );
     $form['yamaps_block_width'] = array(
-      '#title' => t('Map width (px)'),
+      '#title' => t('Map width'),
+      '#field_suffix' => ' ' . t('in pixels or in percentage'),
       '#type' => 'textfield',
-      '#default_value' => variable_get('yamaps_block_width', 168),
+      '#default_value' => variable_get('yamaps_block_width', '168px'),
       '#size' => 5,
-      '#element_validate' => array('element_validate_integer_positive'),
+      '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
       '#required' => TRUE,
     );
     $form['yamaps_block_height'] = array(
-      '#title' => t('Map height (px)'),
+      '#title' => t('Map height'),
+      '#field_suffix' => ' ' . t('in pixels or in percentage'),
       '#type' => 'textfield',
-      '#default_value' => variable_get('yamaps_block_height', 200),
+      '#default_value' => variable_get('yamaps_block_height', '200px'),
       '#size' => 5,
-      '#element_validate' => array('element_validate_integer_positive'),
+      '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
       '#required' => TRUE,
     );
 
@@ -108,8 +110,8 @@ function yamaps_block_content($delta) {
   $id = 'ymap-block-' . $delta;
   // Map information.
   $coords = drupal_json_decode(variable_get('yamaps_block_coords', NULL));
-  $width = variable_get('yamaps_block_width', 168);
-  $height = variable_get('yamaps_block_height', 200);
+  $width = variable_get('yamaps_block_width', '168px');
+  $height = variable_get('yamaps_block_height', '200px');
   // Map initialization parameters.
   $map = array(
     'init' => array(
@@ -137,7 +139,7 @@ function yamaps_block_content($delta) {
     '#tag' => 'div',
     '#attributes' => array(
       'id' => $id,
-      'style' => 'width:' . $width . 'px;height:' . $height . 'px',
+      'style' => 'width:' . $width . ';height:' . $height,
     ),
     '#value' => '',
   );
