@@ -34,9 +34,12 @@
         .add('boundschange', this.exportCoords, this.map)
         .add('typechange', this.exportType, this.map);
 
+      // Right top controls
+      var rightTopControlGroup = [];
+
       // Enable map controls
       this.enableControls = function() {
-        this.map.controls.add('typeSelector', {right: 5, top: 5});
+        rightTopControlGroup.push('typeSelector');
         this.map.controls.add('zoomControl', {right: 5, top: 50});
         $.yaMaps._mapTools.unshift('default');
       };
@@ -48,13 +51,22 @@
           shown:true
         });
         traffic.getProvider().state.set('infoLayerShown', true);
-        this.map.controls.add(traffic, {top: 5, left: 5});
+        traffic.state.set('expanded', false)
+        rightTopControlGroup.unshift(traffic);
       };
+
 
       // Enable plugins
       this.enableTools = function() {
         var mapTools = $.yaMaps.getMapTools(this);
-        this.map.controls.add(new ymaps.control.MapTools(mapTools), {left: 5, bottom: 35});
+        this.map.controls.add(new ymaps.control.MapTools(mapTools), {left: 5, top: 5});
+
+        if (rightTopControlGroup.length > 0) {
+          var groupControl = new ymaps.control.Group({
+            items: rightTopControlGroup
+          });
+          this.map.controls.add(groupControl, {right: 5, top: 5});
+        }
       };
     };
   });

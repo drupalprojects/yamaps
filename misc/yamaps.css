@@ -1,9 +1,6 @@
 .ymaps-map label {
   display: inline;
 }
-.ymaps-map .yamaps-b-select_traffic_folded .yamaps-b-traffic-panel {
-  padding: 0;
-}
 .ymaps-map .yamaps-balloon {
   padding: 2px 10px;
 }
