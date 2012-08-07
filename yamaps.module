@@ -52,7 +52,7 @@ function yamaps_element_info() {
 function yamaps_field_process($element, $form_state, $complete_form) {
 
   // Issue #1712292 fix.
-  // TODO: Need to be deleted when Fields API fixed
+  // TODO: Need to be deleted when Fields API fixed.
   if ($entity = $element['#entity']) {
     if (isset($entity->vid) && !$element['#value']) {
       $entity_type = $element['#entity_type'];
