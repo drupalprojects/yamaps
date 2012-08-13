@@ -40,7 +40,13 @@
       // Enable map controls
       this.enableControls = function() {
         rightTopControlGroup.push('typeSelector');
-        this.map.controls.add('zoomControl', {right: 5, top: 50});
+        var mapSize = this.map.container.getSize();
+        if (mapSize[1] < 270) {
+          this.map.controls.add('smallZoomControl', {right: 5, top: 50});
+        }
+        else {
+          this.map.controls.add('zoomControl', {right: 5, top: 50});
+        }
         $.yaMaps._mapTools.unshift('default');
       };
 
