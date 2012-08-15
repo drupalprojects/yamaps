@@ -11,6 +11,7 @@
       this.mapId = mapId;
       this.options = options;
       this.mapListeners = this.map.events.group();
+      $.yaMaps.maps[mapId] = this;
 
       // Export map coordinates to html element
       this.exportCoords = function(event) {
