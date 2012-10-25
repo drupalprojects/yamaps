@@ -104,7 +104,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
   );
   // Hidden elements to saving map information.
   $element['coords'] = array(
-    '#type' => 'textarea',
+    '#type' => 'hidden',
     '#title' => t('Coordinates'),
     '#default_value' => $value['coords'],
     '#required' => $element['#required'],
