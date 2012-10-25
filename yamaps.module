@@ -78,7 +78,7 @@ function yamaps_field_process($element, $form_state, $complete_form) {
   $routes_array = drupal_json_decode($routes);
 
   // Unique map id.
-  $id = 'ymap-' . $element['#delta'] . '-edit';
+  $id = drupal_html_id(implode('-', array('ymap', $element['#field_name'], $element['#delta'], 'edit')));
   // Map initialization parameters.
   $map = array(
     'init' => array(

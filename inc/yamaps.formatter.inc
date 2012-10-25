@@ -139,7 +139,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
       $maps = array();
       foreach ($items as $delta => $item) {
         // Map id.
-        $id = 'ymap-' . $delta;
+        $id = drupal_html_id(implode('-', array('ymap', $field['field_name'], $delta)));
         // Coordinates of map center.
         $coords = drupal_json_decode($item['coords']);
         // Map initialization parameters.
@@ -178,7 +178,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
     case 'field_yamaps_formatter_static':
       foreach ($items as $delta => $item) {
         // Map id and parameters.
-        $id = 'ymap-' . $delta;
+        $id = drupal_html_id(implode('-', array('ymap', $field['field_name'], $delta)));
         $coords = drupal_json_decode($item['coords']);
         $params = array();
         $url = 'http://static-maps.yandex.ru/1.x/';

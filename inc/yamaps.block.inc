@@ -107,7 +107,7 @@ function yamaps_block_view($delta = '') {
  */
 function yamaps_block_content($delta) {
   // Map id.
-  $id = 'ymap-block-' . $delta;
+  $id = drupal_html_id(implode('-', array('ymap', 'block', $delta)));
   // Map information.
   $coords = drupal_json_decode(variable_get('yamaps_block_coords', NULL));
   $width = variable_get('yamaps_block_width', '168px');

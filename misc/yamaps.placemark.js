@@ -237,6 +237,7 @@
       }
 
       // If map in edit mode add search form
+      // TODO: Replace ID to class!!!
       var $searchForm = $([
         '<form id="yamaps-search-form">',
         '<input type="text" class="form-text" placeholder="' + Drupal.t('Search on the map') + '" value=""/>',
