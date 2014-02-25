@@ -98,6 +98,14 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
   // Load library.
   drupal_add_library('yamaps', 'yamaps.full');
 
+  $element['remove_yamap_field_item'] = array(
+    '#name' => $element['#field_name'] . '_' . $element['#delta'] . '_remove_button',
+    '#type' => 'markup',
+    '#markup' => l(t('Remove'), '', array('attributes' => array('id' => 'remove_yamap_field_item', 'class' => array('button','delta-' . $element['#delta'])))),
+  );
+
+
+
   // Map container.
   $element['map'] = array(
     '#markup' => '<div id="' . $id . '" style="width:100%;height:400px"></div>',

@@ -74,6 +74,8 @@ function yamaps_library() {
       $path . 'yamaps.route.js' => array('scope' => 'footer', 'weight' => $w++),
       $path . 'yamaps.map.js' => array('scope' => 'footer', 'weight' => $w++),
       $path . 'yamaps.run.js' => array('scope' => 'footer', 'weight' => $w++),
+      /* field button script */
+      $path . 'yamaps.field.js' => array('scope' => 'footer', 'weight' => $w++),
     ),
     'css' => array(
       $path . 'yamaps.css' => array(),
