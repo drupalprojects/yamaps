@@ -105,11 +105,17 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
   );
 
 
-
   // Map container.
-  $element['map'] = array(
-    '#markup' => '<div id="' . $id . '" style="width:100%;height:400px"></div>',
-  );
+  $element['map']['#markup'] = theme('html_tag', array(
+    'element' => array(
+      '#tag' => 'div',
+      '#attributes' => array(
+        'style' => 'width:100%; height:400px;',
+        'id' => $id,
+      ),
+      '#value' => '',
+    ),
+  ));
   // Hidden elements to saving map information.
   $element['coords'] = array(
     '#type' => 'hidden',

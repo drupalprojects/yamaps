@@ -34,6 +34,12 @@ function yamaps_block_configure($delta = '') {
       '#type' => 'checkbox',
       '#default_value' => variable_get('yamaps_block_traffic', FALSE),
     );
+    $form['yamaps_block_behaviors'] = array(
+      '#title' => t('Mouse event settings'),
+      '#type' => 'checkboxes',
+      '#options' => yamaps_get_behaviors_list(),
+      '#default_value' => variable_get('yamaps_block_behaviors', array()),
+    );
     $form['yamaps_block_width'] = array(
       '#title' => t('Map width'),
       '#field_suffix' => ' ' . t('in pixels or in percentage'),
@@ -78,6 +84,7 @@ function yamaps_block_save($delta = '', $edit = array()) {
   if ($delta == 'yamaps') {
     variable_set('yamaps_block_controls', $edit['yamaps_block_controls']);
     variable_set('yamaps_block_traffic', $edit['yamaps_block_traffic']);
+    variable_set('yamaps_block_behaviors', $edit['yamaps_block_behaviors']);
     variable_set('yamaps_block_width', $edit['yamaps_block_width']);
     variable_set('yamaps_block_height', $edit['yamaps_block_height']);
     variable_set('yamaps_block_coords', $edit['coords']);
@@ -118,7 +125,7 @@ function yamaps_block_content($delta) {
       'center' => $coords['center'],
       'zoom' => $coords['zoom'],
       'type' => variable_get('yamaps_block_type', 'yandex#map'),
-      'behaviors' => array('scrollZoom', 'dblClickZoom', 'drag'),
+      'behaviors' => array_values(array_filter(variable_get('yamaps_block_behaviors', array()))),
     ),
     'controls' => variable_get('yamaps_block_controls', TRUE),
     'traffic' => variable_get('yamaps_block_traffic', FALSE),
