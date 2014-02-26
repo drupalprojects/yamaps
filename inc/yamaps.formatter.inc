@@ -19,7 +19,14 @@ function yamaps_field_formatter_info() {
         'traffic' => TRUE,
         'width' => '100%',
         'height' => '400px',
-        'behaviors' => array('clickZoom', 'dblClickZoom', 'drag'),
+        'behaviors' => array(
+          'clickZoom',
+          'dblClickZoom',
+          'drag',
+          'scrollZoom',
+          'ruler',
+          'rightMouseButtonMagnifier',
+        ),
       ),
     ),
     // Static map formatter.
@@ -73,14 +80,11 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
         '#required' => TRUE,
       );
+
       $element['behaviors'] = array(
         '#title' => t('Mouse event settings'),
         '#type' => 'checkboxes',
-        '#options' => array(
-          'scrollZoom' => t('Scroll Zoom'), 
-          'dblClickZoom' => t('Double click zoom'), 
-          'drag' => t('Click and drag'),
-          ),
+        '#options' => yamaps_get_behaviors_list(),
         '#default_value' => $settings['behaviors'],
       );
       break;
@@ -127,6 +131,18 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
       $summary[] = t('Show controls: @controls', array('@controls' => $settings['controls'] ? t('Yes') : t('No')));
       $summary[] = t('Show traffic: @traffic', array('@traffic' => $settings['traffic'] ? t('Yes') : t('No')));
       $summary[] = t('Map size: @width x @height', array('@width' => $settings['width'], '@height' => $settings['height']));
+      if (count($display['settings']['behaviors']) > 0) {
+        $behaviors_list = yamaps_get_behaviors_list();
+        $active_behaviors = array_values(array_filter($display['settings']['behaviors']));
+        $prepared_behaviors_list = array();
+        foreach ($active_behaviors as $key => $val) {
+          $prepared_behaviors_list[] = $behaviors_list[$val];
+        }
+        $summary[] = t('Enabled mouse event: !list', array('!list' => implode(', ', $prepared_behaviors_list)));
+      }
+      else {
+        $summary[] = t('All mouse event are disabled.');
+      }
       break;
 
     case 'field_yamaps_formatter_static':
@@ -312,4 +328,19 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
   }
 
   return $element;
+}
+
+/**
+ * Returning behaviors list.
+ */
+function yamaps_get_behaviors_list() {
+  return array(
+    'clickZoom' => t('Click Zoom'),
+    'scrollZoom' => t('Scroll Zoom'),
+    'dblClickZoom' => t('Double click zoom'),
+    'drag' => t('Click and drag'),
+    'multiTouch' => t('Multi Touch support'),
+    'ruler' => t('Ruler'),
+    'rightMouseButtonMagnifier' => t('Right mouse button magnifier'),
+  );
 }
