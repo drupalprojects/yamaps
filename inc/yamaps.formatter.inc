@@ -19,6 +19,7 @@ function yamaps_field_formatter_info() {
         'traffic' => TRUE,
         'width' => '100%',
         'height' => '400px',
+        'behaviors' => array('clickZoom', 'dblClickZoom', 'drag'),
       ),
     ),
     // Static map formatter.
@@ -71,6 +72,16 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#size' => 5,
         '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
         '#required' => TRUE,
+      );
+      $element['behaviors'] = array(
+        '#title' => t('Mouse event settings'),
+        '#type' => 'checkboxes',
+        '#options' => array(
+          'scrollZoom' => t('Scroll Zoom'), 
+          'dblClickZoom' => t('Double click zoom'), 
+          'drag' => t('Click and drag'),
+          ),
+        '#default_value' => $settings['behaviors'],
       );
       break;
 
@@ -148,7 +159,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
             'center' => $coords['center'],
             'zoom' => $coords['zoom'],
             'type' => $item['type'] ? $item['type'] : 'yandex#map',
-            'behaviors' => array('scrollZoom', 'dblClickZoom', 'drag'),
+            'behaviors' => array_values(array_filter($settings['behaviors'])),
           ),
           'controls' => $settings['controls'],
           'traffic' => $settings['traffic'],
