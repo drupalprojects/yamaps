@@ -39,6 +39,23 @@ function yamaps_field_formatter_info() {
         's_height' => 400,
       ),
     ),
+    // Combined map formatter.
+    'field_yamaps_formatter_modal_window' => array(
+      'label' => t('Modal window'),
+      'field types' => array('field_yamaps'),
+      'settings' => array(
+        'original_field' => array(
+          'type' => 'field_yamaps_formatter_static',
+          // possible variants static_image, button,
+          'field_settings' => array(),
+        ),
+        'modal_window_settings' => array(
+          'type' => 'field_yamaps_formatter_dynamic',
+          // possible variants static_image, dynamic_cart
+          'field_settings' => array(),
+        ),
+      ),
+    ),
   );
 }
 
@@ -114,6 +131,31 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#required' => TRUE,
       );
       break;
+      $element['original_field_type'] = array(
+        '#title' => t('Original field type'),
+        '#type' => 'radios',
+        '#default_value' => $settings['s_height'],
+        '#options' => array(
+          'button' => t('Open button'),
+          'field_yamaps_formatter_static' => t('Static image'),
+        ),
+        '#required' => TRUE,
+
+      );
+
+      $element['modal_window_field_type'] = array(
+        '#title' => t('Modal window field type'),
+        '#type' => 'radios',
+        '#default_value' => $settings['s_height'],
+        '#options' => array(
+          'field_yamaps_formatter_dynamic' => t('Dynamic image'),
+          'field_yamaps_formatter_static' => t('Static image'),
+
+        ),
+        '#required' => TRUE,
+
+      );
+      breal;
   }
   return $element;
 }
@@ -150,7 +192,14 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
 
     case 'field_yamaps_formatter_static':
       $summary[] = t('Show traffic: @traffic', array('@traffic' => $settings['s_traffic'] ? t('Yes') : t('No')));
-      $summary[] = t('Map size: @width x @height', array('@width' => $settings['s_width'] . 'px', '@height' => $settings['s_height'] . 'px'));
+      $summary[] = t('Map size: @width x @height', array(
+        '@width' => $settings['s_width'] . 'px',
+        '@height' => $settings['s_height'] . 'px'
+      ));
+      break;
+    case 'field_yamaps_formatter_modal_window':
+      $summary[] = t('Original field settings: @field_settings');
+      $summary[] = t('Modal window settings: @field_settings');
       break;
   }
 
@@ -173,8 +222,14 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           $field['field_name'],
           $delta
         )));
+        // Unique map button id.
+        $open_button_id = drupal_html_id(implode('-', array(
+          $id,
+          'open_button'
+        )));
         // Coordinates of map center.
         $coords = drupal_json_decode($item['coords']);
+
         // Map initialization parameters.
         $maps[$id] = array(
           'init' => array(
@@ -182,6 +237,11 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
             'zoom' => $coords['zoom'],
             'type' => $item['type'] ? $item['type'] : 'yandex#map',
             'behaviors' => array_values(array_filter($settings['behaviors'])),
+          ),
+          'display_options' => array(
+            'display_type' => $field['settings']['display_options']['display_type'],
+            'open_button_text' => $field['settings']['display_options']['open_button_text'],
+            'open_button_id' => $open_button_id,
           ),
           'controls' => $settings['controls'],
           'traffic' => $settings['traffic'],
@@ -191,6 +251,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           'routes' => drupal_json_decode($item['routes']),
           'edit' => FALSE,
         );
+
         // Return map container div.
         $element[$delta] = array(
           '#type' => 'html_tag',

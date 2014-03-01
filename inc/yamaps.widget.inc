@@ -112,25 +112,32 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
   drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
   // Load library.
   drupal_add_library('yamaps', 'yamaps.full');
-
+/*
   $element['remove_yamap_field_item'] = array(
-    '#name' => $element['#field_name'] . '_' . $element['#delta'] . '_remove_button',
+    '#name' => ,
     '#type' => 'markup',
-    '#markup' => l(t('Remove'), '', array('attributes' => array('id' => 'remove_yamap_field_item', 'class' => array('button','delta-' . $element['#delta'])))),
-  );
-
-
-  // Map container.
-  $element['map']['#markup'] = theme('html_tag', array(
-    'element' => array(
-      '#tag' => 'div',
-      '#attributes' => array(
-        'style' => 'width:100%; height:400px;',
-        'id' => $id,
-      ),
-      '#value' => '',
+    '#markup' => '<div id="' . $remove_button_id . '" class="remove_yamap_button">' . t('Remove') . '</div>',
+  );*/
+  $element['remove_yamap_field_item'] = array(
+    '#type' => 'html_tag',
+    '#tag' => 'div',
+    '#value' => t('Remove'),
+    '#attributes' => array(
+      'name'=>$element['#field_name'] . '_' . $element['#delta'] . '_remove_button',
+      'id'=>$remove_button_id,
+      'class' => 'remove_yamap_button',
     ),
-  ));
+  );
+  // Map container.
+  $element['map'] = array(
+    '#type' => 'html_tag',
+    '#tag' => 'div',
+    '#value' => '',
+    '#attributes' => array(
+      'style' => 'width:100%; height:400px;',
+      'id' => $id,
+    ),
+  );
   // Hidden elements to saving map information.
   $element['coords'] = array(
     '#type' => 'hidden',
@@ -172,16 +179,30 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
 
   if ($field['settings']['display_options']['display_type'] == 'map_button') {
     $element['open_map_button'] = array(
-      '#type' => 'markup',
-      '#markup' => '<div id="' . $open_button_id . '">' . $field['settings']['display_options']['open_button_text'] . '</div>',
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#value' => t($field['settings']['display_options']['open_button_text']),
+      '#attributes' => array(
+        'id' => $open_button_id,
+        'class' => 'open_yamap_button',
+        'mapId' => $id,
+      ),
     );
   }
   // Map description.
-  $element['#description'] = '<div class="yamaps-terms">' . l(
-    t('Terms of service «API Yandex.Maps»'),
-    'http://legal.yandex.ru/maps_api/',
-    array('attributes' => array('target' => '_blank'))
-  ) . '</div>';
+  $element['#description'] = theme('html_tag', array(
+    'element' => array(
+    '#type' => 'html_tag',
+    '#tag' => 'div',
+    '#value' => l(
+      t('Terms of service «API Yandex.Maps»'),
+      'http://legal.yandex.ru/maps_api/',
+      array('attributes' => array('target' => '_blank'))
+    ),
+    '#attributes' => array(
+      'class' => 'yamaps-terms',
+    ),
+  )));
 
   return $element;
 }

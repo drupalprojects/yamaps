@@ -11,11 +11,15 @@
         for (var mapId in Drupal.settings.yamaps) {
           var options = Drupal.settings.yamaps[mapId];
 
-          if ((typeof options.display_options != 'undefined') && (options.display_options.display_type == 'map_button')) {
+
+          if (options.display_options.display_type === 'map_button') {
             $('#' + mapId).hide();
             $('#'+ options.display_options.remove_button_id).hide();
             $('#'+ options.display_options.open_button_id).bind({
               click: function () {
+
+                mapId = $(this).attr('mapId');
+                options = Drupal.settings.yamaps[mapId];
                 creating_map(mapId, options);
                 $('#'+ options.display_options.open_button_id).hide('slow');
                 $('#' + mapId).show();
@@ -64,7 +68,8 @@
       }
       // Enable plugins.
       map.enableTools();
-      activeMaps[mapId] = map;
+
+      //activeMaps[mapId] = map;
     });
   }
 })(jQuery);

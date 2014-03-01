@@ -27,7 +27,7 @@ function yamaps_block_info() {
 
 /**
  * Implements hook_block_configure().
- * 
+ *
  * @see yamaps_field_process()
  */
 function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
@@ -67,6 +67,34 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
     '#required' => TRUE,
   );
 
+  $form[$delta . '_block_display_options'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Display options'),
+    '#tree' => TRUE,
+  );
+
+  $display_options = variable_get($delta . '_block_display_options', array());
+  $form[$delta . '_block_display_options']['display_type'] = array(
+    '#type' => 'radios',
+    '#title' => t('How display map for admins'),
+    '#options' => array(
+      'map' => t('Map'),
+      'map_button' => t('Map opened by button click'),
+      'map_modal' => t('Map opened in modal window'),
+    ),
+    '#default_value' => (isset($display_options['display_type'])) ? $display_options['display_type'] : 'map',
+    '#required' => FALSE,
+    '#description' => t('Type of map displaying.'),
+  );
+
+  $form[$delta . '_block_display_options']['open_button_text'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Button text'),
+    '#default_value' => (isset($display_options['open_button_text'])) ? $display_options['open_button_text'] : 'Open map',
+    '#required' => FALSE,
+    '#description' => t('Text of button that opens map.'),
+  );
+
   // Add elements from default field edit form.
   $element = array(
     '#delta' => 'block-' . $delta,
@@ -80,6 +108,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
       'routes' => variable_get($delta . '_block_routes', NULL),
     ),
   );
+
   $form += yamaps_field_process($element, NULL, NULL);
 
   return $form;
@@ -100,6 +129,10 @@ function yamaps_block_save($delta = YAMAPS_DEFAULT_BLOCK_DELTA, $edit = array())
   variable_set($delta . '_block_lines', $edit['lines']);
   variable_set($delta . '_block_polygons', $edit['polygons']);
   variable_set($delta . '_block_routes', $edit['routes']);
+
+
+  variable_set($delta . '_block_display_options', $edit[$delta . '_block_display_options']);
+
 }
 
 /**
@@ -121,10 +154,14 @@ function yamaps_block_content($delta) {
   // Map id.
   $id = drupal_html_id(implode('-', array('ymap', 'block', $delta)));
 
+  $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
+
   // Map information.
   $coords = drupal_json_decode(variable_get($delta . '_block_coords', NULL));
   $width = variable_get($delta . '_block_width', '168px');
   $height = variable_get($delta . '_block_height', '200px');
+
+  $display_options = variable_get($delta . '_block_display_options', array());
 
   // Map initialization parameters.
   $map = array(
@@ -133,6 +170,11 @@ function yamaps_block_content($delta) {
       'zoom' => $coords['zoom'],
       'type' => variable_get($delta . '_block_type', 'yandex#map'),
       'behaviors' => array_values(array_filter(variable_get($delta . '_block_behaviors', array()))),
+    ),
+    'display_options' => array(
+      'display_type' => (isset($display_options['display_type'])) ? $display_options['display_type'] : 'map',
+      'open_button_text' => t((isset($display_options['open_button_text'])) ? $display_options['open_button_text'] : 'Open map'),
+      'open_button_id' => $open_button_id,
     ),
     'controls' => variable_get($delta . '_block_controls', TRUE),
     'traffic' => variable_get($delta . '_block_traffic', FALSE),
@@ -149,7 +191,7 @@ function yamaps_block_content($delta) {
   drupal_add_library('yamaps', 'yamaps.full');
 
   // Return map container div.
-  return array(
+  $block_output['map_container'] = array(
     '#type' => 'html_tag',
     '#tag' => 'div',
     '#attributes' => array(
@@ -158,4 +200,19 @@ function yamaps_block_content($delta) {
     ),
     '#value' => '',
   );
+
+  if (isset($display_options['display_type']) && $display_options['display_type'] == 'map_button') {
+    $block_output['open_map_button'] = array(
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#value' => t($display_options['open_button_text']),
+      '#attributes' => array(
+        'id' => $open_button_id,
+        'class'=>'open_yamap_button',
+        'mapId' => $id,
+      ),
+    );
+  }
+  return $block_output;
 }
+
