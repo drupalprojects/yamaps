@@ -3,3 +3,5 @@ description = Provides Yandex map field for display map on your pages
 core = 7.x
 package = Yandex
 dependencies[] = field
+
+configure = admin/config/services/yamaps

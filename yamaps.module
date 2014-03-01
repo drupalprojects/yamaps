@@ -6,6 +6,12 @@
  */
 
 /**
+ * Constants.
+ */
+define ('YAMAPS_DEFAULT_BLOCK_DELTA', 'yamaps');
+define ('YAMAPS_DEFAULT_BLOCK_AMOUNT', 1);
+
+/**
  * Includes.
  */
 module_load_include('inc', 'yamaps', 'inc/yamaps.formatter');
@@ -46,6 +52,7 @@ function yamaps_element_info() {
 
 /**
  * Process field for edit form.
+ *
  * @see yamaps_element_info()
  */
 function yamaps_field_process($element, $form_state, $complete_form) {
@@ -156,6 +163,7 @@ function yamaps_field_process($element, $form_state, $complete_form) {
 
   return $element;
 }
+
 /**
  * Implements hook_library().
  */
@@ -179,10 +187,19 @@ function yamaps_library() {
         'weight' => $w++,
       ),
       $path . 'yamaps.init.js' => array('scope' => 'footer', 'weight' => $w++),
-      $path . 'yamaps.layouts.js' => array('scope' => 'footer', 'weight' => $w++),
-      $path . 'yamaps.placemark.js' => array('scope' => 'footer', 'weight' => $w++),
+      $path . 'yamaps.layouts.js' => array(
+        'scope' => 'footer',
+        'weight' => $w++
+      ),
+      $path . 'yamaps.placemark.js' => array(
+        'scope' => 'footer',
+        'weight' => $w++
+      ),
       $path . 'yamaps.line.js' => array('scope' => 'footer', 'weight' => $w++),
-      $path . 'yamaps.polygon.js' => array('scope' => 'footer', 'weight' => $w++),
+      $path . 'yamaps.polygon.js' => array(
+        'scope' => 'footer',
+        'weight' => $w++
+      ),
       $path . 'yamaps.route.js' => array('scope' => 'footer', 'weight' => $w++),
       $path . 'yamaps.map.js' => array('scope' => 'footer', 'weight' => $w++),
       $path . 'yamaps.run.js' => array('scope' => 'footer', 'weight' => $w++),
@@ -217,4 +234,51 @@ function yamaps_field_validate_pixels_percentage($element, &$form_state) {
   if (!preg_match('/^[1-9]{1}[0-9]*(px|%)$/', $value)) {
     form_error($element, t('%name must be a positive integer or percentage value.', array('%name' => $element['#title'])));
   }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function yamaps_menu() {
+  $items['admin/config/services/yamaps'] = array(
+    'title' => 'Yandex Maps configuration',
+    'description' => t('Yandex Maps configuration'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('yamaps_settings_page'),
+    'access arguments' => array('administer yamaps settings'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 4,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_menu().
+ *
+ * @return array
+ */
+function yamaps_permission() {
+  $permissions = array(
+    'administer yamaps settings' => array(
+      'title' => t('Administer Yandex Maps settings'),
+      'description' => t('Manage Yandex Maps configuration parameters.'),
+    ),
+  );
+  return $permissions;
+}
+
+/**
+ * Settings page for yandex maps.
+ */
+function yamaps_settings_page($form, &$form_state) {
+  // Set amount of yandex bloks.
+  $form['yamaps_blocks_amount'] = array(
+    '#title' => t('Set amount of Yandex Maps blocks'),
+    '#description' => t('Amount of available Yandex Maps bloks.'),
+    '#type' => 'select',
+    '#options' => range(1, 20),
+    '#default_value' => variable_get('yamaps_blocks_amount', YAMAPS_DEFAULT_BLOCK_AMOUNT),
+    '#required' => TRUE,
+  );
+  return system_settings_form($form);
 }
