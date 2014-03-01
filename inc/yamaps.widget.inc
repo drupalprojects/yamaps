@@ -48,7 +48,16 @@ function _yamaps_format_values_to_js($clean_values) {
  */
 function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   // Unique map id.
-  $id = drupal_html_id(implode('-', array('ymap', $element['#field_name'], $element['#delta'], 'edit')));
+  $id = drupal_html_id(implode('-', array(
+    'ymap',
+    $element['#field_name'],
+    $element['#delta'],
+    'edit'
+  )));
+  // Unique map button id.
+  $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
+  $remove_button_id = drupal_html_id(implode('-', array($id, 'remove_button')));
+
   $value = isset($items[$delta]) ? $items[$delta] : array();
 
   $element += array(
@@ -56,7 +65,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     '#default_value' => $value,
   );
 
-  // Set value after "Add more" button clicked
+  // Set value after "Add more" button clicked.
   if (isset($form_state['values'][$field['field_name']][$langcode][$delta])) {
     $value = $form_state['values'][$field['field_name']][$langcode][$delta];
   }
@@ -83,6 +92,12 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       'zoom' => $default_js['coords']['zoom'],
       'type' => $default_js['type'],
       'behaviors' => array('scrollZoom', 'dblClickZoom', 'drag'),
+    ),
+    'display_options' => array(
+      'display_type' => $field['settings']['display_options']['display_type'],
+      'open_button_text' => $field['settings']['display_options']['open_button_text'],
+      'open_button_id' => $open_button_id,
+      'remove_button_id' => $remove_button_id,
     ),
     'controls' => 1,
     'traffic' => 0,
@@ -155,6 +170,12 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     '#attributes' => array('class' => array('field-yamaps-routes-' . $id)),
   );
 
+  if ($field['settings']['display_options']['display_type'] == 'map_button') {
+    $element['open_map_button'] = array(
+      '#type' => 'markup',
+      '#markup' => '<div id="' . $open_button_id . '">' . $field['settings']['display_options']['open_button_text'] . '</div>',
+    );
+  }
   // Map description.
   $element['#description'] = '<div class="yamaps-terms">' . l(
     t('Terms of service «API Yandex.Maps»'),

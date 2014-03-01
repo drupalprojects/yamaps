@@ -130,7 +130,10 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
     case 'field_yamaps_formatter_dynamic':
       $summary[] = t('Show controls: @controls', array('@controls' => $settings['controls'] ? t('Yes') : t('No')));
       $summary[] = t('Show traffic: @traffic', array('@traffic' => $settings['traffic'] ? t('Yes') : t('No')));
-      $summary[] = t('Map size: @width x @height', array('@width' => $settings['width'], '@height' => $settings['height']));
+      $summary[] = t('Map size: @width x @height', array(
+        '@width' => $settings['width'],
+        '@height' => $settings['height']
+      ));
       if (count($display['settings']['behaviors']) > 0) {
         $behaviors_list = yamaps_get_behaviors_list();
         $active_behaviors = array_values(array_filter($display['settings']['behaviors']));
@@ -160,13 +163,16 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
 function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
   $settings = $display['settings'];
-
   switch ($display['type']) {
     case 'field_yamaps_formatter_dynamic':
       $maps = array();
       foreach ($items as $delta => $item) {
         // Map id.
-        $id = drupal_html_id(implode('-', array('ymap', $field['field_name'], $delta)));
+        $id = drupal_html_id(implode('-', array(
+          'ymap',
+          $field['field_name'],
+          $delta
+        )));
         // Coordinates of map center.
         $coords = drupal_json_decode($item['coords']);
         // Map initialization parameters.
@@ -205,7 +211,11 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
     case 'field_yamaps_formatter_static':
       foreach ($items as $delta => $item) {
         // Map id and parameters.
-        $id = drupal_html_id(implode('-', array('ymap', $field['field_name'], $delta)));
+        $id = drupal_html_id(implode('-', array(
+          'ymap',
+          $field['field_name'],
+          $delta
+        )));
         $coords = drupal_json_decode($item['coords']);
         $params = array();
         $url = 'http://static-maps.yandex.ru/1.x/';

@@ -27,6 +27,12 @@ function yamaps_field_info() {
       'label' => t('Yandex map'),
       'default_widget' => 'yamaps_field',
       'default_formatter' => 'field_yamaps_formatter_dynamic',
+      'settings' => array(
+        'display_options' => array(
+          'display_type' => 'map',
+          'open_button_text' => 'Open map',
+        ),
+      )
     ),
   );
 }
@@ -51,12 +57,45 @@ function yamaps_element_info() {
 }
 
 /**
+ * Implements hook_field_settings_form().
+ */
+function yamaps_field_settings_form($field, $instance, $has_data) {
+  $settings = $field['settings'];
+  $form['display_options'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Display options'),
+    '#tree' => TRUE,
+
+  );
+  $form['display_options']['display_type'] = array(
+    '#type' => 'radios',
+    '#title' => t('How display map for admins'),
+    '#options' => array(
+      'map' => t('Map'),
+      'map_button' => t('Map opened by button click'),
+      'map_modal' => t('Map opened in modal window'),
+    ),
+    '#default_value' => $settings['display_options']['display_type'],
+    '#required' => FALSE,
+    '#description' => t('The maximum length of the field in characters. Leave blank for an unlimited size.'),
+  );
+
+  $form['display_options']['open_button_text'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Button text'),
+    '#default_value' => $settings['display_options']['open_button_text'],
+    '#required' => FALSE,
+    '#description' => t('The maximum length of the field in characters. Leave blank for an unlimited size.'),
+  );
+  return $form;
+}
+
+/**
  * Process field for edit form.
  *
  * @see yamaps_element_info()
  */
 function yamaps_field_process($element, $form_state, $complete_form) {
-
   // Issue #1712292 fix.
   // TODO: Need to be deleted when Fields API fixed.
   if (isset($element['#entity']) && $entity = $element['#entity']) {
@@ -89,6 +128,10 @@ function yamaps_field_process($element, $form_state, $complete_form) {
     $element['#delta'],
     'edit'
   )));
+  // Unique map button id.
+  $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
+  $remove_button_id = drupal_html_id(implode('-', array($id, 'remove_button')));
+  $display_options = variable_get('yamaps_block_edit_display_options', array());
   // Map initialization parameters.
   $map = array(
     'init' => array(
@@ -96,6 +139,12 @@ function yamaps_field_process($element, $form_state, $complete_form) {
       'zoom' => $coords_array['zoom'],
       'type' => $type,
       'behaviors' => array('scrollZoom', 'dblClickZoom', 'drag'),
+    ),
+    'display_options' => array(
+      'display_type' => (isset($display_options['display_type'])) ? $display_options['display_type'] : 'map',
+      'open_button_text' => t((isset($display_options['open_button_text'])) ? $display_options['open_button_text'] : 'Open map'),
+      'open_button_id' => $open_button_id,
+      'remove_button_id' => $remove_button_id,
     ),
     'controls' => 1,
     'traffic' => 0,
@@ -153,6 +202,14 @@ function yamaps_field_process($element, $form_state, $complete_form) {
     '#default_value' => $routes,
     '#attributes' => array('class' => array('field-yamaps-routes-' . $id)),
   );
+
+
+  if (isset($display_options['display_type']) && ($display_options['display_type'] == 'map_button')) {
+    $element['open_map_button'] = array(
+      '#type' => 'markup',
+      '#markup' => '<div id="' . $open_button_id . '">' . $display_options['open_button_text'] . '</div>',
+    );
+  }
 
   // Map description.
   $element['#description'] = '<div class="yamaps-terms">' . l(
@@ -275,10 +332,41 @@ function yamaps_settings_page($form, &$form_state) {
   $form['yamaps_blocks_amount'] = array(
     '#title' => t('Set amount of Yandex Maps blocks'),
     '#description' => t('Amount of available Yandex Maps bloks.'),
+    '#element_validate' => array('element_validate_integer_positive'),
     '#type' => 'select',
     '#options' => range(1, 20),
     '#default_value' => variable_get('yamaps_blocks_amount', YAMAPS_DEFAULT_BLOCK_AMOUNT),
     '#required' => TRUE,
   );
+
+  $display_options = variable_get('yamaps_block_edit_display_options', array());
+
+  $form['yamaps_block_edit_display_options'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Display options'),
+    '#tree' => TRUE,
+
+  );
+  $form['yamaps_block_edit_display_options']['display_type'] = array(
+    '#type' => 'radios',
+    '#title' => t('How display map for admins'),
+    '#options' => array(
+      'map' => t('Map'),
+      'map_button' => t('Map opened by button click'),
+      'map_modal' => t('Map opened in modal window'),
+    ),
+    '#default_value' => (isset($display_options['display_type'])) ? $display_options['display_type'] : 'map',
+    '#required' => FALSE,
+    '#description' => t('Type of map displaying.'),
+  );
+
+  $form['yamaps_block_edit_display_options']['open_button_text'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Button text'),
+    '#default_value' => (isset($display_options['open_button_text'])) ? $display_options['open_button_text'] : 'Open map',
+    '#required' => FALSE,
+    '#description' => t('Text of button that opens map.'),
+  );
+
   return system_settings_form($form);
 }
