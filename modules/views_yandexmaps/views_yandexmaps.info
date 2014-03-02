@@ -1,0 +1,11 @@
+name = Views Yandex Maps
+description = Provides Yandex map field for display map on your pages|
+core = 7.x
+package = Yandex
+
+dependencies[] = views
+dependencies[] = yamaps
+
+files[] = views_yandexmaps.module
+files[] = views_yandexmaps.views.inc
+files[] = /handlers/views_yandexmaps_plugin_style_default_map.inc

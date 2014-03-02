@@ -1,0 +1,45 @@
+<?php
+/**
+ * @file
+ * Adds a formatter for view and create view button.
+ */
+
+/**
+ * Implements hook_views_api()
+ */
+function views_yandexmaps_views_api() {
+  return array('api' => 3);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function views_yandexmaps_theme() {
+  $module_path = drupal_get_path('module', 'views_yandexmaps');
+  /*
+    $base = array(
+      'file' => 'theme.inc',
+      'path' => "$module_path/theme",
+    );*/
+
+  return array(
+    'yandex_balloon_content' => array(
+      'template' => 'yandex-balloon-content',
+      'variables' => array(
+        'view' => NULL,
+        'rendered_fields' => NULL,
+        'item' => NULL
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_help().
+ */
+function views_yandexmaps_help($path, $arg) {
+  switch ($path) {
+    case 'admin/views_yandexmaps#views_yandexmaps':
+      return t('Check the Views Yandex maps project page documentation for tutorials and videos on how to use this module.');
+  }
+}
