@@ -27,6 +27,10 @@ function yamaps_field_formatter_info() {
           'ruler',
           'rightMouseButtonMagnifier',
         ),
+        'yamaps_display_options' => array(
+          'display_type' => 'map',
+          'open_button_text' => 'Open map',
+        ),
       ),
     ),
     // Static map formatter.
@@ -39,7 +43,8 @@ function yamaps_field_formatter_info() {
         's_height' => 400,
       ),
     ),
-    // Combined map formatter.
+    /*// Combined map formatter.
+    // @todo create logic for combined type.
     'field_yamaps_formatter_modal_window' => array(
       'label' => t('Modal window'),
       'field types' => array('field_yamaps'),
@@ -55,7 +60,7 @@ function yamaps_field_formatter_info() {
           'field_settings' => array(),
         ),
       ),
-    ),
+    ),*/
   );
 }
 
@@ -104,6 +109,34 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#options' => yamaps_get_behaviors_list(),
         '#default_value' => $settings['behaviors'],
       );
+
+      $element['yamaps_display_options'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Display options'),
+        '#tree' => TRUE,
+      );
+
+      $element['yamaps_display_options']['display_type'] = array(
+        '#type' => 'radios',
+        '#title' => t('How display map for admins'),
+        '#options' => array(
+          'map' => t('Map'),
+          'map_button' => t('Map opened by button click'),
+          //'map_modal' => t('Map opened in modal window'),
+        ),
+        '#default_value' => $settings['yamaps_display_options']['display_type'],
+        '#required' => FALSE,
+        '#description' => t('Type of map displaying.'),
+      );
+
+      $element['yamaps_display_options']['open_button_text'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Button text'),
+        '#default_value' => (isset($settings['yamaps_display_options']['open_button_text'])) ? $settings['yamaps_display_options']['open_button_text'] : 'Open map',
+        '#required' => FALSE,
+        '#description' => t('Text of button that opens map.'),
+      );
+
       break;
 
     case 'field_yamaps_formatter_static':
@@ -113,6 +146,7 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#default_value' => $settings['s_traffic'],
       );
       $element['s_width'] = array(
+
         '#title' => t('Map width'),
         '#field_suffix' => ' ' . t('pixels'),
         '#type' => 'textfield',
@@ -131,6 +165,7 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#required' => TRUE,
       );
       break;
+    case 'field_yamaps_formatter_modal_window':
       $element['original_field_type'] = array(
         '#title' => t('Original field type'),
         '#type' => 'radios',
@@ -155,7 +190,7 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#required' => TRUE,
 
       );
-      breal;
+      break;
   }
   return $element;
 }
@@ -188,6 +223,7 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
       else {
         $summary[] = t('All mouse event are disabled.');
       }
+      $summary[] = t('Display type: @type', array('@type' => $settings['yamaps_display_options']['display_type']));
       break;
 
     case 'field_yamaps_formatter_static':
@@ -198,8 +234,9 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
       ));
       break;
     case 'field_yamaps_formatter_modal_window':
-      $summary[] = t('Original field settings: @field_settings');
-      $summary[] = t('Modal window settings: @field_settings');
+
+      $summary[] = t('Original field settings: @field_settings', array('@field_settings' => ''));
+      $summary[] = t('Modal window settings: @field_settings', array('@field_settings' => ''));
       break;
   }
 
@@ -210,23 +247,29 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
  * Implements hook_field_formatter_view().
  */
 function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+
   $element = array();
   $settings = $display['settings'];
+
   switch ($display['type']) {
+
     case 'field_yamaps_formatter_dynamic':
       $maps = array();
       foreach ($items as $delta => $item) {
+
         // Map id.
         $id = drupal_html_id(implode('-', array(
           'ymap',
           $field['field_name'],
           $delta
         )));
+
         // Unique map button id.
         $open_button_id = drupal_html_id(implode('-', array(
           $id,
           'open_button'
         )));
+
         // Coordinates of map center.
         $coords = drupal_json_decode($item['coords']);
 
@@ -239,8 +282,8 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
             'behaviors' => array_values(array_filter($settings['behaviors'])),
           ),
           'display_options' => array(
-            'display_type' => $field['settings']['display_options']['display_type'],
-            'open_button_text' => $field['settings']['display_options']['open_button_text'],
+            'display_type' => $settings['yamaps_display_options']['display_type'],
+            'open_button_text' => $settings['yamaps_display_options']['open_button_text'],
             'open_button_id' => $open_button_id,
           ),
           'controls' => $settings['controls'],
@@ -253,6 +296,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         );
 
         // Return map container div.
+
         $element[$delta] = array(
           '#type' => 'html_tag',
           '#tag' => 'div',
@@ -262,6 +306,19 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           ),
           '#value' => '',
         );
+
+        if (isset($settings['yamaps_display_options']['display_type']) && $settings['yamaps_display_options']['display_type'] == 'map_button') {
+          $element[$delta . '_open'] = array(
+            '#type' => 'html_tag',
+            '#tag' => 'div',
+            '#value' => t((isset($settings['yamaps_display_options']['open_button_text'])) ? $settings['yamaps_display_options']['open_button_text'] : 'Open button'),
+            '#attributes' => array(
+              'id' => $open_button_id,
+              'class' => 'open_yamap_button',
+              'mapId' => $id,
+            ),
+          );
+        }
       }
 
       // Adding map to js and load library.
@@ -396,8 +453,10 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         );
       }
       break;
+    case 'field_yamaps_formatter_modal_window':
+      //@todo create logic for combined type.
+      break;
   }
-
   return $element;
 }
 

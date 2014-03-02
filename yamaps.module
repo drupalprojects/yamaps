@@ -19,6 +19,22 @@ module_load_include('inc', 'yamaps', 'inc/yamaps.widget');
 module_load_include('inc', 'yamaps', 'inc/yamaps.block');
 
 /**
+ * Implements hook_menu().
+ */
+function yamaps_menu() {
+  $items['admin/config/services/yamaps'] = array(
+    'title' => 'Yandex Maps configuration',
+    'description' => t('Yandex Maps configuration'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('yamaps_settings_page'),
+    'access arguments' => array('administer yamaps settings'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 4,
+  );
+  return $items;
+}
+
+/**
  * Implements hook_field_info().
  */
 function yamaps_field_info() {
@@ -73,7 +89,7 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
     '#options' => array(
       'map' => t('Map'),
       'map_button' => t('Map opened by button click'),
-      'map_modal' => t('Map opened in modal window'),
+      //'map_modal' => t('Map opened in modal window'),
     ),
     '#default_value' => $settings['display_options']['display_type'],
     '#required' => FALSE,
@@ -168,7 +184,7 @@ function yamaps_field_process($element, $form_state, $complete_form) {
     '#value' => t($display_options['open_button_text']),
     '#attributes' => array(
       'id' => $id,
-      'style' => 'width:100%;height:100%',
+      'style' => 'width:100%;height:400px',
     ),
   );
 
@@ -316,22 +332,6 @@ function yamaps_field_validate_pixels_percentage($element, &$form_state) {
 
 /**
  * Implements hook_menu().
- */
-function yamaps_menu() {
-  $items['admin/config/services/yamaps'] = array(
-    'title' => 'Yandex Maps configuration',
-    'description' => t('Yandex Maps configuration'),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('yamaps_settings_page'),
-    'access arguments' => array('administer yamaps settings'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 4,
-  );
-  return $items;
-}
-
-/**
- * Implements hook_menu().
  *
  * @return array
  */
@@ -374,7 +374,7 @@ function yamaps_settings_page($form, &$form_state) {
     '#options' => array(
       'map' => t('Map'),
       'map_button' => t('Map opened by button click'),
-      'map_modal' => t('Map opened in modal window'),
+      //'map_modal' => t('Map opened in modal window'),
     ),
     '#default_value' => (isset($display_options['display_type'])) ? $display_options['display_type'] : 'map',
     '#required' => FALSE,

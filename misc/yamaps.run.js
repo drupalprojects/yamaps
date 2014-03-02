@@ -1,29 +1,28 @@
 /**
  * @file
- * Run map!
+ * Run map.
  */
 
 (function ($) {
   ymaps.ready(function () {
     var processMaps = function () {
       if (Drupal.settings.yamaps) {
+
         //activeMaps = [];
         for (var mapId in Drupal.settings.yamaps) {
           var options = Drupal.settings.yamaps[mapId];
-
-
           if (options.display_options.display_type === 'map_button') {
             $('#' + mapId).hide();
-            $('#'+ options.display_options.remove_button_id).hide();
-            $('#'+ options.display_options.open_button_id).bind({
+            $('#' + options.display_options.remove_button_id).hide();
+            $('#' + options.display_options.open_button_id).bind({
               click: function () {
 
                 mapId = $(this).attr('mapId');
                 options = Drupal.settings.yamaps[mapId];
                 creating_map(mapId, options);
-                $('#'+ options.display_options.open_button_id).hide('slow');
+                $('#' + options.display_options.open_button_id).hide('slow');
                 $('#' + mapId).show();
-                $('#'+ options.display_options.remove_button_id).show();
+                $('#' + options.display_options.remove_button_id).show();
               }
             });
           }
@@ -46,9 +45,12 @@
   function creating_map(mapId, options) {
     $('#' + mapId).once('yamaps', function () {
       // If zoom and center are not set - set it from user's location.
+
       if (!options.init.center || !options.init.zoom) {
         var location = ymaps.geolocation;
+        // Set map center.
         if (!options.init.center) {
+          // Set location, defined by ip, if they not defined.
           options.init.center = [location.latitude, location.longitude];
         }
         if (!options.init.zoom) {

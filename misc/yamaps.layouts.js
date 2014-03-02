@@ -1,11 +1,11 @@
 /**
  * @file
- * Base layouts
+ * Base layouts.
  */
 
 (function($) {
   ymaps.ready(function() {
-    // Available colors
+    // Available colors.
     $.yaMaps.colors = {
       blue: '#006cff',
       lightblue: '#66c7ff',
@@ -20,13 +20,14 @@
       violet: '#b832fd',
       pink: '#fd32fb'
     };
-    // HTML for colorpicker
+
+    // HTML for colorpicker.
     $.yaMaps.colorsHTML = '';
     for (var i in $.yaMaps.colors) {
       $.yaMaps.colorsHTML += '<div class="yamaps-color"><div data-content="' + i + '">' + $.yaMaps.colors[i] + '</div></div>';
     }
 
-    // Opacity select layout
+    // Opacity select layout.
     $.yaMaps.addLayout('yamaps#OpacityLayout', ymaps.templateLayoutFactory.createClass([
       '<label for="opacity">' + Drupal.t('Opacity') + '</label>',
       '<select id="opacity">',
@@ -55,7 +56,7 @@
       '</select>'
     ].join('')));
 
-    // ColorPicker layout
+    // ColorPicker layout.
     $.yaMaps.addLayout('yamaps#ColorPicker', ymaps.templateLayoutFactory.createClass(
       '<div class="yamaps-colors">' + $.yaMaps.colorsHTML + '</div>',
       {

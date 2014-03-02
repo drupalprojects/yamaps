@@ -80,7 +80,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
     '#options' => array(
       'map' => t('Map'),
       'map_button' => t('Map opened by button click'),
-      'map_modal' => t('Map opened in modal window'),
+      //'map_modal' => t('Map opened in modal window'),
     ),
     '#default_value' => (isset($display_options['display_type'])) ? $display_options['display_type'] : 'map',
     '#required' => FALSE,

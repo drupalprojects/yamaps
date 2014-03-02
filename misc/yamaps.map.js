@@ -1,6 +1,6 @@
 /**
  * @file
- * Map support
+ * Map support.
  */
 
 (function($) {
@@ -13,7 +13,7 @@
       this.mapListeners = this.map.events.group();
       $.yaMaps.maps[mapId] = this;
 
-      // Export map coordinates to html element
+      // Export map coordinates to html element.
       this.exportCoords = function(event) {
         var coords = {
           center: event.get('newCenter'),
@@ -23,22 +23,22 @@
         $storage.val(JSON.stringify(coords));
       };
 
-      // Export map type to html element
+      // Export map type to html element.
       this.exportType = function(event) {
         var type = event.get('newType');
         var $storage = $('.field-yamaps-type-' + mapId);
         $storage.val(type);
       };
 
-      // Map events for export
+      // Map events for export.
       this.map.events
         .add('boundschange', this.exportCoords, this.map)
         .add('typechange', this.exportType, this.map);
 
-      // Right top controls
+      // Right top controls.
       var rightTopControlGroup = [];
 
-      // Enable map controls
+      // Enable map controls.
       this.enableControls = function() {
         rightTopControlGroup.push('typeSelector');
         var mapSize = this.map.container.getSize();
@@ -51,7 +51,7 @@
         $.yaMaps._mapTools.unshift('default');
       };
 
-      // Enable traffic control
+      // Enable traffic control.
       this.enableTraffic = function() {
         var traffic = new ymaps.control.TrafficControl({
           providerKey:'traffic#actual',
@@ -63,7 +63,7 @@
       };
 
 
-      // Enable plugins
+      // Enable plugins.
       this.enableTools = function() {
         var mapTools = $.yaMaps.getMapTools(this);
         this.map.controls.add(new ymaps.control.MapTools(mapTools), {left: 5, top: 5});
