@@ -85,7 +85,7 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
   );
   $form['display_options']['display_type'] = array(
     '#type' => 'radios',
-    '#title' => t('How display map for admins'),
+    '#title' => t('Select displaying type of map.'),
     '#options' => array(
       'map' => t('Map'),
       'map_button' => t('Map opened by button click'),

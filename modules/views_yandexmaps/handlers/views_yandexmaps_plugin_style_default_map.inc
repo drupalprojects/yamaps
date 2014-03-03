@@ -131,8 +131,10 @@ class views_yandexmaps_plugin_style_default_map extends views_plugin_style {
 
     $form['yandex_map_field'] = array(
       '#title' => t('Yandex Map Field'),
+      '#description' => t('Choose Yandex.Maps field. Add if views fields this field for the first.'),
       '#type' => 'select',
       '#options' => $yandex_fields,
+      '#required'=>TRUE,
       '#default_value' => $this->options['yandex_map_field'],
     );
 
@@ -214,9 +216,9 @@ class views_yandexmaps_plugin_style_default_map extends views_plugin_style {
       }
     }
 
-    // No yandex maps field.
+    // No yandex maps field error message.
     if (!$yandexmap_field) {
-      return t('Add Geolocation field to fields list.');
+      return t('Add Yandex.Maps field to fields list.');
     }
 
     // Excluded field.
@@ -224,16 +226,11 @@ class views_yandexmaps_plugin_style_default_map extends views_plugin_style {
     $this->render_fields($this->view->result);
 
     $objects = array();
-    $prepared_placemarks = array();
     foreach ($this->view->result as $row_index => $row) {
 
-      /*      if (!$row->{'field_' . $yandexmap_field}) {
-          continue;
-        }
-    */
       $prepared_placemarks = array();
-
       $yandexmap_field_name = 'field_' . $this->options['yandex_map_field'];
+
       foreach ($row->$yandexmap_field_name as $placemark) {
         // @todo find a better solution.
         $placemark_decode = drupal_json_decode($placemark['raw']['placemarks']);

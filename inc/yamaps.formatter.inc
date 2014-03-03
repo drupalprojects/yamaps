@@ -297,7 +297,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
 
         // Return map container div.
 
-        $element[$delta] = array(
+        $element[$delta]['map_container'] = array(
           '#type' => 'html_tag',
           '#tag' => 'div',
           '#attributes' => array(
@@ -308,7 +308,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         );
 
         if (isset($settings['yamaps_display_options']['display_type']) && $settings['yamaps_display_options']['display_type'] == 'map_button') {
-          $element[$delta . '_open'] = array(
+          $element[$delta]['open_button_text'] = array(
             '#type' => 'html_tag',
             '#tag' => 'div',
             '#value' => t((isset($settings['yamaps_display_options']['open_button_text'])) ? $settings['yamaps_display_options']['open_button_text'] : 'Open button'),
