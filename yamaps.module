@@ -109,7 +109,7 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
 /**
  * Process field for edit form.
  *
- * @see yamaps_element_info()
+ * @see yamaps_element_info().
  */
 function yamaps_field_process($element, $form_state, $complete_form) {
   // Issue #1712292 fix.
@@ -314,7 +314,7 @@ function yamaps_library() {
 function yamaps_help($path, $arg) {
   switch ($path) {
     case 'admin/help#yamaps':
-      // Return a line-break version of the module README.txt
+      // Return a line-break version of the module README.txt.
       return _filter_autop(file_get_contents(dirname(__FILE__) . "/README.txt"));
       break;
   }

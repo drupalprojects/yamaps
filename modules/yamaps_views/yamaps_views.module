@@ -7,15 +7,15 @@
 /**
  * Implements hook_views_api()
  */
-function views_yandexmaps_views_api() {
+function yamaps_views_views_api() {
   return array('api' => 3);
 }
 
 /**
  * Implements hook_theme().
  */
-function views_yandexmaps_theme() {
-  $module_path = drupal_get_path('module', 'views_yandexmaps');
+function yamaps_views_theme() {
+  $module_path = drupal_get_path('module', 'yamaps_views');
   /*
     $base = array(
       'file' => 'theme.inc',
@@ -37,9 +37,9 @@ function views_yandexmaps_theme() {
 /**
  * Implements hook_help().
  */
-function views_yandexmaps_help($path, $arg) {
+function yamaps_views_help($path, $arg) {
   switch ($path) {
-    case 'admin/views_yandexmaps#views_yandexmaps':
+    case 'admin/yamaps_views#yamaps_views':
       return t('Check the Views Yandex maps project page documentation for tutorials and videos on how to use this module.');
   }
 }

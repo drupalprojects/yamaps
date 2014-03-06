@@ -40,17 +40,17 @@
         this.exportParent();
       };
 
-      // Set placemark parent
+      // Set placemark parent.
       this.setParent = function(Parent) {
         this.parent = Parent;
       };
 
-      // Get parent
+      // Get parent.
       this.getParent = function() {
         return this.parent;
       };
 
-      // Export placemark information
+      // Export placemark information.
       this.export = function() {
         var coords = this.placemark.geometry.getCoordinates();
         var props = this.placemark.properties.getAll();
@@ -65,7 +65,7 @@
         };
       };
 
-      // Export all placemarks from this map
+      // Export all placemarks from this map.
       this.exportParent = function() {
         var collection = this.getParent();
         if (collection) {
@@ -76,7 +76,7 @@
         }
       };
 
-      // Placemark events for export
+      // Placemark events for export.
       this.placemark.events
         .add('dragend', this.exportParent, this)
         .add('propertieschange', this.exportParent, this);

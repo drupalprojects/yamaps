@@ -3,15 +3,15 @@
 /**
  * Implementation of hook_views_plugins().
  */
-function views_yandexmaps_views_plugins() {
+function yamaps_views_views_plugins() {
   return array(
-    'module' => 'views_yandexmaps',
+    'module' => 'yamaps_views',
     'style' => array(
       'default_map' => array(
         'title' => t('Yandex Maps'),
         'help' => t('Display Yandex.Map'),
-        'handler' => 'views_yandexmaps_plugin_style_default_map',
-        'path' => drupal_get_path('module', 'views_yandexmaps') . '/handlers',
+        'handler' => 'yamaps_views_plugin_style_default_map',
+        'path' => drupal_get_path('module', 'yamaps_views') . '/handlers',
         'uses options' => TRUE,
         'uses row plugin' => TRUE,
         'uses fields' => TRUE,

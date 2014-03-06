@@ -1,6 +1,6 @@
 <?php
 
-class views_yandexmaps_plugin_style_default_map extends views_plugin_style {
+class yamaps_views_plugin_style_default_map extends views_plugin_style {
   const placemark_title = 'balloonContentHeader';
   const placemark_ballon = 'balloonContentBody';
 
@@ -23,11 +23,11 @@ class views_yandexmaps_plugin_style_default_map extends views_plugin_style {
         'rightMouseButtonMagnifier',
       ),
     );
+
     $options['yamaps_display_options'] = array(
       'display_type' => 'map',
       'open_button_type' => 'Open map',
     );
-
 
     $options['yandex_map_field'] = array('default' => '');
     $options['baloon_title'] = array('default' => '<default>');
@@ -58,8 +58,6 @@ class views_yandexmaps_plugin_style_default_map extends views_plugin_style {
       '#type' => 'checkbox',
       '#default_value' => $this->options['traffic'],
     );
-
-
     $form['width'] = array(
       '#title' => t('Map width'),
       '#field_suffix' => ' ' . t('in pixels or in percentage'),
@@ -69,7 +67,6 @@ class views_yandexmaps_plugin_style_default_map extends views_plugin_style {
       '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
       '#required' => TRUE,
     );
-
     $form['height'] = array(
       '#title' => t('Map height'),
       '#field_suffix' => ' ' . t('in pixels or in percentage'),
@@ -79,7 +76,16 @@ class views_yandexmaps_plugin_style_default_map extends views_plugin_style {
       '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
       '#required' => TRUE,
     );
-
+  /**
+   *  $form['map_center'] = array(
+      '#title' => t('Map center'),
+      '#description' => t(''),
+      '#type' => 'textfield',
+      '#default_value' => $this->options['map_center'],
+      '#size' => 5,
+      '#required' => TRUE,
+    );
+   */
     $form['behaviors'] = array(
       '#title' => t('Mouse event settings'),
       '#type' => 'checkboxes',
@@ -92,7 +98,6 @@ class views_yandexmaps_plugin_style_default_map extends views_plugin_style {
       '#title' => t('Display options'),
       '#tree' => TRUE,
     );
-
     $form['yamaps_display_options']['display_type'] = array(
       '#type' => 'radios',
       '#title' => t('How display map for admins'),
@@ -105,7 +110,6 @@ class views_yandexmaps_plugin_style_default_map extends views_plugin_style {
       '#required' => FALSE,
       '#description' => t('Type of map displaying.'),
     );
-
     $form['yamaps_display_options']['open_button_text'] = array(
       '#type' => 'textfield',
       '#title' => t('Button text'),
@@ -114,13 +118,22 @@ class views_yandexmaps_plugin_style_default_map extends views_plugin_style {
       '#description' => t('Text of button that opens map.'),
     );
 
+    /*  $form['baloon_title'] = array(
+        '#title' => t('Baloon title'),
+        '#type' => 'select',
+        '#options' => $fields,
+        '#default_value' => $this->options['baloon_title'],
+      );
 
-    $form['baloon_title'] = array(
-      '#title' => t('Baloon title'),
-      '#type' => 'select',
-      '#options' => $fields,
-      '#default_value' => $this->options['baloon_title'],
-    );
+      $form['baloon_body'] = array(
+        '#title' => t('Balloon body Field'),
+        '#type' => 'select',
+        '#multiple' => TRUE,
+        '#options' => $fields,
+        '#default_value' => $this->options['baloon_body'],
+      );
+
+    */
 
     $form['map_type'] = array(
       '#title' => t('Yandex Map Field'),
@@ -134,16 +147,8 @@ class views_yandexmaps_plugin_style_default_map extends views_plugin_style {
       '#description' => t('Choose Yandex.Maps field. Add if views fields this field for the first.'),
       '#type' => 'select',
       '#options' => $yandex_fields,
-      '#required'=>TRUE,
+      '#required' => TRUE,
       '#default_value' => $this->options['yandex_map_field'],
-    );
-
-    $form['baloon_body'] = array(
-      '#title' => t('Balloon body Field'),
-      '#type' => 'select',
-      '#multiple' => TRUE,
-      '#options' => $fields,
-      '#default_value' => $this->options['baloon_body'],
     );
 
     $form['map_grouping_cat'] = array(
@@ -186,12 +191,12 @@ class views_yandexmaps_plugin_style_default_map extends views_plugin_style {
     }
     return $fields;
   }
-
+/*
   function render_fields($result) {
     // @todo recheck
-    $res = parent::render_fields($result);
+   = parent::render_fields($result);
   }
-
+*/
   /**
    * Preparing data for render.
    */
@@ -226,18 +231,21 @@ class views_yandexmaps_plugin_style_default_map extends views_plugin_style {
     $this->render_fields($this->view->result);
 
     $objects = array();
+    $map_coords = array('lattitude' => array(), 'longitude' => array());
     foreach ($this->view->result as $row_index => $row) {
 
       $prepared_placemarks = array();
       $yandexmap_field_name = 'field_' . $this->options['yandex_map_field'];
 
       foreach ($row->$yandexmap_field_name as $placemark) {
-        // @todo find a better solution.
-        $placemark_decode = drupal_json_decode($placemark['raw']['placemarks']);
-        $prepared_placemarks[] = $placemark_decode[0];
+        $maps_coords_item = drupal_json_decode($placemark['raw']['coords']);
+        if (count($maps_coords_item['center']) > 0) {
+          $map_coords['lattitude'][] = $maps_coords_item['center'][0];
+          $map_coords['longitude'][] = $maps_coords_item['center'][1];
+        }
+
+        $prepared_placemarks += drupal_json_decode($placemark['raw']['placemarks']);
       }
-
-
       $marker_title = '';
 
 
@@ -284,7 +292,6 @@ class views_yandexmaps_plugin_style_default_map extends views_plugin_style {
     $map = array(
       'init' => array(
         'center' => array(53.9182775224, 27.5093221557),
-        //'type' => $this->options['map_type'],
         'type' => 'yandex#map',
         'behaviors' => array_values(array_filter($this->options['behaviors'])),
       ),
@@ -301,7 +308,9 @@ class views_yandexmaps_plugin_style_default_map extends views_plugin_style {
       'routes' => NULL,
       'edit' => FALSE,
     );
-
+    if (!empty($this->options['map_center'])) {
+      $map['init']['center_geocode'] = $this->options['map_center'];
+    }
     // Adding map to js.
     drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
 
