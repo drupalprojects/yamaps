@@ -295,7 +295,7 @@ function yamaps_library() {
         'weight' => $w++
       ),
       $path . 'yamaps.route.js' => array('scope' => 'footer', 'weight' => $w++),
-      $path . 'yamaps.map.js' => array('scope' => 'footer', 'weight' => $w++),
+      $path . 'yamaps.maps.js' => array('scope' => 'footer', 'weight' => $w++),
       $path . 'yamaps.run.js' => array('scope' => 'footer', 'weight' => $w++),
       /* field button script */
       $path . 'yamaps.field.js' => array('scope' => 'footer', 'weight' => $w++),
