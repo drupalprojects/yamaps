@@ -48,6 +48,7 @@ function _yamaps_format_values_to_js($clean_values) {
  */
 function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
 
+
   // Unique map id.
   $id = drupal_html_id(implode('-', array(
     'ymap',
@@ -131,7 +132,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     ),
   );
   // Map container.
-  $element['map'] = array(
+  $element['map_wrapper']['map'] = array(
     '#type' => 'html_tag',
     '#tag' => 'div',
     '#value' => '',
@@ -192,21 +193,23 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       ),
     );
   }
-  // Map description.
-  $element['#description'] = theme('html_tag', array(
-    'element' => array(
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#value' => l(
-        t('Terms of service «API Yandex.Maps»'),
-        'http://legal.yandex.ru/maps_api/',
-        array('attributes' => array('target' => '_blank'))
-      ),
-      '#attributes' => array(
-        'class' => 'yamaps-terms',
-      ),
-    )
-  ));
 
+  // Map description.
+  $element['#description'] .= '<br/>' . render(theme('html_tag', array(
+          'element' => array(
+            '#type' => 'html_tag',
+            '#tag' => 'div',
+            '#value' => l(
+              t('Terms of service «API Yandex.Maps»'),
+              'http://legal.yandex.ru/maps_api/',
+              array('attributes' => array('target' => '_blank'))
+            ),
+            '#attributes' => array(
+              'class' => 'yamaps-terms',
+            ),
+          ),
+        )
+      )
+    );
   return $element;
 }
