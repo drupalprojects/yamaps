@@ -250,6 +250,13 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
 
   $element = array();
   $settings = $display['settings'];
+  $entity_info = entity_get_info($entity_type);
+
+  $entity_id = uniqid();
+
+  if (isset($entity_info['entity keys']['id']) && isset($entity->{$entity_info['entity keys']['id']})) {
+    $entity_id = $entity->{$entity_info['entity keys']['id']};
+  }
 
   switch ($display['type']) {
 
@@ -260,12 +267,14 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         // Map id.
         $id = drupal_html_id(implode('-', array(
           'ymap',
+          $entity_id,
           $field['field_name'],
           $delta
         )));
 
         // Unique map button id.
         $open_button_id = drupal_html_id(implode('-', array(
+          $entity_id,
           $id,
           'open_button'
         )));
@@ -331,6 +340,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         // Map id and parameters.
         $id = drupal_html_id(implode('-', array(
           'ymap',
+          $entity_id,
           $field['field_name'],
           $delta
         )));
