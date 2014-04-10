@@ -17,24 +17,24 @@
         this.placemark.properties.set('balloonContentBody', balloonContent);
       };
 
-      // Set placemark color
+      // Set placemark color.
       this.setColor = function(color) {
         var preset = 'twirl#' + color;
         preset += this.placemark.properties.get('iconContent') ? 'StretchyIcon' : 'DotIcon';
         this.placemark.options.set('preset', preset)
       };
 
-      // Close balloon
+      // Close balloon.
       this.closeBalloon = function() {
         this.placemark.balloon.close();
       };
 
-      // Open balloon
+      // Open balloon.
       this.openBalloon = function() {
         this.placemark.balloon.open();
       };
 
-      // Remove placemark
+      // Remove placemark.
       this.remove = function() {
         this.getParent().remove(this);
         this.exportParent();
@@ -81,18 +81,18 @@
         .add('dragend', this.exportParent, this)
         .add('propertieschange', this.exportParent, this);
 
-      // Set placemark params
+      // Set placemark params.
       this.placemark.properties.set('Placemark', this);
       this.setColor(properties.color);
     };
 
-    // Placemarks collection class
+    // Placemarks collection class.
     $.yaMaps.YamapsPlacemarkCollection = function(options) {
       this.placemarks = [];
       this.elements = new ymaps.GeoObjectCollection();
       this.elements.options.set(options);
 
-      // Add new placemark to collection
+      // Add new placemark to collection.
       this.add = function(Placemark) {
         Placemark.setParent(this);
         this.placemarks.push(Placemark);
@@ -100,12 +100,12 @@
         return Placemark;
       };
 
-      // Create placemark and add to collection
+      // Create placemark and add to collection.
       this.createPlacemark = function(geometry, properties, options) {
         return this.add(new $.yaMaps.YamapsPlacemark(geometry, properties, options));
       };
 
-      // Remove placemark
+      // Remove placemark.
       this.remove = function(Placemark) {
         this.elements.remove(Placemark.placemark);
         for (var i in this.placemarks) {
@@ -116,14 +116,14 @@
         }
       };
 
-      // Each placemarks callback
+      // Each placemarks callback.
       this.each = function(callback) {
         for (var i in this.placemarks) {
           callback(this.placemarks[i]);
         }
       };
 
-      // Export collection
+      // Export collection.
       this.export = function() {
         var placemarks = [];
         this.each(function(Placemark) {
@@ -133,7 +133,7 @@
       };
     };
 
-    // Edit placemark balloon template
+    // Edit placemark balloon template.
     $.yaMaps.addLayout('yamaps#PlacemarkBalloonEditLayout',
       ymaps.templateLayoutFactory.createClass(
         [
@@ -161,7 +161,7 @@
             var $element = $(this.getParentElement());
             var _this = this;
 
-            // Placemark colorpicker
+            // Placemark colorpicker.
             this.$placemarkColors = $(this.getParentElement()).find('.placemark-colors .yamaps-color');
             this.$placemarkColors.each(function() {
               var $this = $(this);
@@ -172,11 +172,11 @@
             });
             this.$placemarkColors.bind('click', this, this.colorClick);
 
-            // Placemark icon and balloon content
+            // Placemark icon and balloon content.
             this.$iconContent = $element.find('#iconContent');
             this.$balloonContent = $element.find('#balloonContent');
 
-            // Actions
+            // Actions.
             $('#deleteButton').bind('click', this, this.onDeleteClick);
             $('#saveButton').bind('click', this, this.onSaveClick);
           },
@@ -188,18 +188,18 @@
 
           },
           colorClick: function(e) {
-            // Colorpicker click
+            // Colorpicker click.
             e.data.properties.color = $(this).children('div').attr('data-content');
           },
           onDeleteClick: function (e) {
-            // Delete click
+            // Delete click.
             e.data.properties.Placemark.remove();
             e.preventDefault();
           },
           onSaveClick: function(e) {
-            // Save click
+            // Save click.
             var placemark = e.data.properties.Placemark;
-            // Save content, color and close balloon
+            // Save content, color and close balloon.
             placemark.setContent(e.data.$iconContent.val(), e.data.$balloonContent.val());
             placemark.setColor(e.data.properties.color);
             placemark.closeBalloon();
@@ -208,27 +208,27 @@
       )
     );
 
-    // Add placemarks support to map
+    // Add placemarks support to map.
     $.yaMaps.addMapTools(function(Map) {
-      // Default options
+      // Default options.
       var options = {
         balloonMaxWidth: 300,
         balloonCloseButton: true
       };
       if (Map.options.edit) {
-        // If map in edit mode set edit mode to placemarks options
+        // If map in edit mode set edit mode to placemarks options.
         options.balloonContentLayout = 'yamaps#PlacemarkBalloonEditLayout';
         options.draggable = true;
       }
 
-      // Create new collection
+      // Create new collection.
       var placemarksCollection = new $.yaMaps.YamapsPlacemarkCollection(options);
 
-      // Add already created elements to collection
+      // Add already created elements to collection.
       for (var i in Map.options.placemarks) {
         placemarksCollection.add(new $.yaMaps.YamapsPlacemark(Map.options.placemarks[i].coords, Map.options.placemarks[i].params));
       }
-      // Add collection to the map
+      // Add collection to the map.
       Map.map.geoObjects.add(placemarksCollection.elements);
 
       // If map in view mode exit
@@ -236,7 +236,7 @@
         return;
       }
 
-      // If map in edit mode add search form
+      // If map in edit mode add search form.
       // TODO: Replace ID to class!!!
       var $searchForm = $([
         '<form id="yamaps-search-form">',
@@ -246,7 +246,7 @@
 
       $searchForm.bind('submit', function (e) {
         var searchQuery = $searchForm.children('input').val();
-        // Find one element
+        // Find one element.
         ymaps.geocode(searchQuery, {results: 1}, {results: 100}).then(function (res) {
           var geoObject = res.geoObjects.get(0);
           if (!geoObject) {
@@ -255,7 +255,7 @@
           }
           var coordinates = geoObject.geometry.getCoordinates();
           var params = geoObject.properties.getAll();
-          // Create new placemark
+          // Create new placemark.
           var Placemark = new $.yaMaps.YamapsPlacemark(coordinates, {
             iconContent: params.name,
             balloonHeaderContent: params.name,
@@ -264,7 +264,7 @@
           });
           placemarksCollection.add(Placemark);
           Placemark.openBalloon();
-          // Pan to new placemark
+          // Pan to new placemark.
           Map.map.panTo(coordinates, {
             checkZoomRange: false,
             delay: 0,
@@ -274,16 +274,16 @@
         });
         e.preventDefault();
       });
-      // Add search form after current map
+      // Add search form after current map.
       $searchForm.insertAfter('#' + Map.mapId);
 
-      // Map click listener to adding new placemark
+      // Map click listener to adding new placemark.
       var mapClick = function(event) {
         var Placemark = placemarksCollection.createPlacemark(event.get('coordPosition'), {iconContent: '', color: 'blue', balloonContentBody: '', balloonContentHeader: ''});
         Placemark.openBalloon();
       };
 
-      // New button
+      // New button.
       var pointButton = new ymaps.control.Button({
         data: {
           content: '<ymaps class="ymaps-b-form-button__text"><ymaps class="ymaps-b-ico ymaps-b-ico_type_point"></ymaps></ymaps>',
@@ -291,7 +291,7 @@
         }
       });
 
-      // Button events
+      // Button events.
       pointButton.events
         .add('select', function(event) {
           Map.cursor = Map.map.cursors.push('pointer');

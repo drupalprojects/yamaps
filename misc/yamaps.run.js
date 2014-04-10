@@ -57,11 +57,10 @@
           options.init.zoom = location.zoom ? location.zoom : 10;
         }
       }
-
       // Create new map.
       var map = new $.yaMaps.YamapsMap(mapId, options);
       if (options.controls) {
-        // Enable controls
+        // Enable controls.
         map.enableControls();
       }
       if (options.traffic) {

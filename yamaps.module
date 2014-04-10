@@ -148,13 +148,15 @@ function yamaps_field_process($element, $form_state, $complete_form) {
   $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
   $remove_button_id = drupal_html_id(implode('-', array($id, 'remove_button')));
   $display_options = variable_get('yamaps_block_edit_display_options', array());
+  $behaviors = array('scrollZoom', 'dblClickZoom', 'drag');
   // Map initialization parameters.
+  // @todo
   $map = array(
     'init' => array(
       'center' => $coords_array['center'],
       'zoom' => $coords_array['zoom'],
       'type' => $type,
-      'behaviors' => array('scrollZoom', 'dblClickZoom', 'drag'),
+      'behaviors' => $behaviors,
     ),
     'display_options' => array(
       'display_type' => (isset($display_options['display_type'])) ? $display_options['display_type'] : 'map',
@@ -170,7 +172,6 @@ function yamaps_field_process($element, $form_state, $complete_form) {
     'routes' => $routes_array,
     'edit' => TRUE,
   );
-
   // Add information about this map to js.
   drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
   // Load library.
@@ -390,4 +391,53 @@ function yamaps_settings_page($form, &$form_state) {
   );
 
   return system_settings_form($form);
+}
+
+/**
+ * Get geo data for string.
+ *
+ * @param string $geolocation_string
+ *
+ * @return array|bool
+ */
+function yamaps_geocoding($geolocation_string) {
+  // Preparing geocoding string.
+  $query = array(
+    'format' => 'json',
+    'geocode' => $geolocation_string,
+    'results' => 1,
+  );
+
+  $geolocation_request = file_get_contents(url('http://geocode-maps.yandex.ru/1.x', array(
+    'query' => $query,
+    'absolute' => TRUE,
+  )));
+
+  $geolocation_request = json_decode($geolocation_request);
+
+  if ($geolocation_request->response->GeoObjectCollection->metaDataProperty->GeocoderResponseMetaData->found > 0) {
+    $map_center = $geolocation_request->response->GeoObjectCollection->featureMember[0]->GeoObject->Point->pos;
+    $boundedBy = array();
+    $boundedBy[] = array_map('yamaps_var_to_float', array_reverse(explode(' ', $geolocation_request->response->GeoObjectCollection->featureMember[0]->GeoObject->boundedBy->Envelope->lowerCorner)));
+    $boundedBy[] = array_map('yamaps_var_to_float', array_reverse(explode(' ', $geolocation_request->response->GeoObjectCollection->featureMember[0]->GeoObject->boundedBy->Envelope->upperCorner)));
+
+    return array(
+      'map_center' => array_map('yamaps_var_to_float', array_reverse(explode(' ', $map_center))),
+      'bounds' => $boundedBy,
+    );
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Set variable to float.
+ *
+ * @param $val
+ *
+ * @return float
+ */
+function yamaps_var_to_float($val) {
+  return (float) $val;
 }

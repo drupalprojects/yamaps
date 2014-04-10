@@ -43,8 +43,7 @@ function yamaps_field_formatter_info() {
         's_height' => 400,
       ),
     ),
-    /*// Combined map formatter.
-    // @todo create logic for combined type.
+    // Combined map formatter.
     'field_yamaps_formatter_modal_window' => array(
       'label' => t('Modal window'),
       'field types' => array('field_yamaps'),
@@ -60,7 +59,7 @@ function yamaps_field_formatter_info() {
           'field_settings' => array(),
         ),
       ),
-    ),*/
+    ),
   );
 }
 

@@ -24,9 +24,17 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       ),
     );
 
+    $options['yamaps_center_options'] = array(
+      'default' => array(
+        'map_center_type' => 'geolocation',
+        'map_center_geolocation' => '',
+      )
+    );
     $options['yamaps_display_options'] = array(
-      'display_type' => 'map',
-      'open_button_type' => 'Open map',
+      'default' => array(
+        'display_type' => 'map',
+        'open_button_type' => 'Open map',
+      )
     );
 
     $options['yandex_map_field'] = array('default' => '');
@@ -53,11 +61,13 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#type' => 'checkbox',
       '#default_value' => $this->options['controls'],
     );
+
     $form['traffic'] = array(
       '#title' => t('Show traffic'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['traffic'],
     );
+
     $form['width'] = array(
       '#title' => t('Map width'),
       '#field_suffix' => ' ' . t('in pixels or in percentage'),
@@ -67,6 +77,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
       '#required' => TRUE,
     );
+
     $form['height'] = array(
       '#title' => t('Map height'),
       '#field_suffix' => ' ' . t('in pixels or in percentage'),
@@ -76,16 +87,50 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
       '#required' => TRUE,
     );
-  /**
-   *  $form['map_center'] = array(
-      '#title' => t('Map center'),
-      '#description' => t(''),
-      '#type' => 'textfield',
-      '#default_value' => $this->options['map_center'],
-      '#size' => 5,
-      '#required' => TRUE,
+
+    $form['yamaps_center_options'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Display options'),
     );
-   */
+
+    $form['yamaps_center_options']['map_center_type'] = array(
+      '#type' => 'radios',
+      '#title' => t('How display map for admins'),
+      '#options' => array(
+        'geolocation' => t('Geolocation.'),
+        //  'mini_map' => t('Choose on map.'),
+      ),
+      '#default_value' => $this->options['yamaps_center_options']['map_center_type'],
+      '#required' => FALSE,
+      '#description' => t('Type of map displaying.'),
+    );
+    $settings = array(
+      '#delta' => 0,
+
+    );
+    // $form += yamaps_field_process($settings, array(), array());
+    $form['yamaps_center_options']['map_center_geolocation'] = array(
+      '#title' => t('Map center geolocation'),
+      '#description' => t('Please enter place on whitch map will be centered.'),
+      '#type' => 'textfield',
+      '#default_value' => $this->options['yamaps_center_options']['map_center_geolocation'],
+      '#size' => 40,
+      '#states' => array(
+        'visible' => array(
+          ':input[name="style_options[yamaps_center_options][map_center_type]"]' => array('value' => 'geolocation'),
+        ),
+      ),
+    );
+    /*
+        $form['yamaps_center_options']['map_center_string'] = array(
+          '#title' => t('Map center'),
+          '#description' => t(''),
+          '#type' => 'textfield',
+          '#default_value' => $this->options['map_center'],
+          '#size' => 5,
+
+         );
+    */
     $form['behaviors'] = array(
       '#title' => t('Mouse event settings'),
       '#type' => 'checkboxes',
@@ -98,26 +143,50 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#title' => t('Display options'),
       '#tree' => TRUE,
     );
+    $display_type = array(
+      'map' => t('Map'),
+      'map_button' => t('Map opened by button click'),
+    );
+    if (module_enable(array('yamaps_modal'))) {
+      $display_type['map_modal'] = t('Map opened in modal window');
+      $modal_type = array(
+        'colorbox' => t('Colorbox'),
+        'fancybox' => t('Fancybox'),
+        'shadoxbox' => t('Shadowbox'),
+      );
+    }
     $form['yamaps_display_options']['display_type'] = array(
       '#type' => 'radios',
       '#title' => t('How display map for admins'),
-      '#options' => array(
-        'map' => t('Map'),
-        'map_button' => t('Map opened by button click'),
-        //'map_modal' => t('Map opened in modal window'),
-      ),
+      '#options' => $display_type,
       '#default_value' => $this->options['yamaps_display_options']['display_type'],
-      '#required' => FALSE,
       '#description' => t('Type of map displaying.'),
     );
     $form['yamaps_display_options']['open_button_text'] = array(
       '#type' => 'textfield',
       '#title' => t('Button text'),
       '#default_value' => $this->options['yamaps_display_options']['open_button_text'],
-      '#required' => FALSE,
       '#description' => t('Text of button that opens map.'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="style_options[yamaps_display_options][display_type]"]' => array('value' => 'map_button'),
+        ),
+      ),
     );
+    /*
+    $form['yamaps_display_options']['modal_type'] = array(
+      '#type' => 'radios',
+      '#title' => t('How display map for admins'),
+      '#options' => $modal_type,
+      '#default_value' => $this->options['yamaps_display_options']['display_type'],
 
+      '#description' => t('Type of map displaying.'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="style_options[yamaps_display_options][display_type]"]' => array('value' => 'map_modal'),
+        ),
+      ),
+    );*/
     /*  $form['baloon_title'] = array(
         '#title' => t('Baloon title'),
         '#type' => 'select',
@@ -191,12 +260,12 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     }
     return $fields;
   }
-/*
-  function render_fields($result) {
-    // @todo recheck
-   = parent::render_fields($result);
-  }
-*/
+  /*
+    function render_fields($result) {
+      // @todo recheck
+     = parent::render_fields($result);
+    }
+  */
   /**
    * Preparing data for render.
    */
@@ -288,13 +357,10 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     )));
     $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
 
+
     // Map initialization parameters.
     $map = array(
-      'init' => array(
-        'center' => array(53.9182775224, 27.5093221557),
-        'type' => 'yandex#map',
-        'behaviors' => array_values(array_filter($this->options['behaviors'])),
-      ),
+      'id' => $id,
       'display_options' => array(
         'display_type' => (isset($this->options['yamaps_display_options']['display_type'])) ? $this->options['yamaps_display_options']['display_type'] : 'map',
         'open_button_text' => t((isset($this->options['yamaps_display_options']['open_button_text'])) ? $this->options['yamaps_display_options']['open_button_text'] : 'Open map'),
@@ -308,6 +374,21 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       'routes' => NULL,
       'edit' => FALSE,
     );
+    $map['init'] = array(
+      'type' => 'yandex#map',
+      'zoom' => 4,
+      'behaviors' => array_values(array_filter($this->options['behaviors'])),
+    );
+
+    if (($this->options['yamaps_center_options']['map_center_type'] == 'geolocation')) {
+      $parameters = yamaps_geocoding($this->options['yamaps_center_options']['map_center_geolocation']);
+    }
+
+    if (isset($parameters) && $parameters !== FALSE) {
+      $map['init']['center'] = $parameters['map_center'];
+      $map['init']['bounds'] = $parameters['bounds'];
+    }
+
     if (!empty($this->options['map_center'])) {
       $map['init']['center_geocode'] = $this->options['map_center'];
     }
