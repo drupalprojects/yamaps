@@ -101,7 +101,7 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
         '#required' => TRUE,
       );
-
+      # Updated version of patch at issue #1911320 --author="adubovskoy <adubovskoy@168427.no-reply.drupal.org>".
       $element['behaviors'] = array(
         '#title' => t('Mouse event settings'),
         '#type' => 'checkboxes',
