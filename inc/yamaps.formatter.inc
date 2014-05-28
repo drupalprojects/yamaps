@@ -60,6 +60,20 @@ function yamaps_field_formatter_info() {
         ),
       ),
     ),
+    'field_yamaps_formatter_raw_settings' => array(
+      'label' => t('Raw Map settings'),
+      'field types' => array('field_yamaps'),
+      'settings' => array(
+        'original_field' => array(
+          'type' => 'field_yamaps_formatter_static',
+          'field_settings' => array(),
+        ),
+        'modal_window_settings' => array(
+          'type' => 'field_yamaps_formatter_dynamic',
+          'field_settings' => array(),
+        ),
+      ),
+    ),
   );
 }
 
@@ -190,6 +204,9 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
 
       );
       break;
+    case 'field_yamaps_formatter_raw_settings':
+
+      break;
   }
   return $element;
 }
@@ -236,6 +253,9 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
 
       $summary[] = t('Original field settings: @field_settings', array('@field_settings' => ''));
       $summary[] = t('Modal window settings: @field_settings', array('@field_settings' => ''));
+      break;
+    case 'field_yamaps_formatter_raw_settings':
+      $summary[] = t('Raw settings');
       break;
   }
 
@@ -464,6 +484,11 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
       break;
     case 'field_yamaps_formatter_modal_window':
       //@todo create logic for combined type.
+      break;
+    case 'field_yamaps_formatter_raw_settings':
+      foreach ($items as $delta => $item) {
+        $element[$delta] = $settings;
+      }
       break;
   }
   return $element;
