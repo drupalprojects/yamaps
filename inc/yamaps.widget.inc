@@ -205,12 +205,10 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     ),
   );
 
+  $themed_description = theme('html_tag', array('element' => $description_tag));
+
   // Map description.
-  $element['#description'] .= '<br/>' . render(theme('html_tag', array(
-        'element' => $description_tag,
-      )
-    )
-  );
+  $element['#description'] .= '<br/>' . render($themed_description);
 
   return $element;
 }
