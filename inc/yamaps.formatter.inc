@@ -92,11 +92,13 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#type' => 'checkbox',
         '#default_value' => $settings['controls'],
       );
+
       $element['traffic'] = array(
         '#title' => t('Show traffic'),
         '#type' => 'checkbox',
         '#default_value' => $settings['traffic'],
       );
+
       $element['width'] = array(
         '#title' => t('Map width'),
         '#field_suffix' => ' ' . t('in pixels or in percentage'),
@@ -106,6 +108,7 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
         '#required' => TRUE,
       );
+
       $element['height'] = array(
         '#title' => t('Map height'),
         '#field_suffix' => ' ' . t('in pixels or in percentage'),
@@ -115,7 +118,8 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
         '#required' => TRUE,
       );
-      # Updated version of patch at issue #1911320 --author="adubovskoy <adubovskoy@168427.no-reply.drupal.org>".
+
+      // Updated version of patch at issue #1911320 --author="adubovskoy <adubovskoy@168427.no-reply.drupal.org>".
       $element['behaviors'] = array(
         '#title' => t('Mouse event settings'),
         '#type' => 'checkboxes',
@@ -158,8 +162,8 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#type' => 'checkbox',
         '#default_value' => $settings['s_traffic'],
       );
-      $element['s_width'] = array(
 
+      $element['s_width'] = array(
         '#title' => t('Map width'),
         '#field_suffix' => ' ' . t('pixels'),
         '#type' => 'textfield',
@@ -168,6 +172,7 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#element_validate' => array('element_validate_integer_positive'),
         '#required' => TRUE,
       );
+
       $element['s_height'] = array(
         '#title' => t('Map height'),
         '#field_suffix' => ' ' . t('pixels'),
@@ -177,6 +182,7 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#element_validate' => array('element_validate_integer_positive'),
         '#required' => TRUE,
       );
+
       break;
     case 'field_yamaps_formatter_modal_window':
       $element['original_field_type'] = array(
@@ -188,7 +194,6 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
           'field_yamaps_formatter_static' => t('Static image'),
         ),
         '#required' => TRUE,
-
       );
 
       $element['modal_window_field_type'] = array(
@@ -201,8 +206,8 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
 
         ),
         '#required' => TRUE,
-
       );
+
       break;
     case 'field_yamaps_formatter_raw_settings':
 
@@ -227,19 +232,24 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
         '@width' => $settings['width'],
         '@height' => $settings['height']
       ));
+
       if (count($display['settings']['behaviors']) > 0) {
         $behaviors_list = yamaps_get_behaviors_list();
         $active_behaviors = array_values(array_filter($display['settings']['behaviors']));
         $prepared_behaviors_list = array();
-        foreach ($active_behaviors as $key => $val) {
+
+        foreach ($active_behaviors as $val) {
           $prepared_behaviors_list[] = $behaviors_list[$val];
         }
+
         $summary[] = t('Enabled mouse event: !list', array('!list' => implode(', ', $prepared_behaviors_list)));
       }
       else {
         $summary[] = t('All mouse event are disabled.');
       }
+
       $summary[] = t('Display type: @type', array('@type' => $settings['yamaps_display_options']['display_type']));
+
       break;
 
     case 'field_yamaps_formatter_static':
@@ -248,6 +258,7 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
         '@width' => $settings['s_width'] . 'px',
         '@height' => $settings['s_height'] . 'px'
       ));
+
       break;
     case 'field_yamaps_formatter_modal_window':
 
@@ -256,6 +267,7 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
       break;
     case 'field_yamaps_formatter_raw_settings':
       $summary[] = t('Raw settings');
+
       break;
   }
 
@@ -266,11 +278,9 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
  * Implements hook_field_formatter_view().
  */
 function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-
   $element = array();
   $settings = $display['settings'];
   $entity_info = entity_get_info($entity_type);
-
   $entity_id = uniqid();
 
   if (isset($entity_info['entity keys']['id']) && isset($entity->{$entity_info['entity keys']['id']})) {
@@ -278,7 +288,6 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
   }
 
   switch ($display['type']) {
-
     case 'field_yamaps_formatter_dynamic':
       $maps = array();
       foreach ($items as $delta => $item) {
@@ -324,7 +333,6 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         );
 
         // Return map container div.
-
         $element[$delta]['map_container'] = array(
           '#type' => 'html_tag',
           '#tag' => 'div',
@@ -352,6 +360,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
       // Adding map to js and load library.
       drupal_add_js(array('yamaps' => $maps), 'setting');
       drupal_add_library('yamaps', 'yamaps.full');
+
       break;
 
     case 'field_yamaps_formatter_static':
@@ -379,6 +388,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           'yandex#publicMapHybrid' => 'sat,pskl',
         );
         $params['l'] = $map_types[$item['type'] ? $item['type'] : 'yandex#map'];
+
         if ($settings['s_traffic']) {
           $params['l'] .= ',trf';
         }
@@ -398,6 +408,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           'violet' => 'vv',
           'pink' => 'pn',
         );
+
         // 2.x to hex colors.
         $colors = array(
           'blue' => '006cff',
@@ -417,6 +428,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         // Placemarks.
         if ($item['placemarks']) {
           $pt = array();
+
           foreach (drupal_json_decode($item['placemarks']) as $placemark) {
             $pm = end($placemark['coords']) . ',' . reset($placemark['coords']) . ',';
             $pm .= 'pm2';
@@ -424,21 +436,25 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
             $pm .= 'm';
             $pt[] = $pm;
           }
+
           $params['pt'] = implode('~', $pt);
         }
 
         // Lines and polygons.
         $pl = array();
+
         if ($item['lines']) {
           foreach (drupal_json_decode($item['lines']) as $line) {
             $opts = $line['params'];
             $pm = 'c:' . $colors[$opts['strokeColor']] . dechex(255 * $opts['opacity']) . ',';
             $pm .= 'w:' . $opts['strokeWidth'] . ',';
             $c = array();
+
             foreach ($line['coords'] as $coords) {
               $c[] = end($coords);
               $c[] = reset($coords);
             }
+
             $pm .= implode(',', $c);
             $pl[] = $pm;
           }
@@ -451,16 +467,19 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
             $pm .= 'f:' . $colors[$opts['fillColor']] . $opa . ',';
             $pm .= 'w:' . $opts['strokeWidth'] . ',';
             $c = array();
+
             foreach ($polygon['coords'] as $coords_array) {
               foreach ($coords_array as $coords) {
                 $c[] = end($coords);
                 $c[] = reset($coords);
               }
             }
+
             $pm .= implode(',', $c);
             $pl[] = $pm;
           }
         }
+
         if (!empty($pl)) {
           $params['pl'] = implode('~', $pl);
         }
@@ -481,6 +500,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           )),
         );
       }
+
       break;
     case 'field_yamaps_formatter_modal_window':
       //@todo create logic for combined type.
@@ -489,8 +509,10 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
       foreach ($items as $delta => $item) {
         $element[$delta] = $settings;
       }
+
       break;
   }
+
   return $element;
 }
 

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Yandex.Maps block.
+ * Yandex.Maps blocks configuration.
  */
 
 /**
@@ -16,12 +16,14 @@ function yamaps_block_info() {
 
   $blocks_amount = variable_get('yamaps_blocks_amount', YAMAPS_DEFAULT_BLOCK_AMOUNT);
   ++$blocks_amount;
+
   for ($block_number = 2; $block_number <= $blocks_amount; $block_number++) {
     $blocks[YAMAPS_DEFAULT_BLOCK_DELTA . '_' . $block_number] = array(
       'info' => t('Yandex.Map #!block_number', array('!block_number' => $block_number)),
       'cache' => DRUPAL_NO_CACHE,
     );
   }
+
   return $blocks;
 }
 
@@ -31,23 +33,25 @@ function yamaps_block_info() {
  * @see yamaps_field_process()
  */
 function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
-
   $form[$delta . '_block_controls'] = array(
     '#title' => t('Show controls'),
     '#type' => 'checkbox',
     '#default_value' => variable_get($delta . '_block_controls', TRUE),
   );
+
   $form[$delta . '_block_traffic'] = array(
     '#title' => t('Show traffic'),
     '#type' => 'checkbox',
     '#default_value' => variable_get($delta . '_block_traffic', FALSE),
   );
+
   $form[$delta . '_block_behaviors'] = array(
     '#title' => t('Mouse event settings'),
     '#type' => 'checkboxes',
     '#options' => yamaps_get_behaviors_list(),
     '#default_value' => variable_get($delta . '_block_behaviors', array()),
   );
+
   $form[$delta . '_block_width'] = array(
     '#title' => t('Map width'),
     '#field_suffix' => ' ' . t('in pixels or in percentage'),
@@ -57,6 +61,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
     '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
     '#required' => TRUE,
   );
+
   $form[$delta . '_block_height'] = array(
     '#title' => t('Map height'),
     '#field_suffix' => ' ' . t('in pixels or in percentage'),
@@ -74,6 +79,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
   );
 
   $display_options = variable_get($delta . '_block_display_options', array());
+
   $form[$delta . '_block_display_options']['display_type'] = array(
     '#type' => 'radios',
     '#title' => t('How display map for admins'),
@@ -129,10 +135,7 @@ function yamaps_block_save($delta = YAMAPS_DEFAULT_BLOCK_DELTA, $edit = array())
   variable_set($delta . '_block_lines', $edit['lines']);
   variable_set($delta . '_block_polygons', $edit['polygons']);
   variable_set($delta . '_block_routes', $edit['routes']);
-
-
   variable_set($delta . '_block_display_options', $edit[$delta . '_block_display_options']);
-
 }
 
 /**
@@ -142,6 +145,7 @@ function yamaps_block_view($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
   $block = array();
   $block['subject'] = t('Yandex.Map');
   $block['content'] = yamaps_block_content($delta);
+
   return $block;
 }
 
@@ -153,14 +157,12 @@ function yamaps_block_view($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
 function yamaps_block_content($delta) {
   // Map id.
   $id = drupal_html_id(implode('-', array('ymap', 'block', $delta)));
-
   $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
 
   // Map information.
   $coords = drupal_json_decode(variable_get($delta . '_block_coords', NULL));
   $width = variable_get($delta . '_block_width', '168px');
   $height = variable_get($delta . '_block_height', '200px');
-
   $display_options = variable_get($delta . '_block_display_options', array());
 
   // Map initialization parameters.
@@ -213,6 +215,6 @@ function yamaps_block_content($delta) {
       ),
     );
   }
+
   return $block_output;
 }
-

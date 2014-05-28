@@ -47,8 +47,6 @@ function _yamaps_format_values_to_js($clean_values) {
  * Implements hook_field_widget_form().
  */
 function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-
-
   // Unique map id.
   $id = drupal_html_id(implode('-', array(
     'ymap',
@@ -60,7 +58,6 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
   // Unique map button id.
   $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
   $remove_button_id = drupal_html_id(implode('-', array($id, 'remove_button')));
-
   $value = isset($items[$delta]) ? $items[$delta] : array();
 
   $element += array(
@@ -115,12 +112,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
   drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
   // Load library.
   drupal_add_library('yamaps', 'yamaps.full');
-  /*
-    $element['remove_yamap_field_item'] = array(
-      '#name' => ,
-      '#type' => 'markup',
-      '#markup' => '<div id="' . $remove_button_id . '" class="remove_yamap_button">' . t('Remove') . '</div>',
-    );*/
+
   $element['remove_yamap_field_item'] = array(
     '#type' => 'html_tag',
     '#tag' => 'div',
@@ -131,6 +123,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       'class' => 'remove_yamap_button',
     ),
   );
+
   // Map container.
   $element['map_wrapper']['map'] = array(
     '#type' => 'html_tag',
@@ -150,30 +143,35 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     '#required' => $element['#required'],
     '#attributes' => array('class' => array('field-yamaps-coords-' . $id)),
   );
+
   $element['type'] = array(
     '#type' => 'hidden',
     '#title' => t('Type'),
     '#default_value' => $value['type'],
     '#attributes' => array('class' => array('field-yamaps-type-' . $id)),
   );
+
   $element['placemarks'] = array(
     '#type' => 'hidden',
     '#title' => t('Placemarks'),
     '#default_value' => $value['placemarks'],
     '#attributes' => array('class' => array('field-yamaps-placemarks-' . $id)),
   );
+
   $element['lines'] = array(
     '#type' => 'hidden',
     '#title' => t('Lines'),
     '#default_value' => $value['lines'],
     '#attributes' => array('class' => array('field-yamaps-lines-' . $id)),
   );
+
   $element['polygons'] = array(
     '#type' => 'hidden',
     '#title' => t('Polygons'),
     '#default_value' => $value['polygons'],
     '#attributes' => array('class' => array('field-yamaps-polygons-' . $id)),
   );
+
   $element['routes'] = array(
     '#type' => 'hidden',
     '#title' => t('Routes'),
@@ -194,22 +192,25 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     );
   }
 
+  $description_tag = array(
+    '#type' => 'html_tag',
+    '#tag' => 'div',
+    '#value' => l(
+      t('Terms of service «API Yandex.Maps»'),
+      'http://legal.yandex.ru/maps_api/',
+      array('attributes' => array('target' => '_blank'))
+    ),
+    '#attributes' => array(
+      'class' => 'yamaps-terms',
+    ),
+  );
+
   // Map description.
   $element['#description'] .= '<br/>' . render(theme('html_tag', array(
-          'element' => array(
-            '#type' => 'html_tag',
-            '#tag' => 'div',
-            '#value' => l(
-              t('Terms of service «API Yandex.Maps»'),
-              'http://legal.yandex.ru/maps_api/',
-              array('attributes' => array('target' => '_blank'))
-            ),
-            '#attributes' => array(
-              'class' => 'yamaps-terms',
-            ),
-          ),
-        )
+        'element' => $description_tag,
       )
-    );
+    )
+  );
+
   return $element;
 }
