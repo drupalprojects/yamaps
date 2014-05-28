@@ -52,16 +52,21 @@ function yamaps_uninstall() {
   variable_del('yamaps_block_amount');
 
   $t = get_t();
-  drupal_set_message($t('Yandex.Maps module was sucessfull unistalled'));
+  drupal_set_message($t('"Yandex Maps" module was unistalled successfully'));
 }
 
+/**
+ * Cleans up variables after uninstalling module.
+ */
 function yamaps_delete_blocks_variables() {
   $blocks_amount = variable_get('yamaps_blocks_amount', YAMAPS_DEFAULT_BLOCK_AMOUNT);
   $delta = YAMAPS_DEFAULT_BLOCK_DELTA;
+
   for ($block_number = 1; $block_number <= $blocks_amount; $block_number++) {
     if ($block_number > 1) {
       $delta .= '_' . $block_number;
     }
+
     variable_del($delta . '_block_controls');
     variable_del($delta . '_block_behaviors');
     variable_del($delta . '_block_traffic');
@@ -74,5 +79,4 @@ function yamaps_delete_blocks_variables() {
     variable_del($delta . '_block_polygons');
     variable_del($delta . '_block_routes');
   }
-
 }

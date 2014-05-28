@@ -8,8 +8,8 @@
 /**
  * Constants.
  */
-define ('YAMAPS_DEFAULT_BLOCK_DELTA', 'yamaps');
-define ('YAMAPS_DEFAULT_BLOCK_AMOUNT', 1);
+define('YAMAPS_DEFAULT_BLOCK_DELTA', 'yamaps');
+define('YAMAPS_DEFAULT_BLOCK_AMOUNT', 1);
 
 /**
  * Includes.
@@ -32,6 +32,19 @@ function yamaps_menu() {
     'weight' => 4,
   );
   return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function yamaps_permission() {
+  $permissions = array(
+    'administer yamaps settings' => array(
+      'title' => t('Administer Yandex Maps settings'),
+      'description' => t('Manage Yandex Maps configuration parameters.'),
+    ),
+  );
+  return $permissions;
 }
 
 /**
@@ -107,159 +120,6 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
 }
 
 /**
- * Process field for edit form.
- *
- * @see yamaps_element_info().
- */
-function yamaps_field_process($element, $form_state, $complete_form) {
-  // Issue #1712292 fix.
-  // TODO: Need to be deleted when Fields API fixed.
-  if (isset($element['#entity']) && $entity = $element['#entity']) {
-    if (isset($entity->vid) && !$element['#value']) {
-      $entity_type = $element['#entity_type'];
-      $field_name = $element['#field_name'];
-      $instance = field_info_instance($entity_type, $field_name, $entity->type);
-      $field = field_info_field($field_name);
-      $default_value = field_get_default_value($entity_type, $entity, $field, $instance);
-      $element['#default_value'] = $element['#value'] = reset($default_value);
-    }
-  }
-
-  // Map information.
-  $coords = isset($element['#value']['coords']) ? $element['#value']['coords'] : NULL;
-  $coords_array = drupal_json_decode($coords);
-  $type = isset($element['#value']['type']) ? $element['#value']['type'] : 'yandex#map';
-  $placemarks = isset($element['#value']['placemarks']) ? $element['#value']['placemarks'] : NULL;
-  $placemarks_array = drupal_json_decode($placemarks);
-  $lines = isset($element['#value']['lines']) ? $element['#value']['lines'] : NULL;
-  $lines_array = drupal_json_decode($lines);
-  $polygons = isset($element['#value']['polygons']) ? $element['#value']['polygons'] : NULL;
-  $polygons_array = drupal_json_decode($polygons);
-  $routes = isset($element['#value']['routes']) ? $element['#value']['routes'] : NULL;
-  $routes_array = drupal_json_decode($routes);
-
-  // Unique map id.
-  $id = drupal_html_id(implode('-', array(
-    'ymap',
-    $element['#delta'],
-    'edit'
-  )));
-  // Unique map button id.
-  $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
-  $remove_button_id = drupal_html_id(implode('-', array($id, 'remove_button')));
-  $display_options = variable_get('yamaps_block_edit_display_options', array());
-  $behaviors = array('scrollZoom', 'dblClickZoom', 'drag');
-  // Map initialization parameters.
-  // @todo
-  $map = array(
-    'init' => array(
-      'center' => $coords_array['center'],
-      'zoom' => $coords_array['zoom'],
-      'type' => $type,
-      'behaviors' => $behaviors,
-    ),
-    'display_options' => array(
-      'display_type' => (isset($display_options['display_type'])) ? $display_options['display_type'] : 'map',
-      'open_button_text' => t((isset($display_options['open_button_text'])) ? $display_options['open_button_text'] : 'Open map'),
-      'open_button_id' => $open_button_id,
-      'remove_button_id' => $remove_button_id,
-    ),
-    'controls' => 1,
-    'traffic' => 0,
-    'placemarks' => $placemarks_array,
-    'lines' => $lines_array,
-    'polygons' => $polygons_array,
-    'routes' => $routes_array,
-    'edit' => TRUE,
-  );
-  // Add information about this map to js.
-  drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
-  // Load library.
-  drupal_add_library('yamaps', 'yamaps.full');
-
-  // Map container.
-
-  $element['map'] = array(
-    '#type' => 'html_tag',
-    '#tag' => 'div',
-    '#value' => t($display_options['open_button_text']),
-    '#attributes' => array(
-      'id' => $id,
-      'style' => 'width:100%;height:400px',
-    ),
-  );
-
-  // Hidden elements to saving map information.
-  $element['coords'] = array(
-    '#type' => 'hidden',
-    '#title' => t('Coordinates'),
-    '#default_value' => $coords,
-    '#required' => $element['#required'],
-    '#attributes' => array('class' => array('field-yamaps-coords-' . $id)),
-  );
-  $element['type'] = array(
-    '#type' => 'hidden',
-    '#title' => t('Type'),
-    '#default_value' => $type,
-    '#attributes' => array('class' => array('field-yamaps-type-' . $id)),
-  );
-  $element['placemarks'] = array(
-    '#type' => 'hidden',
-    '#title' => t('Placemarks'),
-    '#default_value' => $placemarks,
-    '#attributes' => array('class' => array('field-yamaps-placemarks-' . $id)),
-  );
-  $element['lines'] = array(
-    '#type' => 'hidden',
-    '#title' => t('Lines'),
-    '#default_value' => $lines,
-    '#attributes' => array('class' => array('field-yamaps-lines-' . $id)),
-  );
-  $element['polygons'] = array(
-    '#type' => 'hidden',
-    '#title' => t('Polygons'),
-    '#default_value' => $polygons,
-    '#attributes' => array('class' => array('field-yamaps-polygons-' . $id)),
-  );
-  $element['routes'] = array(
-    '#type' => 'hidden',
-    '#title' => t('Routes'),
-    '#default_value' => $routes,
-    '#attributes' => array('class' => array('field-yamaps-routes-' . $id)),
-  );
-
-
-  if (isset($display_options['display_type']) && ($display_options['display_type'] == 'map_button')) {
-    $element['open_map_button'] = array(
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#value' => t($display_options['open_button_text']),
-      '#attributes' => array(
-        'id' => $open_button_id,
-        'class' => 'open_yamap_button',
-        'mapId' => $id,
-
-      ),
-    );
-  }
-
-  // Map description.
-  $element['#description'] = array(
-    '#type' => 'html_tag',
-    '#tag' => 'div',
-    '#value' => l(
-      t('Terms of service «API Yandex.Maps»'),
-      'http://legal.yandex.ru/maps_api/',
-      array('attributes' => array('target' => '_blank'))
-    ),
-    '#attributes' => array(
-      'class' => 'yamaps-terms',
-    ),
-  );
-  return $element;
-}
-
-/**
  * Implements hook_library().
  */
 function yamaps_library() {
@@ -322,6 +182,162 @@ function yamaps_help($path, $arg) {
 }
 
 /**
+ * Process field for edit form.
+ *
+ * @see yamaps_element_info().
+ */
+function yamaps_field_process($element, $form_state, $complete_form) {
+  // Issue #1712292 fix.
+  // TODO: Need to be deleted when Fields API fixed.
+  if (isset($element['#entity']) && $entity = $element['#entity']) {
+    if (isset($entity->vid) && !$element['#value']) {
+      $entity_type = $element['#entity_type'];
+      $field_name = $element['#field_name'];
+      $instance = field_info_instance($entity_type, $field_name, $entity->type);
+      $field = field_info_field($field_name);
+      $default_value = field_get_default_value($entity_type, $entity, $field, $instance);
+      $element['#default_value'] = $element['#value'] = reset($default_value);
+    }
+  }
+
+  // Map information.
+  $coords = isset($element['#value']['coords']) ? $element['#value']['coords'] : NULL;
+  $coords_array = drupal_json_decode($coords);
+  $type = isset($element['#value']['type']) ? $element['#value']['type'] : 'yandex#map';
+  $placemarks = isset($element['#value']['placemarks']) ? $element['#value']['placemarks'] : NULL;
+  $placemarks_array = drupal_json_decode($placemarks);
+  $lines = isset($element['#value']['lines']) ? $element['#value']['lines'] : NULL;
+  $lines_array = drupal_json_decode($lines);
+  $polygons = isset($element['#value']['polygons']) ? $element['#value']['polygons'] : NULL;
+  $polygons_array = drupal_json_decode($polygons);
+  $routes = isset($element['#value']['routes']) ? $element['#value']['routes'] : NULL;
+  $routes_array = drupal_json_decode($routes);
+
+  // Unique map id.
+  $id = drupal_html_id(implode('-', array(
+    'ymap',
+    $element['#delta'],
+    'edit'
+  )));
+  // Unique map button id.
+  $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
+  $remove_button_id = drupal_html_id(implode('-', array($id, 'remove_button')));
+  $display_options = variable_get('yamaps_block_edit_display_options', array());
+  $behaviors = array('scrollZoom', 'dblClickZoom', 'drag');
+  // Map initialization parameters.
+  // @todo
+  $map = array(
+    'init' => array(
+      'center' => $coords_array['center'],
+      'zoom' => $coords_array['zoom'],
+      'type' => $type,
+      'behaviors' => $behaviors,
+    ),
+    'display_options' => array(
+      'display_type' => isset($display_options['display_type']) ? $display_options['display_type'] : 'map',
+      'open_button_text' => isset($display_options['open_button_text']) ? t($display_options['open_button_text']) : t('Open map'),
+      'open_button_id' => $open_button_id,
+      'remove_button_id' => $remove_button_id,
+    ),
+    'controls' => 1,
+    'traffic' => 0,
+    'placemarks' => $placemarks_array,
+    'lines' => $lines_array,
+    'polygons' => $polygons_array,
+    'routes' => $routes_array,
+    'edit' => TRUE,
+  );
+
+  // Add information about this map to js.
+  drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
+  // Load library.
+  drupal_add_library('yamaps', 'yamaps.full');
+
+  // Map container.
+  $element['map'] = array(
+    '#type' => 'html_tag',
+    '#tag' => 'div',
+    '#value' => isset($display_options['open_button_text']) ? t($display_options['open_button_text']) : t('Open map'),
+    '#attributes' => array(
+      'id' => $id,
+      'style' => 'width:100%;height:400px',
+    ),
+  );
+
+  // Hidden elements to save map information.
+  $element['coords'] = array(
+    '#type' => 'hidden',
+    '#title' => t('Coordinates'),
+    '#default_value' => $coords,
+    '#required' => $element['#required'],
+    '#attributes' => array('class' => array('field-yamaps-coords-' . $id)),
+  );
+
+  $element['type'] = array(
+    '#type' => 'hidden',
+    '#title' => t('Type'),
+    '#default_value' => $type,
+    '#attributes' => array('class' => array('field-yamaps-type-' . $id)),
+  );
+
+  $element['placemarks'] = array(
+    '#type' => 'hidden',
+    '#title' => t('Placemarks'),
+    '#default_value' => $placemarks,
+    '#attributes' => array('class' => array('field-yamaps-placemarks-' . $id)),
+  );
+
+  $element['lines'] = array(
+    '#type' => 'hidden',
+    '#title' => t('Lines'),
+    '#default_value' => $lines,
+    '#attributes' => array('class' => array('field-yamaps-lines-' . $id)),
+  );
+
+  $element['polygons'] = array(
+    '#type' => 'hidden',
+    '#title' => t('Polygons'),
+    '#default_value' => $polygons,
+    '#attributes' => array('class' => array('field-yamaps-polygons-' . $id)),
+  );
+
+  $element['routes'] = array(
+    '#type' => 'hidden',
+    '#title' => t('Routes'),
+    '#default_value' => $routes,
+    '#attributes' => array('class' => array('field-yamaps-routes-' . $id)),
+  );
+
+  if (isset($display_options['display_type']) && ($display_options['display_type'] == 'map_button')) {
+    $element['open_map_button'] = array(
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#value' => t($display_options['open_button_text']),
+      '#attributes' => array(
+        'id' => $open_button_id,
+        'class' => 'open_yamap_button',
+        'mapId' => $id,
+      ),
+    );
+  }
+
+  // Map description.
+  $element['#description'] = array(
+    '#type' => 'html_tag',
+    '#tag' => 'div',
+    '#value' => l(
+      t('Terms of service «API Yandex.Maps»'),
+      'http://legal.yandex.ru/maps_api/',
+      array('attributes' => array('target' => '_blank'))
+    ),
+    '#attributes' => array(
+      'class' => 'yamaps-terms',
+    ),
+  );
+  return $element;
+}
+
+/**
  * Validate pixels or percentage value.
  */
 function yamaps_field_validate_pixels_percentage($element, &$form_state) {
@@ -332,25 +348,15 @@ function yamaps_field_validate_pixels_percentage($element, &$form_state) {
 }
 
 /**
- * Implements hook_menu().
+ * Form builder for admin settings form.
+ *
+ * @param $form
+ * @param $form_state
  *
  * @return array
  */
-function yamaps_permission() {
-  $permissions = array(
-    'administer yamaps settings' => array(
-      'title' => t('Administer Yandex Maps settings'),
-      'description' => t('Manage Yandex Maps configuration parameters.'),
-    ),
-  );
-  return $permissions;
-}
-
-/**
- * Settings page for yandex maps.
- */
 function yamaps_settings_page($form, &$form_state) {
-  // Set amount of yandex bloks.
+  // Set amount of blocks admin can create.
   $form['yamaps_blocks_amount'] = array(
     '#title' => t('Set amount of Yandex Maps blocks'),
     '#description' => t('Amount of available Yandex Maps bloks.'),
@@ -369,6 +375,7 @@ function yamaps_settings_page($form, &$form_state) {
     '#tree' => TRUE,
 
   );
+
   $form['yamaps_block_edit_display_options']['display_type'] = array(
     '#type' => 'radios',
     '#title' => t('How display map for admins'),
