@@ -13,6 +13,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $options['traffic'] = array('default' => FALSE);
     $options['width'] = array('default' => '100%');
     $options['height'] = array('default' => '400px');
+    $options['zoom'] = array('default' => '6');
     $options['behaviors'] = array(
       'default' => array(
         'clickZoom',
@@ -86,6 +87,14 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#size' => 5,
       '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
       '#required' => TRUE,
+    );
+
+    $form['zoom'] = array(
+      '#title' => t('Zoom'),
+      '#type' => 'select',
+      '#description' => t('Zoom of map'),
+      '#options' => range(1, 20),
+      '#default_value' => $this->options['zoom'],
     );
 
     $form['yamaps_center_options'] = array(
