@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Yandex.Maps field formatter.
+ * Yandex Maps field formatter.
  */
 
 /**

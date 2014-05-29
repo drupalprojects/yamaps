@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Yandex.Maps blocks configuration.
+ * Yandex Maps blocks configuration.
  */
 
 /**

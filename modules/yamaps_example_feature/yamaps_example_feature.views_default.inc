@@ -15,7 +15,7 @@ function yamaps_example_feature_views_default_views() {
   $view->description = '';
   $view->tag = 'default';
   $view->base_table = 'node';
-  $view->human_name = 'Yandex.Maps Views example';
+  $view->human_name = 'Yandex Maps Views example';
   $view->core = 7;
   $view->api_version = '3.0';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -61,7 +61,7 @@ function yamaps_example_feature_views_default_views() {
   $handler->display->display_options['fields']['title']['label'] = '';
   $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
   $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
-  /* Field: Content: Yandex.Maps example field */
+  /* Field: Content: Yandex Maps example field */
   $handler->display->display_options['fields']['field_yandex_maps_example_field']['id'] = 'field_yandex_maps_example_field';
   $handler->display->display_options['fields']['field_yandex_maps_example_field']['table'] = 'field_data_field_yandex_maps_example_field';
   $handler->display->display_options['fields']['field_yandex_maps_example_field']['field'] = 'field_yandex_maps_example_field';

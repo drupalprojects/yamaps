@@ -50,7 +50,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
   }
 
   /**
-   * Views Yandex.Maps settings form.
+   * Views Yandex Maps settings form.
    */
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
@@ -222,7 +222,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
 
     $form['yandex_map_field'] = array(
       '#title' => t('Yandex Map Field'),
-      '#description' => t('Choose Yandex.Maps field. Add if views fields this field for the first.'),
+      '#description' => t('Choose Yandex Maps field. Add if views fields this field for the first.'),
       '#type' => 'select',
       '#options' => $yandex_fields,
       '#required' => TRUE,
@@ -301,7 +301,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
 
     // No yandex maps field error message.
     if (!$yandexmap_field) {
-      return t('Add Yandex.Maps field to fields list.');
+      return t('Add Yandex Maps field to fields list.');
     }
 
     // Excluded field.

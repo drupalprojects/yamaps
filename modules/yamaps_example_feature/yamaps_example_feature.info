@@ -1,5 +1,5 @@
-name = Yandex.Maps example feature
-description = Example feature
+name = Yandex Maps example feature
+description = Example feature.
 core = 7.x
 package = Yandex
 version = 7.x-1.0

@@ -1,5 +1,5 @@
-name = Yandex.Maps Views
-description = Provides Yandex.Maps Views plugins.
+name = Yandex Maps Views
+description = Provides Yandex Maps Views plugins.
 core = 7.x
 package = Yandex
 
