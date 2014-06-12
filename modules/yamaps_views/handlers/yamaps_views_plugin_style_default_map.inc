@@ -412,7 +412,9 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#tag' => 'div',
       '#attributes' => array(
         'id' => $id,
-        'style' => 'width: 100%;height:400px',
+        'class' => array(
+          'yamaps-map-container',
+        ),
       ),
       '#value' => '',
     );

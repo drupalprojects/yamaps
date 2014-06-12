@@ -130,8 +130,10 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     '#tag' => 'div',
     '#value' => '',
     '#attributes' => array(
-      'style' => 'width:100%; height:400px;',
       'id' => $id,
+      'class' => array(
+        'yamaps-map-container',
+      ),
     ),
   );
 
@@ -209,8 +211,6 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
 
   // Map description.
   $element['#description'] .= '<br/>' . render($themed_description);
-
-  dpm($element);
 
   return $element;
 }
