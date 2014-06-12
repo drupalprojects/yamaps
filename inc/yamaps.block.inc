@@ -86,7 +86,6 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
     '#options' => array(
       'map' => t('Map'),
       'map_button' => t('Map opened by button click'),
-      //'map_modal' => t('Map opened in modal window'),
     ),
     '#default_value' => (isset($display_options['display_type'])) ? $display_options['display_type'] : 'map',
     '#required' => FALSE,
@@ -161,8 +160,8 @@ function yamaps_block_content($delta) {
 
   // Map information.
   $coords = drupal_json_decode(variable_get($delta . '_block_coords', NULL));
-  $width = variable_get($delta . '_block_width', '168px');
-  $height = variable_get($delta . '_block_height', '200px');
+  $width = variable_get($delta . '_block_width', YAMAPS_DEFAULT_BLOCK_MAP_WIDTH);
+  $height = variable_get($delta . '_block_height', YAMAPS_DEFAULT_BLOCK_MAP_HEIGHT);
   $display_options = variable_get($delta . '_block_display_options', array());
 
   // Map initialization parameters.

@@ -139,7 +139,6 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#options' => array(
           'map' => t('Map'),
           'map_button' => t('Map opened by button click'),
-          //'map_modal' => t('Map opened in modal window'),
         ),
         '#default_value' => $settings['yamaps_display_options']['display_type'],
         '#required' => FALSE,
@@ -155,7 +154,6 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
       );
 
       break;
-
     case 'field_yamaps_formatter_static':
       $element['s_traffic'] = array(
         '#title' => t('Show traffic'),
@@ -362,7 +360,6 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
       drupal_add_library('yamaps', 'yamaps.full');
 
       break;
-
     case 'field_yamaps_formatter_static':
       foreach ($items as $delta => $item) {
         // Map id and parameters.

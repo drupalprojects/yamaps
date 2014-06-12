@@ -8,8 +8,11 @@
 /**
  * Constants.
  */
+define('YAMAPS_GEOCODER_URL', 'http://geocode-maps.yandex.ru/1.x');
 define('YAMAPS_DEFAULT_BLOCK_DELTA', 'yamaps');
 define('YAMAPS_DEFAULT_BLOCK_AMOUNT', 1);
+define('YAMAPS_DEFAULT_BLOCK_MAP_WIDTH', '168px');
+define('YAMAPS_DEFAULT_BLOCK_MAP_HEIGHT', '200px');
 
 /**
  * Includes.
@@ -259,7 +262,9 @@ function yamaps_field_process($element, $form_state, $complete_form) {
     '#value' => isset($display_options['open_button_text']) ? t($display_options['open_button_text']) : t('Open map'),
     '#attributes' => array(
       'id' => $id,
-      'style' => 'width:100%;height:400px',
+      'class' => array(
+        'yamaps-map-container',
+      ),
     ),
   );
 
@@ -362,7 +367,7 @@ function yamaps_geocoding($geolocation_string) {
     'results' => 1,
   );
 
-  $geolocation_request = file_get_contents(url('http://geocode-maps.yandex.ru/1.x', array(
+  $geolocation_request = file_get_contents(url(YAMAPS_GEOCODER_URL, array(
     'query' => $query,
     'absolute' => TRUE,
   )));
