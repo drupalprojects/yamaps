@@ -59,7 +59,7 @@ function yamaps_example_feature_field_default_field_instances() {
     'bundle' => 'yandex_maps_example',
     'default_value' => array(
       0 => array(
-        'coords' => '{"center":[55.75847326474585,46.045812264893705],"zoom":5}',
+        'coords' => '',
         'type' => 'yandex#map',
         'placemarks' => '[]',
         'lines' => '',
