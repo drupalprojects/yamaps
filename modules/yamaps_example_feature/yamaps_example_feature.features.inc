@@ -17,7 +17,7 @@ function yamaps_example_feature_views_api($module = NULL, $api = NULL) {
 function yamaps_example_feature_node_info() {
   $items = array(
     'yandex_maps_example' => array(
-      'name' => t('Yandex Maps example'),
+      'name' => t('Yandex Maps Page'),
       'base' => 'node_content',
       'description' => '',
       'has_title' => '1',
