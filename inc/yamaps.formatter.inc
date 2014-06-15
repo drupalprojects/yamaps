@@ -295,14 +295,14 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           'ymap',
           $entity_id,
           $field['field_name'],
-          $delta
+          $delta,
         )));
 
         // Unique map button id.
         $open_button_id = drupal_html_id(implode('-', array(
           $entity_id,
           $id,
-          'open_button'
+          'open_button',
         )));
 
         // Coordinates of map center.
@@ -367,7 +367,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           'ymap',
           $entity_id,
           $field['field_name'],
-          $delta
+          $delta,
         )));
         $coords = drupal_json_decode($item['coords']);
         $params = array();

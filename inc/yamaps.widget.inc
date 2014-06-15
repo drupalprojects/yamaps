@@ -52,7 +52,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     'ymap',
     $element['#field_name'],
     $element['#delta'],
-    'edit'
+    'edit',
   )));
 
   // Unique map button id.

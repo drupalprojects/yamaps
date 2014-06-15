@@ -241,7 +241,7 @@
       var $searchForm = $([
         '<form id="yamaps-search-form">',
         '<input type="text" class="form-text" placeholder="' + Drupal.t('Search on the map') + '" value=""/>',
-        '<input type="submit" class="form-submit" value="Найти"/>',
+        '<input type="submit" class="form-submit" value="' + Drupal.t('Search') + '"/>',
         '</form>'].join(''));
 
       $searchForm.bind('submit', function (e) {

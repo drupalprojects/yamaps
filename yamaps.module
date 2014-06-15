@@ -219,7 +219,7 @@ function yamaps_field_process($element, $form_state, $complete_form) {
   $id = drupal_html_id(implode('-', array(
     'ymap',
     $element['#delta'],
-    'edit'
+    'edit',
   )));
   // Unique map button id.
   $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
