@@ -201,7 +201,6 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#options' => array(
           'field_yamaps_formatter_dynamic' => t('Dynamic image'),
           'field_yamaps_formatter_static' => t('Static image'),
-
         ),
         '#required' => TRUE,
       );
@@ -259,9 +258,9 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
 
       break;
     case 'field_yamaps_formatter_modal_window':
-
       $summary[] = t('Original field settings: @field_settings', array('@field_settings' => ''));
       $summary[] = t('Modal window settings: @field_settings', array('@field_settings' => ''));
+
       break;
     case 'field_yamaps_formatter_raw_settings':
       $summary[] = t('Raw settings');

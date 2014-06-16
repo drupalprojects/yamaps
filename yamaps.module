@@ -221,13 +221,14 @@ function yamaps_field_process($element, $form_state, $complete_form) {
     $element['#delta'],
     'edit',
   )));
+
   // Unique map button id.
   $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
   $remove_button_id = drupal_html_id(implode('-', array($id, 'remove_button')));
   $display_options = variable_get('yamaps_block_edit_display_options', array());
   $behaviors = array('scrollZoom', 'dblClickZoom', 'drag');
+
   // Map initialization parameters.
-  // @todo
   $map = array(
     'init' => array(
       'center' => $coords_array['center'],
