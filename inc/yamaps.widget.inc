@@ -18,32 +18,6 @@ function yamaps_field_widget_info() {
 }
 
 /**
- * Helper function for cleanup values.
- */
-function _yamaps_cleanup_values(&$value) {
-  $value['coords'] = isset($value['coords']) ? $value['coords'] : NULL;
-  $value['type'] = isset($value['type']) ? $value['type'] : 'yandex#map';
-  $value['placemarks'] = isset($value['placemarks']) ? $value['placemarks'] : NULL;
-  $value['lines'] = isset($value['lines']) ? $value['lines'] : NULL;
-  $value['polygons'] = isset($value['polygons']) ? $value['polygons'] : NULL;
-  $value['routes'] = isset($value['routes']) ? $value['routes'] : NULL;
-}
-
-/**
- * Helper function for cleanup values for json.
- */
-function _yamaps_format_values_to_js($clean_values) {
-  return array(
-    'coords' => drupal_json_decode($clean_values['coords']),
-    'type' => $clean_values['type'],
-    'placemarks' => drupal_json_decode($clean_values['placemarks']),
-    'lines' => drupal_json_decode($clean_values['lines']),
-    'polygons' => drupal_json_decode($clean_values['polygons']),
-    'routes' => drupal_json_decode($clean_values['routes']),
-  );
-}
-
-/**
  * Implements hook_field_widget_form().
  */
 function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
@@ -207,4 +181,36 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
   $element['#description'] .= '<br/>' . render($themed_description);
 
   return $element;
+}
+
+/**
+ * Helper function for cleanup values.
+ *
+ * @param $value
+ */
+function _yamaps_cleanup_values(&$value) {
+  $value['coords'] = isset($value['coords']) ? $value['coords'] : NULL;
+  $value['type'] = isset($value['type']) ? $value['type'] : 'yandex#map';
+  $value['placemarks'] = isset($value['placemarks']) ? $value['placemarks'] : NULL;
+  $value['lines'] = isset($value['lines']) ? $value['lines'] : NULL;
+  $value['polygons'] = isset($value['polygons']) ? $value['polygons'] : NULL;
+  $value['routes'] = isset($value['routes']) ? $value['routes'] : NULL;
+}
+
+/**
+ * Helper function to pass values to js.
+ *
+ * @param $clean_values
+ *
+ * @return array
+ */
+function _yamaps_format_values_to_js($clean_values) {
+  return array(
+    'coords' => drupal_json_decode($clean_values['coords']),
+    'type' => $clean_values['type'],
+    'placemarks' => drupal_json_decode($clean_values['placemarks']),
+    'lines' => drupal_json_decode($clean_values['lines']),
+    'polygons' => drupal_json_decode($clean_values['polygons']),
+    'routes' => drupal_json_decode($clean_values['routes']),
+  );
 }

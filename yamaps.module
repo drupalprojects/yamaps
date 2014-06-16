@@ -8,7 +8,9 @@
 /**
  * Constants.
  */
+define('YAMAPS_API_URL', 'http://api-maps.yandex.ru/2.0/');
 define('YAMAPS_GEOCODER_URL', 'http://geocode-maps.yandex.ru/1.x/');
+define('YAMAPS_API_LANGUAGE', 'ru-RU');
 define('YAMAPS_DEFAULT_BLOCK_DELTA', 'yamaps');
 define('YAMAPS_DEFAULT_BLOCK_AMOUNT', 1);
 define('YAMAPS_DEFAULT_BLOCK_MAP_WIDTH', '168px');
@@ -134,7 +136,11 @@ function yamaps_library() {
   // Weight counter.
   $w = 10;
   // API url.
-  $api_url = 'http://api-maps.yandex.ru/2.0/?load=package.full&lang=ru-RU&wizard=Drupal_yamaps_' . $language->language;
+  $api_url = url(YAMAPS_API_URL, array('absolute' => TRUE, 'query' => array(
+    'load' => 'package.full',
+    'lang' => YAMAPS_API_LANGUAGE,
+    'wizard' => 'Drupal_yamaps_' . $language->language,
+  )));
 
   $libraries['yamaps.full'] = array(
     'title' => 'Yandex maps. Edit mode.',
@@ -148,16 +154,16 @@ function yamaps_library() {
       $path . 'yamaps.init.js' => array('scope' => 'footer', 'weight' => $w++),
       $path . 'yamaps.layouts.js' => array(
         'scope' => 'footer',
-        'weight' => $w++
+        'weight' => $w++,
       ),
       $path . 'yamaps.placemark.js' => array(
         'scope' => 'footer',
-        'weight' => $w++
+        'weight' => $w++,
       ),
       $path . 'yamaps.line.js' => array('scope' => 'footer', 'weight' => $w++),
       $path . 'yamaps.polygon.js' => array(
         'scope' => 'footer',
-        'weight' => $w++
+        'weight' => $w++,
       ),
       $path . 'yamaps.route.js' => array('scope' => 'footer', 'weight' => $w++),
       $path . 'yamaps.maps.js' => array('scope' => 'footer', 'weight' => $w++),
@@ -179,14 +185,19 @@ function yamaps_library() {
 function yamaps_help($path, $arg) {
   if ($path == 'admin/help#yamaps') {
     // Return a line-break version of the module README.txt.
-    return _filter_autop(file_get_contents(dirname(__FILE__) . "/README.txt"));
+    return _filter_autop(file_get_contents(dirname(__FILE__) . '/README.txt'));
   }
 }
 
 /**
  * Process field for edit form.
- *
  * @see yamaps_element_info().
+ *
+ * @param $element
+ * @param $form_state
+ * @param $complete_form
+ *
+ * @return mixed
  */
 function yamaps_field_process($element, $form_state, $complete_form) {
   // Issue #1712292 fix.
@@ -345,6 +356,9 @@ function yamaps_field_process($element, $form_state, $complete_form) {
 
 /**
  * Validate pixels or percentage value.
+ *
+ * @param $element
+ * @param $form_state
  */
 function yamaps_field_validate_pixels_percentage($element, &$form_state) {
   $value = $element['#value'];

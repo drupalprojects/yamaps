@@ -10,7 +10,7 @@
  */
 function yamaps_block_info() {
   $blocks[YAMAPS_DEFAULT_BLOCK_DELTA] = array(
-    'info' => t('Yandex.Map #1'),
+    'info' => t('Yandex Map #1'),
     'cache' => DRUPAL_NO_CACHE,
   );
 
@@ -19,7 +19,7 @@ function yamaps_block_info() {
 
   for ($block_number = 2; $block_number <= $blocks_amount; $block_number++) {
     $blocks[YAMAPS_DEFAULT_BLOCK_DELTA . '_' . $block_number] = array(
-      'info' => t('Yandex.Map #!block_number', array('!block_number' => $block_number)),
+      'info' => t('Yandex Map #!block_number', array('!block_number' => $block_number)),
       'cache' => DRUPAL_NO_CACHE,
     );
   }
@@ -56,7 +56,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
     '#title' => t('Map width'),
     '#field_suffix' => ' ' . t('in pixels or in percentage'),
     '#type' => 'textfield',
-    '#default_value' => variable_get($delta . '_block_width', '168px'),
+    '#default_value' => variable_get($delta . '_block_width', YAMAPS_DEFAULT_BLOCK_MAP_WIDTH),
     '#size' => 5,
     '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
     '#required' => TRUE,
@@ -66,7 +66,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
     '#title' => t('Map height'),
     '#field_suffix' => ' ' . t('in pixels or in percentage'),
     '#type' => 'textfield',
-    '#default_value' => variable_get($delta . '_block_height', '200px'),
+    '#default_value' => variable_get($delta . '_block_height', YAMAPS_DEFAULT_BLOCK_MAP_HEIGHT),
     '#size' => 5,
     '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
     '#required' => TRUE,
@@ -141,8 +141,7 @@ function yamaps_block_save($delta = YAMAPS_DEFAULT_BLOCK_DELTA, $edit = array())
  * Implements hook_block_view().
  */
 function yamaps_block_view($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
-  $block = array();
-  $block['subject'] = t('Yandex.Map');
+  $block['subject'] = t('Yandex Map');
   $block['content'] = yamaps_block_content($delta);
 
   return $block;
