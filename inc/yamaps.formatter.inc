@@ -289,6 +289,9 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
     case 'field_yamaps_formatter_dynamic':
       $maps = array();
       foreach ($items as $delta => $item) {
+        if (empty($item['coords'])) {
+          continue;
+        }
 
         // Map id.
         $id = drupal_html_id(implode('-', array(
