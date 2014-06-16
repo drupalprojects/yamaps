@@ -70,18 +70,18 @@
   background-color: #444;
 }
 
-#yamaps-search-form {
+.yamaps-search-form {
   display: block;
   margin: 25px 0 15px 0;
   overflow: hidden;
 }
 
-#yamaps-search-form input.form-text {
+.yamaps-search-form input.form-text {
   margin: 0 10px 0 0;
   width: 80%;
 }
 
-#yamaps-search-form input.form-submit {
+.yamaps-search-form input.form-submit {
   margin: 0;
   width: 15%;
 }
