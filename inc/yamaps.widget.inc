@@ -100,17 +100,19 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     ),
   );
 
-  // 'Remove field' button.
-  $element['remove_yamap_field_item'] = array(
-    '#type' => 'html_tag',
-    '#tag' => 'div',
-    '#value' => t('Remove field'),
-    '#attributes' => array(
-      'name' => $element['#field_name'] . '_' . $element['#delta'] . '_remove_button',
-      'id' => $remove_button_id,
-      'class' => 'remove_yamap_button',
-    ),
-  );
+  if ($delta > 0) {
+    // 'Remove field' button.
+    $element['remove_yamap_field_item'] = array(
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#value' => t('Remove field'),
+      '#attributes' => array(
+        'name' => $element['#field_name'] . '_' . $element['#delta'] . '_remove_button',
+        'id' => $remove_button_id,
+        'class' => 'remove_yamap_button',
+      ),
+    );
+  }
 
   // Hidden elements to saving map information.
   $element['coords'] = array(
