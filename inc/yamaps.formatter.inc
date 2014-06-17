@@ -43,37 +43,6 @@ function yamaps_field_formatter_info() {
         's_height' => 400,
       ),
     ),
-    // Combined map formatter.
-    'field_yamaps_formatter_modal_window' => array(
-      'label' => t('Modal window'),
-      'field types' => array('field_yamaps'),
-      'settings' => array(
-        'original_field' => array(
-          'type' => 'field_yamaps_formatter_static',
-          // possible variants static_image, button,
-          'field_settings' => array(),
-        ),
-        'modal_window_settings' => array(
-          'type' => 'field_yamaps_formatter_dynamic',
-          // possible variants static_image, dynamic_cart
-          'field_settings' => array(),
-        ),
-      ),
-    ),
-    'field_yamaps_formatter_raw_settings' => array(
-      'label' => t('Raw Map settings'),
-      'field types' => array('field_yamaps'),
-      'settings' => array(
-        'original_field' => array(
-          'type' => 'field_yamaps_formatter_static',
-          'field_settings' => array(),
-        ),
-        'modal_window_settings' => array(
-          'type' => 'field_yamaps_formatter_dynamic',
-          'field_settings' => array(),
-        ),
-      ),
-    ),
   );
 }
 
@@ -182,33 +151,6 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
       );
 
       break;
-    case 'field_yamaps_formatter_modal_window':
-      $element['original_field_type'] = array(
-        '#title' => t('Original field type'),
-        '#type' => 'radios',
-        '#default_value' => $settings['s_height'],
-        '#options' => array(
-          'button' => t('Open button'),
-          'field_yamaps_formatter_static' => t('Static image'),
-        ),
-        '#required' => TRUE,
-      );
-
-      $element['modal_window_field_type'] = array(
-        '#title' => t('Modal window field type'),
-        '#type' => 'radios',
-        '#default_value' => $settings['s_height'],
-        '#options' => array(
-          'field_yamaps_formatter_dynamic' => t('Dynamic image'),
-          'field_yamaps_formatter_static' => t('Static image'),
-        ),
-        '#required' => TRUE,
-      );
-
-      break;
-    case 'field_yamaps_formatter_raw_settings':
-
-      break;
   }
   return $element;
 }
@@ -257,15 +199,6 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
       ));
 
       break;
-    case 'field_yamaps_formatter_modal_window':
-      $summary[] = t('Original field settings: @field_settings', array('@field_settings' => ''));
-      $summary[] = t('Modal window settings: @field_settings', array('@field_settings' => ''));
-
-      break;
-    case 'field_yamaps_formatter_raw_settings':
-      $summary[] = t('Raw settings');
-
-      break;
   }
 
   return implode('<br />', $summary);
@@ -288,6 +221,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
     case 'field_yamaps_formatter_dynamic':
       $maps = array();
       foreach ($items as $delta => $item) {
+        // Ensure that field with empty coordinates doesn't show up.
         if (empty($item['coords'])) {
           continue;
         }
@@ -364,6 +298,11 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
       break;
     case 'field_yamaps_formatter_static':
       foreach ($items as $delta => $item) {
+        // Ensure that field with empty coordinates doesn't show up.
+        if (empty($item['coords'])) {
+          continue;
+        }
+
         // Map id and parameters.
         $id = drupal_html_id(implode('-', array(
           'ymap',
@@ -501,22 +440,13 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
       }
 
       break;
-    case 'field_yamaps_formatter_modal_window':
-      //@todo create logic for combined type.
-      break;
-    case 'field_yamaps_formatter_raw_settings':
-      foreach ($items as $delta => $item) {
-        $element[$delta] = $settings;
-      }
-
-      break;
   }
 
   return $element;
 }
 
 /**
- * Returning behaviors list.
+ * Returns behaviors list.
  */
 function yamaps_get_behaviors_list() {
   return array(
