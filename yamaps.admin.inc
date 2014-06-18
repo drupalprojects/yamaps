@@ -37,14 +37,16 @@ function yamaps_settings_page($form, &$form_state) {
   // Display options.
   $form['yamaps_block_edit_display_options']['display_type'] = array(
     '#type' => 'radios',
-    '#title' => t('How to display map for admins'),
+    '#title' => t('Map display style in admin UI for blocks'),
     '#options' => array(
       'map' => t('Map'),
       'map_button' => t('Map opened by button click'),
     ),
     '#default_value' => (isset($display_options['display_type'])) ? $display_options['display_type'] : 'map',
     '#required' => FALSE,
-    '#description' => t('Type of map displaying.'),
+    '#description' => t('Configure how to display "Yandex Map" field while creating new / updating blocks.
+    This setting applies to admin UI only. To display map opening in block by button click for end users select
+    appropriate option in "Map display style for end users" section of the appropriate block.'),
   );
 
   // Text on button that opens map by click.
@@ -53,7 +55,9 @@ function yamaps_settings_page($form, &$form_state) {
     '#title' => t('Button text'),
     '#default_value' => (isset($display_options['open_button_text'])) ? $display_options['open_button_text'] : 'Open map',
     '#required' => FALSE,
-    '#description' => t('Text of button that opens map.'),
+    '#description' => t('Specify text to display on the button opening map in case of "Map opened by button click" option.
+    This setting applies to admin UI only. To configure text on the button opening map for end users select appropriate
+    option in "Manage Display" section of the appropriate block.'),
   );
 
   return system_settings_form($form);

@@ -82,14 +82,14 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
 
   $form[$delta . '_block_display_options']['display_type'] = array(
     '#type' => 'radios',
-    '#title' => t('How display map for admins'),
+    '#title' => t('Map display style for end user'),
     '#options' => array(
       'map' => t('Map'),
       'map_button' => t('Map opened by button click'),
     ),
     '#default_value' => (isset($display_options['display_type'])) ? $display_options['display_type'] : 'map',
     '#required' => FALSE,
-    '#description' => t('Type of map displaying.'),
+    '#description' => t('Configure how to display "Yandex Map" block for end user.'),
   );
 
   $form[$delta . '_block_display_options']['open_button_text'] = array(
@@ -97,7 +97,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
     '#title' => t('Button text'),
     '#default_value' => (isset($display_options['open_button_text'])) ? $display_options['open_button_text'] : 'Open map',
     '#required' => FALSE,
-    '#description' => t('Text of button that opens map.'),
+    '#description' => t('Text of button that opens map for end user.'),
   );
 
   // Add elements from default field edit form.
@@ -196,7 +196,7 @@ function yamaps_block_content($delta) {
     '#tag' => 'div',
     '#attributes' => array(
       'id' => $id,
-      'style' => 'width:' . $width . ';height:' . $height,
+      'style' => 'width:' . $width . '; height:' . $height,
     ),
     '#value' => '',
   );

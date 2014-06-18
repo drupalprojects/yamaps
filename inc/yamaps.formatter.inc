@@ -104,14 +104,14 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
 
       $element['yamaps_display_options']['display_type'] = array(
         '#type' => 'radios',
-        '#title' => t('How display map for admins'),
+        '#title' => t('Map display style for end user'),
         '#options' => array(
           'map' => t('Map'),
           'map_button' => t('Map opened by button click'),
         ),
         '#default_value' => $settings['yamaps_display_options']['display_type'],
         '#required' => FALSE,
-        '#description' => t('Type of map displaying.'),
+        '#description' => t('Configure how to display "Yandex Map" field for end user.'),
       );
 
       $element['yamaps_display_options']['open_button_text'] = array(
@@ -119,7 +119,7 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#title' => t('Button text'),
         '#default_value' => (isset($settings['yamaps_display_options']['open_button_text'])) ? $settings['yamaps_display_options']['open_button_text'] : 'Open map',
         '#required' => FALSE,
-        '#description' => t('Text of button that opens map.'),
+        '#description' => t('Text of button that opens map for end user.'),
       );
 
       break;
@@ -272,7 +272,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           '#tag' => 'div',
           '#attributes' => array(
             'id' => $id,
-            'style' => 'width:' . $settings['width'] . ';height:' . $settings['height'],
+            'style' => 'width:' . $settings['width'] . '; height:' . $settings['height'],
           ),
           '#value' => '',
         );
@@ -428,7 +428,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           '#tag' => 'div',
           '#attributes' => array(
             'id' => $id,
-            'style' => 'width:' . $settings['s_width'] . 'px;height:' . $settings['s_height'] . 'px',
+            'style' => 'width:' . $settings['s_width'] . 'px; height:' . $settings['s_height'] . 'px',
           ),
           '#value' => theme('image', array(
             'path' => url($url, array('query' => $params, 'external' => TRUE)),

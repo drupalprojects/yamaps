@@ -104,14 +104,16 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
   );
   $form['display_options']['display_type'] = array(
     '#type' => 'radios',
-    '#title' => t('Select displaying type of map.'),
+    '#title' => t('Map display style in admin UI for field'),
     '#options' => array(
       'map' => t('Map'),
       'map_button' => t('Map opened by button click'),
     ),
     '#default_value' => $settings['display_options']['display_type'],
     '#required' => FALSE,
-    '#description' => t('The maximum length of the field in characters. Leave blank for an unlimited size.'),
+    '#description' => t('Configure how to display "Yandex Map" field while creating new / updating material.
+    This setting applies to admin UI only. To display map opening by button click for end users select appropriate option
+    in "Manage Display" section of the appropriate content type.'),
   );
 
   $form['display_options']['open_button_text'] = array(
@@ -119,7 +121,9 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
     '#title' => t('Button text'),
     '#default_value' => $settings['display_options']['open_button_text'],
     '#required' => FALSE,
-    '#description' => t('The maximum length of the field in characters. Leave blank for an unlimited size.'),
+    '#description' => t('Specify text to display on button that opens map in case of "Map opened by button click" option.
+    This setting applies to admin UI only. To configure text on the button opening map for end users select appropriate
+    option in "Manage Display" section of the appropriate content type.'),
   );
 
   return $form;
