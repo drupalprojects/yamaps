@@ -212,6 +212,10 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
 
       $summary[] = t('Display type: @type', array('@type' => $settings['yamaps_display_options']['display_type']));
 
+      if ($settings['yamaps_display_options']['display_type'] == 'map_button') {
+        $summary[] = t('Button text: @text', array('@text' => $settings['yamaps_display_options']['open_button_text']));
+      }
+
       break;
 
     case 'field_yamaps_formatter_static':
@@ -220,6 +224,12 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
         '@width' => $settings['s_width'] . 'px',
         '@height' => $settings['s_height'] . 'px'
       ));
+
+      $summary[] = t('Display type: @type', array('@type' => $settings['yamaps_display_options_static']['display_type_static']));
+
+      if ($settings['yamaps_display_options_static']['display_type_static'] == 'map_button') {
+        $summary[] = t('Button text: @text', array('@text' => $settings['yamaps_display_options_static']['open_button_text_static']));
+      }
 
       break;
   }
