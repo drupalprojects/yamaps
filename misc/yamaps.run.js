@@ -20,7 +20,7 @@
                 mapId = $(this).attr('mapId');
                 options = Drupal.settings.yamaps[mapId];
                 creating_map(mapId, options);
-                $('#' + options.display_options.open_button_id).hide('slow');
+                $('#' + options.display_options.open_button_id).hide();
                 $('#' + mapId).show();
                 $('#' + options.display_options.remove_button_id).show();
               }

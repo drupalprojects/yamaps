@@ -486,9 +486,18 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           );
         }
 
-        // Adding map to js and load library.
-        drupal_add_js(array('yamaps' => $maps), 'setting');
-        drupal_add_library('yamaps', 'yamaps.full');
+        // Map initialization parameters.
+        $maps[$id] = array(
+          'display_options' => array(
+            'display_type' => $settings['yamaps_display_options_static']['display_type_static'],
+            'open_button_text' => $settings['yamaps_display_options_static']['open_button_text_static'],
+            'open_button_id' => $open_button_id,
+          ),
+        );
+
+        // Adding map to js.
+        drupal_add_js(array('yamapsStatic' => $maps), 'setting');
+        drupal_add_js(drupal_get_path('module', 'yamaps') . '/misc/yamaps.run.static.js');
       }
 
       break;
