@@ -37,5 +37,5 @@ To add "Yandex Maps" block perform following steps:
 
 * navigate to /admin/config/services/yamaps and set required amount of "Yandex Maps" blocks
 * navigate to /admin/structure/block, scroll down to find "Disabled" section
-  and find block called "Yandex.Map #{NUMBER}"
+  and find block called "Yandex Map #{NUMBER}"
 * configure the block and pull it into the required region.

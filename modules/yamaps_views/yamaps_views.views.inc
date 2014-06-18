@@ -9,7 +9,7 @@ function yamaps_views_views_plugins() {
     'style' => array(
       'default_map' => array(
         'title' => t('Yandex Maps'),
-        'help' => t('Display Yandex.Map'),
+        'help' => t('Display Yandex Map'),
         'handler' => 'yamaps_views_plugin_style_default_map',
         'path' => drupal_get_path('module', 'yamaps_views') . '/handlers',
         'uses options' => TRUE,
