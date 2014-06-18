@@ -41,6 +41,10 @@ function yamaps_field_formatter_info() {
         's_traffic' => FALSE,
         's_width' => 640,
         's_height' => 400,
+        'yamaps_display_options_static' => array(
+          'display_type_static' => 'map',
+          'open_button_text_static' => 'Open map',
+        ),
       ),
     ),
   );
@@ -88,7 +92,6 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#required' => TRUE,
       );
 
-      // Updated version of patch at issue #1911320 --author="adubovskoy <adubovskoy@168427.no-reply.drupal.org>".
       $element['behaviors'] = array(
         '#title' => t('Mouse event settings'),
         '#type' => 'checkboxes',
@@ -117,7 +120,7 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
       $element['yamaps_display_options']['open_button_text'] = array(
         '#type' => 'textfield',
         '#title' => t('Button text'),
-        '#default_value' => (isset($settings['yamaps_display_options']['open_button_text'])) ? $settings['yamaps_display_options']['open_button_text'] : 'Open map',
+        '#default_value' => $settings['yamaps_display_options']['open_button_text'],
         '#required' => FALSE,
         '#description' => t('Text of button that opens map for end user.'),
       );
@@ -148,6 +151,26 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#size' => 5,
         '#element_validate' => array('element_validate_integer_positive'),
         '#required' => TRUE,
+      );
+
+      $element['yamaps_display_options_static']['display_type_static'] = array(
+        '#type' => 'radios',
+        '#title' => t('Map display style for end user'),
+        '#options' => array(
+          'map' => t('Map'),
+          'map_button' => t('Map opened by button click'),
+        ),
+        '#default_value' => $settings['yamaps_display_options_static']['display_type_static'],
+        '#required' => FALSE,
+        '#description' => t('Configure how to display "Yandex Map" field for end user.'),
+      );
+
+      $element['yamaps_display_options_static']['open_button_text_static'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Button text'),
+        '#default_value' => $settings['yamaps_display_options_static']['open_button_text_static'],
+        '#required' => FALSE,
+        '#description' => t('Text of button that opens map for end user.'),
       );
 
       break;
@@ -281,7 +304,8 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           $element[$delta]['open_button_text'] = array(
             '#type' => 'html_tag',
             '#tag' => 'div',
-            '#value' => t((isset($settings['yamaps_display_options']['open_button_text'])) ? $settings['yamaps_display_options']['open_button_text'] : 'Open button'),
+            '#value' => t((isset($settings['yamaps_display_options']['open_button_text'])) ?
+              $settings['yamaps_display_options']['open_button_text'] : 'Open button'),
             '#attributes' => array(
               'id' => $open_button_id,
               'class' => 'open_yamap_button',
@@ -422,21 +446,49 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           $params['pl'] = implode('~', $pl);
         }
 
+        $hide_map = (isset($settings['yamaps_display_options_static']['display_type_static']) &&
+          $settings['yamaps_display_options_static']['display_type_static'] == 'map_button');
+        $map_display_style = $hide_map ? '; display: none' : '';
+
         // Return map container div with image.
-        $element[$delta] = array(
+        $element[$delta]['map_container'] = array(
           '#type' => 'html_tag',
           '#tag' => 'div',
           '#attributes' => array(
             'id' => $id,
-            'style' => 'width:' . $settings['s_width'] . 'px; height:' . $settings['s_height'] . 'px',
+            'style' => 'width:' . $settings['s_width'] . 'px; height:' . $settings['s_height'] . 'px' . $map_display_style,
           ),
           '#value' => theme('image', array(
             'path' => url($url, array('query' => $params, 'external' => TRUE)),
             'width' => $settings['s_width'],
             'height' => $settings['s_height'],
-            'title' => t('Yandex.Map'),
+            'title' => t('Yandex Map'),
           )),
         );
+
+        $open_button_id = drupal_html_id(implode('-', array(
+          $entity_id,
+          $id,
+          'open_button',
+        )));
+
+        if ($hide_map) {
+          $element[$delta]['open_button_text'] = array(
+            '#type' => 'html_tag',
+            '#tag' => 'div',
+            '#value' => t((isset($settings['yamaps_display_options_static']['open_button_text_static'])) ?
+              $settings['yamaps_display_options_static']['open_button_text_static'] : 'Open button'),
+            '#attributes' => array(
+              'id' => $open_button_id,
+              'class' => 'open_yamap_button_static',
+              'mapId' => $id,
+            ),
+          );
+        }
+
+        // Adding map to js and load library.
+        drupal_add_js(array('yamaps' => $maps), 'setting');
+        drupal_add_library('yamaps', 'yamaps.full');
       }
 
       break;

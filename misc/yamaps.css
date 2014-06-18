@@ -101,6 +101,7 @@
 }
 
 .open_yamap_button,
+.open_yamap_button_static,
 .remove_yamap_button {
   position: relative;
   top: 0;
