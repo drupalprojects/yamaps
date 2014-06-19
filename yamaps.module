@@ -9,6 +9,7 @@
  * Constants.
  */
 define('YAMAPS_API_URL', 'http://api-maps.yandex.ru/2.0/');
+define('YAMAPS_STATIC_API_URL', 'http://static-maps.yandex.ru/1.x/');
 define('YAMAPS_GEOCODER_URL', 'http://geocode-maps.yandex.ru/1.x/');
 define('YAMAPS_API_LANGUAGE', 'ru-RU');
 define('YAMAPS_DEFAULT_BLOCK_DELTA', 'yamaps');

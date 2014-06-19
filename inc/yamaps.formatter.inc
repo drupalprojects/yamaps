@@ -349,7 +349,6 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
 
         $coords = drupal_json_decode($item['coords']);
         $params = array();
-        $url = 'http://static-maps.yandex.ru/1.x/';
         $params['ll'] = end($coords['center']) . ',' . reset($coords['center']);
         $params['z'] = $coords['zoom'];
         $params['size'] = $settings['s_width'] . ',' . $settings['s_height'];
@@ -472,7 +471,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
             'style' => 'width:' . $settings['s_width'] . 'px; height:' . $settings['s_height'] . 'px' . $map_display_style,
           ),
           '#value' => theme('image', array(
-            'path' => url($url, array('query' => $params, 'external' => TRUE)),
+            'path' => url(YAMAPS_STATIC_API_URL, array('query' => $params, 'external' => TRUE)),
             'width' => $settings['s_width'],
             'height' => $settings['s_height'],
             'title' => t('Yandex Map'),

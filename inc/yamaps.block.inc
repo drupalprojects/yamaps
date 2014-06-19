@@ -80,6 +80,17 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
 
   $display_options = variable_get($delta . '_block_display_options', array());
 
+  $form[$delta . '_block_display_options']['map_type'] = array(
+    '#type' => 'radios',
+    '#title' => t('Map type for end user'),
+    '#options' => array(
+      'dynamic' => t('Dynamic Map'),
+      'static' => t('Static Map'),
+    ),
+    '#default_value' => (isset($display_options['map_type'])) ? $display_options['map_type'] : 'dynamic',
+    '#description' => t('Configure "Yandex Map" type for end user.'),
+  );
+
   $form[$delta . '_block_display_options']['display_type'] = array(
     '#type' => 'radios',
     '#title' => t('Map display style for end user'),
@@ -153,65 +164,216 @@ function yamaps_block_view($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
  * @see yamaps_block_view()
  */
 function yamaps_block_content($delta) {
-  // Map id.
-  $id = drupal_html_id(implode('-', array('ymap', 'block', $delta)));
-  $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
+  $block_output = '';
 
   // Map information.
   $coords = drupal_json_decode(variable_get($delta . '_block_coords', NULL));
+  if (empty($coords)) {
+    return $block_output;
+  }
+
+  $id = drupal_html_id(implode('-', array('ymap', 'block', $delta)));
+  $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
+  $open_button_text = isset($display_options['open_button_text']) ? $display_options['open_button_text'] : t('Open map');
+
   $width = variable_get($delta . '_block_width', YAMAPS_DEFAULT_BLOCK_MAP_WIDTH);
   $height = variable_get($delta . '_block_height', YAMAPS_DEFAULT_BLOCK_MAP_HEIGHT);
+
   $display_options = variable_get($delta . '_block_display_options', array());
+  $traffic = variable_get($delta . '_block_traffic', FALSE);
+  $controls = variable_get($delta . '_block_controls', TRUE);
 
-  // Map initialization parameters.
-  $map = array(
-    'init' => array(
-      'center' => $coords['center'],
-      'zoom' => $coords['zoom'],
-      'type' => variable_get($delta . '_block_type', 'yandex#map'),
-      'behaviors' => array_values(array_filter(variable_get($delta . '_block_behaviors', array()))),
-    ),
-    'display_options' => array(
-      'display_type' => (isset($display_options['display_type'])) ? $display_options['display_type'] : 'map',
-      'open_button_text' => t((isset($display_options['open_button_text'])) ? $display_options['open_button_text'] : 'Open map'),
-      'open_button_id' => $open_button_id,
-    ),
-    'controls' => variable_get($delta . '_block_controls', TRUE),
-    'traffic' => variable_get($delta . '_block_traffic', FALSE),
-    'placemarks' => drupal_json_decode(variable_get($delta . '_block_placemarks', NULL)),
-    'lines' => drupal_json_decode(variable_get($delta . '_block_lines', NULL)),
-    'polygons' => drupal_json_decode(variable_get($delta . '_block_polygons', NULL)),
-    'routes' => drupal_json_decode(variable_get($delta . '_block_routes', NULL)),
-    'edit' => FALSE,
-  );
+  $block_type = variable_get($delta . '_block_type', 'yandex#map');
+  $map_type = isset($display_options['map_type']) ? $display_options['map_type'] : 'dynamic';
+  $display_type = (isset($display_options['display_type'])) ? $display_options['display_type'] : 'map';
 
-  // Adding map to js.
-  drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
-  // Load library.
-  drupal_add_library('yamaps', 'yamaps.full');
+  $placemarks = drupal_json_decode(variable_get($delta . '_block_placemarks', NULL));
+  $lines = drupal_json_decode(variable_get($delta . '_block_lines', NULL));
+  $polygons = drupal_json_decode(variable_get($delta . '_block_polygons', NULL));
+  $routes = drupal_json_decode(variable_get($delta . '_block_routes', NULL));
 
-  // Return map container div.
-  $block_output['map_container'] = array(
-    '#type' => 'html_tag',
-    '#tag' => 'div',
-    '#attributes' => array(
-      'id' => $id,
-      'style' => 'width:' . $width . '; height:' . $height,
-    ),
-    '#value' => '',
-  );
+  switch ($map_type) {
+    case 'dynamic':
+      // Map initialization parameters.
+      $map = array(
+        'init' => array(
+          'center' => $coords['center'],
+          'zoom' => $coords['zoom'],
+          'type' => $block_type,
+          'behaviors' => array_values(array_filter(variable_get($delta . '_block_behaviors', array()))),
+        ),
+        'display_options' => array(
+          'display_type' => $display_type,
+          'open_button_text' => $open_button_text,
+          'open_button_id' => $open_button_id,
+        ),
+        'controls' => $controls,
+        'traffic' => $traffic,
+        'placemarks' => $placemarks,
+        'lines' => $lines,
+        'polygons' => $polygons,
+        'routes' => $routes,
+        'edit' => FALSE,
+      );
 
-  if (isset($display_options['display_type']) && $display_options['display_type'] == 'map_button') {
-    $block_output['open_map_button'] = array(
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#value' => t($display_options['open_button_text']),
-      '#attributes' => array(
-        'id' => $open_button_id,
-        'class'=>'open_yamap_button',
-        'mapId' => $id,
-      ),
-    );
+      // Adding map to js.
+      drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
+      // Load library.
+      drupal_add_library('yamaps', 'yamaps.full');
+
+      // Return map container div.
+      $block_output['map_container'] = array(
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#attributes' => array(
+          'id' => $id,
+          'style' => 'width:' . $width . '; height:' . $height,
+        ),
+        '#value' => '',
+      );
+
+      if (isset($display_options['display_type']) && $display_options['display_type'] == 'map_button') {
+        $block_output['open_map_button'] = array(
+          '#type' => 'html_tag',
+          '#tag' => 'div',
+          '#value' => t($display_options['open_button_text']),
+          '#attributes' => array(
+            'id' => $open_button_id,
+            'class'=>'open_yamap_button',
+            'mapId' => $id,
+          ),
+        );
+      }
+
+      break;
+    case 'static':
+      $params = array();
+      $params['ll'] = end($coords['center']) . ',' . reset($coords['center']);
+      $params['z'] = $coords['zoom'];
+      $params['size'] = intval($width) . ',' . intval($height);
+
+      // 2.x to 1.x types.
+      $map_types = array(
+        'yandex#map' => 'map',
+        'yandex#satellite' => 'sat',
+        'yandex#hybrid' => 'sat,skl',
+        'yandex#publicMap' => 'pmap',
+        'yandex#publicMapHybrid' => 'sat,pskl',
+      );
+      $params['l'] = $map_types[$block_type];
+
+      if (variable_get($delta . '_block_traffic', FALSE)) {
+        $params['l'] .= ',trf';
+      }
+
+      // 2.x to 1.x colors.
+      $colors21 = array(
+        'blue' => 'bl',
+        'lightblue' => 'lb',
+        'night' => 'nt',
+        'darkblue' => 'db',
+        'green' => 'gn',
+        'white' => 'wt',
+        'red' => 'rd',
+        'orange' => 'or',
+        'darkorange' => 'do',
+        'yellow' => 'yw',
+        'violet' => 'vv',
+        'pink' => 'pn',
+      );
+
+      // 2.x to hex colors.
+      $colors = array(
+        'blue' => '006cff',
+        'lightblue' => '66c7ff',
+        'night' => '004056',
+        'darkblue' => '00339a',
+        'green' => '33cc00',
+        'white' => 'ffffff',
+        'red' => 'ff0000',
+        'orange' => 'ffb400',
+        'darkorange' => 'ff6600',
+        'yellow' => 'ffea00',
+        'violet' => 'b832fd',
+        'pink' => 'fd32fb',
+      );
+
+      // Placemarks.
+      if ($placemarks) {
+        $pt = array();
+
+        foreach ($placemarks as $placemark) {
+          $pm = end($placemark['coords']) . ',' . reset($placemark['coords']) . ',';
+          $pm .= 'pm2';
+          $pm .= $colors21[$placemark['params']['color']];
+          $pm .= 'm';
+          $pt[] = $pm;
+        }
+
+        $params['pt'] = implode('~', $pt);
+      }
+
+      // Lines and polygons.
+      $pl = array();
+
+      if ($lines) {
+        foreach ($lines as $line) {
+          $opts = $line['params'];
+          $pm = 'c:' . $colors[$opts['strokeColor']] . dechex(255 * $opts['opacity']) . ',';
+          $pm .= 'w:' . $opts['strokeWidth'] . ',';
+          $c = array();
+
+          foreach ($line['coords'] as $coords) {
+            $c[] = end($coords);
+            $c[] = reset($coords);
+          }
+
+          $pm .= implode(',', $c);
+          $pl[] = $pm;
+        }
+      }
+      if ($polygons) {
+        foreach ($polygons as $polygon) {
+          $opts = $polygon['params'];
+          $opa = dechex(255 * $opts['opacity']);
+          $pm = 'c:' . $colors[$opts['strokeColor']] . $opa . ',';
+          $pm .= 'f:' . $colors[$opts['fillColor']] . $opa . ',';
+          $pm .= 'w:' . $opts['strokeWidth'] . ',';
+          $c = array();
+
+          foreach ($polygon['coords'] as $coords_array) {
+            foreach ($coords_array as $coords) {
+              $c[] = end($coords);
+              $c[] = reset($coords);
+            }
+          }
+
+          $pm .= implode(',', $c);
+          $pl[] = $pm;
+        }
+      }
+
+      if (!empty($pl)) {
+        $params['pl'] = implode('~', $pl);
+      }
+
+      // Return map container div with image.
+      $block_output['map_container'] = array(
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#attributes' => array(
+          'id' => $id,
+          'style' => 'width:' . $width . 'px; height:' . $height . 'px',
+        ),
+        '#value' => theme('image', array(
+          'path' => url(YAMAPS_STATIC_API_URL, array('query' => $params, 'external' => TRUE)),
+          'width' => $width,
+          'height' => $height,
+          'title' => t('Yandex Map'),
+        )),
+      );
+
+      break;
   }
 
   return $block_output;

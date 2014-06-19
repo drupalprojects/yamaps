@@ -52,7 +52,7 @@ function yamaps_uninstall() {
   variable_del('yamaps_block_amount');
 
   $t = get_t();
-  drupal_set_message($t('"Yandex Maps" module was unistalled successfully'));
+  drupal_set_message($t('"Yandex Maps" module was unistalled successfully.'));
 }
 
 /**
