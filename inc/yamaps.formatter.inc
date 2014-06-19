@@ -507,6 +507,9 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           ),
         );
 
+        // Adding CSS for button.
+        drupal_add_css(drupal_get_path('module', 'yamaps') . '/misc/yamaps.css');
+
         // Adding map to js.
         drupal_add_js(array('yamapsStatic' => $maps), 'setting');
         drupal_add_js(drupal_get_path('module', 'yamaps') . '/misc/yamaps.run.static.js');

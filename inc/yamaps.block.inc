@@ -357,13 +357,16 @@ function yamaps_block_content($delta) {
         $params['pl'] = implode('~', $pl);
       }
 
+      $hide_map = ($display_type == 'map_button');
+      $map_display_style = $hide_map ? '; display: none' : '';
+
       // Return map container div with image.
       $block_output['map_container'] = array(
         '#type' => 'html_tag',
         '#tag' => 'div',
         '#attributes' => array(
           'id' => $id,
-          'style' => 'width:' . $width . 'px; height:' . $height . 'px',
+          'style' => 'width:' . $width . 'px; height:' . $height . 'px' . $map_display_style,
         ),
         '#value' => theme('image', array(
           'path' => url(YAMAPS_STATIC_API_URL, array('query' => $params, 'external' => TRUE)),
@@ -372,6 +375,33 @@ function yamaps_block_content($delta) {
           'title' => t('Yandex Map'),
         )),
       );
+
+      if ($hide_map) {
+        $block_output['open_button_text'] = array(
+          '#type' => 'html_tag',
+          '#tag' => 'div',
+          '#value' => $open_button_text,
+          '#attributes' => array(
+            'id' => $open_button_id,
+            'class' => 'open_yamap_button_static',
+            'mapId' => $id,
+          ),
+        );
+      }
+
+      // Map initialization parameters.
+      $maps[$id] = array(
+        'display_options' => array(
+          'display_type' => $display_type,
+          'open_button_text' => $open_button_text,
+          'open_button_id' => $open_button_id,
+        ),
+      );
+
+      // Adding map to js.
+      drupal_add_js(array('yamapsStatic' => $maps), 'setting');
+      // Load library.
+      drupal_add_library('yamaps', 'yamaps.static');
 
       break;
   }

@@ -148,7 +148,7 @@ function yamaps_library() {
   )));
 
   $libraries['yamaps.full'] = array(
-    'title' => 'Yandex maps. Edit mode.',
+    'title' => 'Yandex maps. Version for dynamic map.',
     'version' => '2.x',
     'js' => array(
       $api_url => array(
@@ -175,6 +175,22 @@ function yamaps_library() {
       $path . 'yamaps.run.js' => array('scope' => 'footer', 'weight' => $w++),
       /* field button script */
       $path . 'yamaps.field.js' => array('scope' => 'footer', 'weight' => $w++),
+    ),
+    'css' => array(
+      $path . 'yamaps.css' => array(),
+    ),
+  );
+
+  $libraries['yamaps.static'] = array(
+    'title' => 'Yandex maps. Version for static map.',
+    'version' => '2.x',
+    'js' => array(
+      $api_url => array(
+        'type' => 'external',
+        'scope' => 'footer',
+        'weight' => $w++,
+      ),
+      $path . 'yamaps.run.static.js' => array('scope' => 'footer', 'weight' => $w++),
     ),
     'css' => array(
       $path . 'yamaps.css' => array(),
