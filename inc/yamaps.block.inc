@@ -33,45 +33,6 @@ function yamaps_block_info() {
  * @see yamaps_field_process()
  */
 function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
-  $form[$delta . '_block_controls'] = array(
-    '#title' => t('Show controls'),
-    '#type' => 'checkbox',
-    '#default_value' => variable_get($delta . '_block_controls', TRUE),
-  );
-
-  $form[$delta . '_block_traffic'] = array(
-    '#title' => t('Show traffic'),
-    '#type' => 'checkbox',
-    '#default_value' => variable_get($delta . '_block_traffic', FALSE),
-  );
-
-  $form[$delta . '_block_behaviors'] = array(
-    '#title' => t('Mouse event settings'),
-    '#type' => 'checkboxes',
-    '#options' => yamaps_get_behaviors_list(),
-    '#default_value' => variable_get($delta . '_block_behaviors', array()),
-  );
-
-  $form[$delta . '_block_width'] = array(
-    '#title' => t('Map width'),
-    '#field_suffix' => ' ' . t('in pixels or in percentage'),
-    '#type' => 'textfield',
-    '#default_value' => variable_get($delta . '_block_width', YAMAPS_DEFAULT_BLOCK_MAP_WIDTH),
-    '#size' => 5,
-    '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
-    '#required' => TRUE,
-  );
-
-  $form[$delta . '_block_height'] = array(
-    '#title' => t('Map height'),
-    '#field_suffix' => ' ' . t('in pixels or in percentage'),
-    '#type' => 'textfield',
-    '#default_value' => variable_get($delta . '_block_height', YAMAPS_DEFAULT_BLOCK_MAP_HEIGHT),
-    '#size' => 5,
-    '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
-    '#required' => TRUE,
-  );
-
   $form[$delta . '_block_display_options'] = array(
     '#type' => 'fieldset',
     '#title' => t('Display options'),
@@ -109,6 +70,52 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
     '#default_value' => (isset($display_options['open_button_text'])) ? $display_options['open_button_text'] : 'Open map',
     '#required' => FALSE,
     '#description' => t('Text of button that opens map for end user.'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="yamaps_block_display_options[display_type]"]' => array(
+          'value' => 'map_button',
+        ),
+      ),
+    ),
+  );
+
+  $form[$delta . '_block_controls'] = array(
+    '#title' => t('Show controls'),
+    '#type' => 'checkbox',
+    '#default_value' => variable_get($delta . '_block_controls', TRUE),
+  );
+
+  $form[$delta . '_block_traffic'] = array(
+    '#title' => t('Show traffic'),
+    '#type' => 'checkbox',
+    '#default_value' => variable_get($delta . '_block_traffic', FALSE),
+  );
+
+  $form[$delta . '_block_behaviors'] = array(
+    '#title' => t('Mouse event settings'),
+    '#type' => 'checkboxes',
+    '#options' => yamaps_get_behaviors_list(),
+    '#default_value' => variable_get($delta . '_block_behaviors', array()),
+  );
+
+  $form[$delta . '_block_width'] = array(
+    '#title' => t('Map width'),
+    '#field_suffix' => ' ' . t('in pixels or in percentage'),
+    '#type' => 'textfield',
+    '#default_value' => variable_get($delta . '_block_width', YAMAPS_DEFAULT_BLOCK_MAP_WIDTH),
+    '#size' => 5,
+    '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
+    '#required' => TRUE,
+  );
+
+  $form[$delta . '_block_height'] = array(
+    '#title' => t('Map height'),
+    '#field_suffix' => ' ' . t('in pixels or in percentage'),
+    '#type' => 'textfield',
+    '#default_value' => variable_get($delta . '_block_height', YAMAPS_DEFAULT_BLOCK_MAP_HEIGHT),
+    '#size' => 5,
+    '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
+    '#required' => TRUE,
   );
 
   // Add elements from default field edit form.
