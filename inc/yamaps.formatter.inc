@@ -262,6 +262,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         // Map id.
         $id = drupal_html_id(implode('-', array(
           'ymap',
+          $entity->type,
           $entity_id,
           $field['field_name'],
           $delta,
@@ -340,10 +341,12 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         // Map id and parameters.
         $id = drupal_html_id(implode('-', array(
           'ymap',
+          $entity->type,
           $entity_id,
           $field['field_name'],
           $delta,
         )));
+
         $coords = drupal_json_decode($item['coords']);
         $params = array();
         $url = 'http://static-maps.yandex.ru/1.x/';
