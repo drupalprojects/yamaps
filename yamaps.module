@@ -125,6 +125,13 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
     '#description' => t('Specify text to display on button that opens map in case of "Map opened by button click" option.
     This setting applies to admin UI only. To configure text on the button opening map for end users select appropriate
     option in "Manage Display" section of the appropriate content type.'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="field[settings][display_options][display_type]"]' => array(
+          'value' => 'map_button',
+        ),
+      ),
+    ),
   );
 
   return $form;

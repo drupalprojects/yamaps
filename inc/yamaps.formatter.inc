@@ -123,6 +123,13 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#default_value' => $settings['yamaps_display_options']['open_button_text'],
         '#required' => FALSE,
         '#description' => t('Text of button that opens map for end user.'),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="fields[' . $field['field_name'] . '][settings_edit_form][settings][yamaps_display_options][display_type]"]' => array(
+              'value' => 'map_button',
+            ),
+          ),
+        ),
       );
 
       break;
@@ -171,6 +178,13 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#default_value' => $settings['yamaps_display_options_static']['open_button_text_static'],
         '#required' => FALSE,
         '#description' => t('Text of button that opens map for end user.'),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="fields[' . $field['field_name'] . '][settings_edit_form][settings][yamaps_display_options_static][display_type_static]"]' => array(
+              'value' => 'map_button',
+            ),
+          ),
+        ),
       );
 
       break;
