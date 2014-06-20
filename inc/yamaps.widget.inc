@@ -169,7 +169,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     '#tag' => 'div',
     '#value' => l(
       t('Terms of service «API Yandex.Maps»'),
-      'http://legal.yandex.ru/maps_api/',
+      YAMAPS_LEGAL_AGREEMENT_URL,
       array('attributes' => array('target' => '_blank'))
     ),
     '#attributes' => array(

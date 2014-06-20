@@ -11,6 +11,7 @@
 define('YAMAPS_API_URL', 'http://api-maps.yandex.ru/2.0/');
 define('YAMAPS_STATIC_API_URL', 'http://static-maps.yandex.ru/1.x/');
 define('YAMAPS_GEOCODER_URL', 'http://geocode-maps.yandex.ru/1.x/');
+define('YAMAPS_LEGAL_AGREEMENT_URL', 'http://legal.yandex.ru/maps_api/');
 define('YAMAPS_API_LANGUAGE', 'ru-RU');
 define('YAMAPS_DEFAULT_BLOCK_DELTA', 'yamaps');
 define('YAMAPS_DEFAULT_BLOCK_AMOUNT', 1);
@@ -371,7 +372,7 @@ function yamaps_field_process($element, $form_state, $complete_form) {
     '#tag' => 'div',
     '#value' => l(
       t('Terms of service «API Yandex.Maps»'),
-      'http://legal.yandex.ru/maps_api/',
+      YAMAPS_LEGAL_AGREEMENT_URL,
       array('attributes' => array('target' => '_blank'))
     ),
     '#attributes' => array(
