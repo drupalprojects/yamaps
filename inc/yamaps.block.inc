@@ -136,7 +136,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
     ),
   );
 
-  $form += yamaps_field_process($element, NULL, NULL);
+  $form += yamaps_admin_form_process($element, NULL, NULL);
 
   return $form;
 }
