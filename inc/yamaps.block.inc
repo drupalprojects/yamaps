@@ -33,6 +33,10 @@ function yamaps_block_info() {
  * @see yamaps_field_process()
  */
 function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
+  $form['global_conf'] = array(
+    '#markup' => l('Global configuration for "Yandex Maps" blocks', 'admin/config/services/yamaps'),
+  );
+
   $form[$delta . '_block_display_options'] = array(
     '#type' => 'fieldset',
     '#title' => t('Display options'),
@@ -72,7 +76,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
     '#description' => t('Text of button that opens map for end user.'),
     '#states' => array(
       'visible' => array(
-        ':input[name="yamaps_block_display_options[display_type]"]' => array(
+        ':input[name="' . $delta . '_block_display_options[display_type]"]' => array(
           'value' => 'map_button',
         ),
       ),

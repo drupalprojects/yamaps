@@ -17,7 +17,8 @@ function yamaps_settings_page($form, &$form_state) {
   // Set amount of blocks admin can create.
   $form['yamaps_blocks_amount'] = array(
     '#title' => t('Set amount of Yandex Maps blocks'),
-    '#description' => t('Amount of available Yandex Maps bloks.'),
+    '#description' => t('Amount of Yandex Maps blocks available on !blocks_page.',
+      array('!blocks_page' => l(t('Blocks page'), 'admin/structure/block'))),
     '#element_validate' => array('element_validate_integer_positive'),
     '#type' => 'select',
     '#options' => range(1, 20),
