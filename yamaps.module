@@ -190,22 +190,6 @@ function yamaps_library() {
     ),
   );
 
-  $libraries['yamaps.static'] = array(
-    'title' => 'Yandex maps. Version for static map.',
-    'version' => '2.x',
-    'js' => array(
-      $api_url => array(
-        'type' => 'external',
-        'scope' => 'footer',
-        'weight' => $w++,
-      ),
-      $path . 'yamaps.run.static.js' => array('scope' => 'footer', 'weight' => $w++),
-    ),
-    'css' => array(
-      $path . 'yamaps.css' => array(),
-    ),
-  );
-
   return $libraries;
 }
 

@@ -284,7 +284,6 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
 
         // Unique map button id.
         $open_button_id = drupal_html_id(implode('-', array(
-          $entity_id,
           $id,
           'open_button',
         )));
@@ -351,15 +350,6 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         if (empty($item['coords'])) {
           continue;
         }
-
-        // Map id and parameters.
-        $id = drupal_html_id(implode('-', array(
-          'ymap',
-          $entity->type,
-          $entity_id,
-          $field['field_name'],
-          $delta,
-        )));
 
         $coords = drupal_json_decode($item['coords']);
         $params = array();
@@ -472,6 +462,20 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           $params['pl'] = implode('~', $pl);
         }
 
+        // Map id and parameters.
+        $id = drupal_html_id(implode('-', array(
+          'ymap',
+          $entity->type,
+          $entity_id,
+          $field['field_name'],
+          $delta,
+        )));
+
+        $open_button_id = drupal_html_id(implode('-', array(
+          $id,
+          'open_button',
+        )));
+
         $hide_map = (isset($settings['yamaps_display_options_static']['display_type_static']) &&
           $settings['yamaps_display_options_static']['display_type_static'] == 'map_button');
         $map_display_style = $hide_map ? '; display: none' : '';
@@ -491,12 +495,6 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
             'title' => t('Yandex Map'),
           )),
         );
-
-        $open_button_id = drupal_html_id(implode('-', array(
-          $entity_id,
-          $id,
-          'open_button',
-        )));
 
         if ($hide_map) {
           $element[$delta]['open_button_text'] = array(
@@ -526,7 +524,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
 
         // Adding map to js.
         drupal_add_js(array('yamapsStatic' => $maps), 'setting');
-        $element['#attached']['library'][] = array('yamaps', 'yamaps.static');
+        $element['#attached']['library'][] = array('yamaps', 'yamaps.full');
       }
 
       break;
