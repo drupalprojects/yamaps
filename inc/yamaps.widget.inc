@@ -98,7 +98,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
   $element['hide'] = array(
     '#type' => 'checkbox',
     '#title' => t('Hide field'),
-    '#default_value' => $value['hide'],
+    '#default_value' => isset($value['hide']) ? $value['hide'] : $field['settings']['display_options']['hide'],
     '#description' => t(t("Hide field containing map from the end user.
     Can be useful when administrator uses field as optional and doesn't intend to display map.")),
   );
@@ -204,7 +204,6 @@ function _yamaps_cleanup_values(&$value) {
   $value['lines'] = isset($value['lines']) ? $value['lines'] : NULL;
   $value['polygons'] = isset($value['polygons']) ? $value['polygons'] : NULL;
   $value['routes'] = isset($value['routes']) ? $value['routes'] : NULL;
-  $value['hide'] = isset($value['hide']) ? $value['hide'] : 0;
 }
 
 /**

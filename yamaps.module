@@ -79,7 +79,7 @@ function yamaps_field_info() {
  * Implements hook_field_is_empty().
  */
 function yamaps_field_is_empty($item, $field) {
-  return empty($item['coords']);
+  return (empty($item['coords']) || $item['hide'] == 1);
 }
 
 /**
@@ -99,12 +99,13 @@ function yamaps_element_info() {
  */
 function yamaps_field_settings_form($field, $instance, $has_data) {
   $settings = $field['settings'];
+
   $form['display_options'] = array(
     '#type' => 'fieldset',
     '#title' => t('Display options'),
     '#tree' => TRUE,
-
   );
+
   $form['display_options']['display_type'] = array(
     '#type' => 'radios',
     '#title' => t('Map display style in admin UI for field'),
@@ -134,6 +135,14 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
         ),
       ),
     ),
+  );
+
+  $form['display_options']['hide'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Hide field by default'),
+    '#default_value' => isset($settings['display_options']['hide']) ? $settings['display_options']['hide'] : 0,
+    '#description' => t(t("Hide field containing map from the end user.
+    Can be useful when administrator uses field as optional and intend to hide map by default.")),
   );
 
   return $form;
