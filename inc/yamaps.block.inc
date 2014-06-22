@@ -227,11 +227,6 @@ function yamaps_block_content($delta) {
         'edit' => FALSE,
       );
 
-      // Adding map to js.
-      drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
-      // Load library.
-      drupal_add_library('yamaps', 'yamaps.full');
-
       // Return map container div.
       $block_output['map_container'] = array(
         '#type' => 'html_tag',
@@ -255,6 +250,11 @@ function yamaps_block_content($delta) {
           ),
         );
       }
+
+      // Adding map to js.
+      drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
+      // Load library.
+      $block_output['#attached']['library'][] = array('yamaps', 'yamaps.full');
 
       break;
     case 'static':
@@ -412,7 +412,7 @@ function yamaps_block_content($delta) {
       // Adding map to js.
       drupal_add_js(array('yamapsStatic' => $maps), 'setting');
       // Load library.
-      drupal_add_library('yamaps', 'yamaps.static');
+      $block_output['#attached']['library'][] = array('yamaps', 'yamaps.static');
 
       break;
   }

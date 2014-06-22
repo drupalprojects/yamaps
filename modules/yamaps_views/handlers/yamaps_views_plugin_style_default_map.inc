@@ -117,7 +117,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#delta' => 0,
 
     );
-    // $form += yamaps_field_process($settings, array(), array());
+
     $form['yamaps_center_options']['map_center_geolocation'] = array(
       '#title' => t('Map center geolocation'),
       '#description' => t('Please enter place on whitch map will be centered.'),
@@ -405,7 +405,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
 
     // Load library.
-    drupal_add_library('yamaps', 'yamaps.full');
+    $views_output['#attached']['library'][] = array('yamaps', 'yamaps.full');
+
     $views_output = array();
     $views_output[] = array(
       '#type' => 'html_tag',

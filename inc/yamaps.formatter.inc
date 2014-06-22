@@ -342,7 +342,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
 
       // Adding map to js and load library.
       drupal_add_js(array('yamaps' => $maps), 'setting');
-      drupal_add_library('yamaps', 'yamaps.full');
+      $element['#attached']['library'][] = array('yamaps', 'yamaps.full');
 
       break;
     case 'field_yamaps_formatter_static':
@@ -526,7 +526,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
 
         // Adding map to js.
         drupal_add_js(array('yamapsStatic' => $maps), 'setting');
-        drupal_add_js(drupal_get_path('module', 'yamaps') . '/misc/yamaps.run.static.js');
+        $element['#attached']['library'][] = array('yamaps', 'yamaps.static');
       }
 
       break;

@@ -84,8 +84,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
 
   // Add information about this map to js.
   drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
-  // Load library.
-  drupal_add_library('yamaps', 'yamaps.full');
+  $form['#attached']['library'][] = array('yamaps', 'yamaps.full');
 
   // Map container.
   $element['map_wrapper']['map'] = array(
