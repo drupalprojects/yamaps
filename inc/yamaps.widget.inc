@@ -99,8 +99,8 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     '#type' => 'checkbox',
     '#title' => t('Hide field'),
     '#default_value' => isset($value['hide']) ? $value['hide'] : $field['settings']['display_options']['hide'],
-    '#description' => t(t("Hide field containing map from the end user.
-    Can be useful when administrator uses field as optional and doesn't intend to display map.")),
+    '#description' => t("Hide field containing map from the end user.
+    Can be useful when administrator uses field as optional and doesn't intend to display map."),
   );
 
   if ($delta > 0) {
