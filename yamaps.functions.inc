@@ -237,3 +237,22 @@ function yamaps_geocoding($geolocation_string) {
 function yamaps_var_to_float($val) {
   return (float) $val;
 }
+
+/**
+ * Wraps each element in array with specified tag and implodes array.
+ *
+ * @param $arr
+ * @param $wrap_start
+ * @param $wrap_end
+ *
+ * @return string
+ */
+function yamaps_wrap_items($arr, $wrap_start, $wrap_end) {
+  $items = array();
+
+  foreach ($arr as $item) {
+    $items[] = $wrap_start . $item . $wrap_end;
+  }
+
+  return implode('', $items);
+}
