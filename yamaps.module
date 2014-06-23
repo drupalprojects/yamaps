@@ -70,7 +70,7 @@ function yamaps_field_info() {
           'display_type' => 'map',
           'open_button_text' => 'Open map',
         ),
-      )
+      ),
     ),
   );
 }
@@ -79,7 +79,7 @@ function yamaps_field_info() {
  * Implements hook_field_is_empty().
  */
 function yamaps_field_is_empty($item, $field) {
-  return (empty($item['coords']) || $item['hide'] == 1);
+  return empty($item['coords']);
 }
 
 /**

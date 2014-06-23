@@ -95,35 +95,18 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     ),
   );
 
-  $element['hide'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Hide field'),
-    '#default_value' => $value['hide'],
-    '#description' => t("Hide field containing map from the end user.
-    Can be useful when administrator uses field as optional and doesn't intend to display map."),
+  $element['coords'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Coordinates'),
+    '#default_value' => $value['coords'],
+    '#attributes' => array(
+      'class' => array('field-yamaps-coords-' . $id),
+      'style' => 'width: 100%;',
+    ),
+    '#description' => t('Search for object on the map to fill this field or leave it blank (if field is not required).'),
   );
-
-  if ($delta > 0) {
-    // 'Remove field' button.
-    $element['remove_yamap_field_item'] = array(
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#value' => t('Remove field'),
-      '#attributes' => array(
-        'name' => $element['#field_name'] . '_' . $element['#delta'] . '_remove_button',
-        'id' => $remove_button_id,
-        'class' => 'remove_yamap_button',
-      ),
-    );
-  }
 
   // Hidden elements to saving map information.
-  $element['coords'] = array(
-    '#type' => 'hidden',
-    '#default_value' => $value['coords'],
-    '#attributes' => array('class' => array('field-yamaps-coords-' . $id)),
-  );
-
   $element['type'] = array(
     '#type' => 'hidden',
     '#default_value' => $value['type'],
@@ -153,6 +136,28 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     '#default_value' => $value['routes'],
     '#attributes' => array('class' => array('field-yamaps-routes-' . $id)),
   );
+
+  $element['hide'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Hide field'),
+    '#default_value' => $value['hide'],
+    '#description' => t("Hide field containing map from the end user.
+    Can be useful when administrator uses field as optional and doesn't intend to display map."),
+  );
+
+  if ($delta > 0) {
+    // 'Remove field' button.
+    $element['remove_yamap_field_item'] = array(
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#value' => t('Remove field'),
+      '#attributes' => array(
+        'name' => $element['#field_name'] . '_' . $element['#delta'] . '_remove_button',
+        'id' => $remove_button_id,
+        'class' => 'remove_yamap_button',
+      ),
+    );
+  }
 
   if ($field['settings']['display_options']['display_type'] == 'map_button') {
     $element['open_map_button'] = array(

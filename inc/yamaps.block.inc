@@ -125,7 +125,6 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
   // Add elements from default field edit form.
   $element = array(
     '#delta' => 'block-' . $delta,
-    '#required' => FALSE,
     '#value' => array(
       'coords' => variable_get($delta . '_block_coords', NULL),
       'type' => variable_get($delta . '_block_type', 'yandex#map'),

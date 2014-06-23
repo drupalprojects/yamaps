@@ -57,6 +57,19 @@ function yamaps_admin_form_process($element, $form_state, $complete_form) {
   $display_options = variable_get('yamaps_block_edit_display_options', array());
   $behaviors = array('scrollZoom', 'dblClickZoom', 'drag');
 
+  if (isset($display_options['display_type']) && ($display_options['display_type'] == 'map_button')) {
+    $element['open_map_button'] = array(
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#value' => t($display_options['open_button_text']),
+      '#attributes' => array(
+        'id' => $open_button_id,
+        'class' => 'open_yamap_button',
+        'mapId' => $id,
+      ),
+    );
+  }
+
   // Map initialization parameters.
   $map = array(
     'init' => array(
@@ -93,15 +106,19 @@ function yamaps_admin_form_process($element, $form_state, $complete_form) {
     ),
   );
 
-  // Hidden elements to save map information.
   $element['coords'] = array(
-    '#type' => 'hidden',
+    '#type' => 'textfield',
     '#title' => t('Coordinates'),
     '#default_value' => $coords,
-    '#required' => $element['#required'],
-    '#attributes' => array('class' => array('field-yamaps-coords-' . $id)),
+    '#attributes' => array(
+      'class' => array('field-yamaps-coords-' . $id),
+      'style' => 'width: 100%;',
+    ),
+    '#description' => t('Search for object on the map to fill this field.'),
+    '#required' => TRUE,
   );
 
+  // Hidden elements to save map information.
   $element['type'] = array(
     '#type' => 'hidden',
     '#title' => t('Type'),
@@ -136,19 +153,6 @@ function yamaps_admin_form_process($element, $form_state, $complete_form) {
     '#default_value' => $routes,
     '#attributes' => array('class' => array('field-yamaps-routes-' . $id)),
   );
-
-  if (isset($display_options['display_type']) && ($display_options['display_type'] == 'map_button')) {
-    $element['open_map_button'] = array(
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#value' => t($display_options['open_button_text']),
-      '#attributes' => array(
-        'id' => $open_button_id,
-        'class' => 'open_yamap_button',
-        'mapId' => $id,
-      ),
-    );
-  }
 
   // Map description.
   $element['#description'] = array(

@@ -255,6 +255,10 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
  * Implements hook_field_formatter_view().
  */
 function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  if (empty($items)) {
+    return array();
+  }
+
   $element = array();
   $settings = $display['settings'];
   $entity_info = entity_get_info($entity_type);
