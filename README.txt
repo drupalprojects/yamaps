@@ -1,41 +1,47 @@
 
--- SUMMARY --
+-- ABOUT --
 
 Module for Drupal 7.
-Uses http://api.yandex.ru/maps/ (API 2.x)
+Uses http://api.yandex.ru/maps/ (API 2.x).
 
-For a full description of the module, visit the project page:
-  https://drupal.org/project/yamaps
-
-To submit bug reports and feature suggestions, or to track changes:
-  http://drupal.org/project/issues/yamaps
+Project page: https://drupal.org/project/yamaps.
+To submit bug reports and feature suggestions, or to track changes: https://drupal.org/project/issues/yamaps.
 
 -- OPTIONS --
 
+* Map can be displayed as interactive object ("dynamic map") or image ("static map").
+* Map can be displayed by click on the "button" with configurable text.
 * Change the type, size and center of the map.
-* Add placemarks, select label color, change texts, add labels using the search string
-* Draw polylines, chose colors, transparency, line width, text
-* Draw polygons, chose colors and line width, fill color, transparency, texts
-* Add a route
-* Displays traffic jams
+* Add placemarks, select label color, change texts, add labels using the search string.
+* Draw polylines, chose colors, transparency, line width, text.
+* Draw polygons, chose colors and line width, fill color, transparency, texts.
+* Add a route.
+* Displays traffic jams.
 
--- REQUIREMENTS --
+-- REQUIREMENTS, INSTALLATION AND UNINSTALLATION --
 
 Requires core 'block' and 'field' modules.
-
--- INSTALLATION AND UNINSTALLATION --
-
 Install and uninstall as usual.
 See http://drupal.org/documentation/install/modules-themes/modules-7 for further information.
 
--- CONFIGURATION --
+-- CONFIGURATION AND USAGE --
 
 Provides configurable "Yandex Maps" field, which can be added to any type of Drupal content.
+Field may accept "Dynamic" and "Static" formats.
+"Dynamic" format means that map is displayed as interactive object.
+"Static" format means that map is displayed as regular image.
+
+To add "Yandex Maps" field perform following steps:
+* Navigate to /admin/structure/types and select content type.
+* Navigate to /admin/structure/types/manage/{CONTENT-TYPE}/fields ("Manage Fields" page) of the selected content type.
+* Configure and add field of "Yandex map" type.
+* Navigate to /admin/structure/types/manage/{CONTENT-TYPE}/display ("Manage Display" page) of the selected content type.
+* Configure field format.
 
 Provides configurable amount of "Yandex Maps" blocks to display maps in any regions of the website.
+Block may also present map as a "Dynamic" (interactive object) or "Static" (image).
 To add "Yandex Maps" block perform following steps:
 
-* navigate to /admin/config/services/yamaps and set required amount of "Yandex Maps" blocks
-* navigate to /admin/structure/block, scroll down to find "Disabled" section
-  and find block called "Yandex Map #{NUMBER}"
-* configure the block and pull it into the required region.
+* Navigate to /admin/config/services/yamaps and set required amount of "Yandex Maps" blocks.
+* Navigate to /admin/structure/block, scroll down to find "Disabled" section and find block called "Yandex Map #{NUMBER}".
+* Configure the block and pull it into the required region.
