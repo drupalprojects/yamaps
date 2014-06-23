@@ -269,7 +269,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
       $maps = array();
       foreach ($items as $delta => $item) {
         // Ensure that field with empty coordinates doesn't show up.
-        if (empty($item['coords'])) {
+        if (empty($item['coords']) || $item['hide'] == 1) {
           continue;
         }
 
@@ -347,7 +347,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
     case 'field_yamaps_formatter_static':
       foreach ($items as $delta => $item) {
         // Ensure that field with empty coordinates doesn't show up.
-        if (empty($item['coords'])) {
+        if (empty($item['coords']) || $item['hide'] == 1) {
           continue;
         }
 

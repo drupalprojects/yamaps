@@ -82,10 +82,6 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     'edit' => TRUE,
   );
 
-  // Add information about this map to js.
-  drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
-  $form['#attached']['library'][] = array('yamaps', 'yamaps.full');
-
   // Map container.
   $element['map_wrapper']['map'] = array(
     '#type' => 'html_tag',
@@ -97,6 +93,14 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
         'yamaps-map-container',
       ),
     ),
+  );
+
+  $element['hide'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Hide field'),
+    '#default_value' => isset($value['hide']) ? $value['hide'] : $field['settings']['display_options']['hide'],
+    '#description' => t(t("Hide field containing map from the end user.
+    Can be useful when administrator uses field as optional and doesn't intend to display map.")),
   );
 
   if ($delta > 0) {
@@ -180,6 +184,10 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
 
   // Map description.
   $element['#description'] .= '<br/>' . render($themed_description);
+
+  // Add information about this map to js.
+  drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
+  $form['#attached']['library'][] = array('yamaps', 'yamaps.full');
 
   return $element;
 }
