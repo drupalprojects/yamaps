@@ -404,10 +404,11 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     // Adding map to js.
     drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
 
+    $views_output = array();
+
     // Load library.
     $views_output['#attached']['library'][] = array('yamaps', 'yamaps.full');
 
-    $views_output = array();
     $views_output[] = array(
       '#type' => 'html_tag',
       '#tag' => 'div',
