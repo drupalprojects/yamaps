@@ -448,10 +448,9 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '<default>' => t('Default baloon value')
     );
     $fields = $this->display->handler->get_handlers('field');
-
     foreach ($fields as $id => $handler) {
       if ($handler->field_info['module'] !== 'yamaps') {
-        $field_names[$id] = $handler->ui_name(FALSE);
+        $field_names[$id] = $handler->human_name;
       }
     }
     return $field_names;
@@ -466,7 +465,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $fields = $this->display->handler->get_handlers('field');
     foreach ($fields as $id => $handler) {
       if ($handler->field_info['module'] == 'yamaps') {
-        $field_names[$id] = $handler->ui_name(FALSE);
+        $field_names[$id] = $handler->human_name;
       }
     }
     return $field_names;
