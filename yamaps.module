@@ -137,14 +137,6 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
     ),
   );
 
-  $form['display_options']['hide'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Hide field by default'),
-    '#default_value' => isset($settings['display_options']['hide']) ? $settings['display_options']['hide'] : 0,
-    '#description' => t(t("Hide field containing map from the end user.
-    Can be useful when administrator uses field as optional and intend to hide map by default.")),
-  );
-
   return $form;
 }
 
@@ -276,5 +268,27 @@ function yamaps_help($path, $arg) {
     $output .= theme('item_list', array('items' => $config_blocks_options));
 
     return $output;
+  }
+}
+
+/**
+ * Implements hook_field_validate().
+ */
+function yamaps_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+  if ($instance['required']) {
+    $items_total = count($items);
+    $items_empty = 0;
+    foreach ($items as $delta => $item) {
+      if (empty($item['coords'])) {
+        $items_empty++;
+      }
+    }
+
+    if ($items_total == $items_empty) {
+      $errors[$field['field_name']][$langcode][0][] = array(
+        'error' => 'coords',
+        'message' => t('"Cooordinates" cannot be empty for required field.'),
+      );
+    }
   }
 }
