@@ -1,8 +1,0 @@
-name = Yandex.Maps modal windows
-Description = provides modal windows for yandex maps
-core = 7.x
-
-package = Yandex
-
-dependencies[] = yamaps
-dependencies[] = libraries
