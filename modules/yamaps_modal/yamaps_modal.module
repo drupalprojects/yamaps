@@ -131,3 +131,15 @@ function yamaps_modal_get_modals_list() {
   }
   return $list;
 }
+
+function yamaps_modal_show_map($settings) {
+
+}
+
+function theme_yandex_modal_fancybox() {
+  $drupal_id = drupal_html_id(implode('-', arary('fancybox', 'modal')));
+  $output = l('text', '#' . $drupal_id, array('attributes' => array('class' => array('yandex-fancybox'))));
+
+  $output .= '<div ' . drupal_attributes(array('id' => $drupal_id, 'class' => array(), 'style' => '')) . '>' . '</div>';
+  return $output;
+}
