@@ -106,3 +106,28 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
   }
   return $element;
 }
+
+
+
+/**
+ * Get list of modal libraries.
+ *
+ * @return array
+ */
+function yamaps_modal_get_modals_list() {
+  $list = array();
+
+  $list['standalone'] = t('Standalone library');
+
+  if (libraries_detect('colorbox')) {
+    $list['colorbox'] = t('Colorbox');
+  }
+
+  if (libraries_detect('fancybox')) {
+    $list['fancybox'] = t('Fancybox');
+  }
+  if (libraries_detect('shadowbox')) {
+    $list['shadowbox'] = t('Shadowbox');
+  }
+  return $list;
+}
