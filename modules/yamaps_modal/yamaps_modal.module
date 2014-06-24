@@ -68,3 +68,21 @@ function yamaps_modal_field_formatter_settings_form($field, $instance, $view_mod
   return $element;
 }
 
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  $summary = array();
+
+  switch ($display['type']) {
+    case 'field_yamaps_formatter_modal_window':
+      $summary[] = t('Original field settings: @field_settings', array('@field_settings' => ''));
+      $summary[] = t('Modal window settings: @field_settings', array('@field_settings' => ''));
+      break;
+  }
+
+  return implode('<br />', $summary);
+}
+
