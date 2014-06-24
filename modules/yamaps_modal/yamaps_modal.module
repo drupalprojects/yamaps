@@ -1,0 +1,29 @@
+<?php
+/**
+ * @file
+ * yamaps_modal.module
+ */
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function yamaps_modal_field_formatter_info() {
+  return array(
+    'field_yamaps_formatter_modal_window' => array(
+      'label' => t('Modal window'),
+      'field types' => array('field_yamaps'),
+      'settings' => array(
+        'original_field' => array(
+          'type' => 'field_yamaps_formatter_static',
+          // Possible variants static_image, button.
+          'field_settings' => array(),
+        ),
+        'modal_window_settings' => array(
+          'type' => 'field_yamaps_formatter_dynamic',
+          // Possible variants static_image, dynamic_cart.
+          'field_settings' => array(),
+        ),
+      ),
+    ),
+  );
+}
