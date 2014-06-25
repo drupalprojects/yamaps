@@ -5,7 +5,7 @@
 
 (function($) {
   ymaps.ready(function() {
-    // Basic map class
+    // Basic map class.
     $.yaMaps.YamapsMap = function(mapId, options) {
       this.map = new ymaps.Map(mapId, options.init);
       this.mapId = mapId;

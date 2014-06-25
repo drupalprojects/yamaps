@@ -362,7 +362,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $id = drupal_html_id(implode('-', array(
       $this->plugin_name,
       $this->view->name,
-      $this->view->current_display
+      $this->view->current_display,
+      $this->view->dom_id,
     )));
     $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
 
@@ -382,11 +383,11 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       'polygons' => NULL,
       'routes' => NULL,
       'edit' => FALSE,
-    );
-    $map['init'] = array(
-      'type' => 'yandex#map',
-      'zoom' => 4,
-      'behaviors' => array_values(array_filter($this->options['behaviors'])),
+      'init' => array(
+        'type' => 'yandex#map',
+        'zoom' => $this->options['zoom'],
+        'behaviors' => array_values(array_filter($this->options['behaviors'])),
+      ),
     );
 
     if (($this->options['yamaps_center_options']['map_center_type'] == 'geolocation')) {
@@ -449,7 +450,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     );
     $fields = $this->display->handler->get_handlers('field');
     foreach ($fields as $id => $handler) {
-      if ($handler->field_info['module'] !== 'yamaps') {
+      if (isset($handler->field_info['module']) && $handler->field_info['module'] !== 'yamaps') {
         $field_names[$id] = $handler->human_name;
       }
     }
@@ -464,8 +465,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $field_names = array('' => t('<none>'),);
     $fields = $this->display->handler->get_handlers('field');
     foreach ($fields as $id => $handler) {
-      if ($handler->field_info['module'] == 'yamaps') {
-        $field_names[$id] = $handler->human_name;
+      if (isset($handler->field_info) && $handler->field_info['module'] == 'yamaps') {
+        $field_names[$id] = $handler->definition['title'];
       }
     }
     return $field_names;
