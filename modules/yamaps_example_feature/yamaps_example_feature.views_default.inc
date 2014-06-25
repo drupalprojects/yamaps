@@ -49,6 +49,7 @@ function yamaps_example_feature_views_default_views() {
   );
   $handler->display->display_options['style_options']['yamaps_display_options'] = array(
     'display_type' => 'map_button',
+    'open_button_type' => 'Open map',
     'open_button_text' => 'Yandex maps example text',
   );
   $handler->display->display_options['style_options']['yandex_map_field'] = 'field_yandex_maps_example_field';
