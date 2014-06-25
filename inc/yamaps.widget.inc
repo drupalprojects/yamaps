@@ -191,7 +191,10 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
   $element['#description'] .= '<br/>' . render($themed_description);
 
   // Add information about this map to js.
-  drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
+  $form['#attached']['js'][] = array(
+    'data' => array('yamaps' => array($id => $map)),
+    'type' => 'setting',
+  );
   $form['#attached']['library'][] = array('yamaps', 'yamaps.full');
 
   return $element;

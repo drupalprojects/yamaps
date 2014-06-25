@@ -169,7 +169,10 @@ function yamaps_admin_form_process($element, $form_state, $complete_form) {
   );
 
   // Add information about this map to js.
-  drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
+  $element['#attached']['js'][] = array(
+    'data' => array('yamaps' => array($id => $map)),
+    'type' => 'setting',
+  );
   // Load library.
   $element['#attached']['library'][] = array('yamaps', 'yamaps.full');
 

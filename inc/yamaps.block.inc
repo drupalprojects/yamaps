@@ -251,7 +251,10 @@ function yamaps_block_content($delta) {
       }
 
       // Adding map to js.
-      drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
+      $block_output['#attached']['js'][] = array(
+        'data' => array('yamaps' => array($id => $map)),
+        'type' => 'setting',
+      );
       // Load library.
       $block_output['#attached']['library'][] = array('yamaps', 'yamaps.full');
 
