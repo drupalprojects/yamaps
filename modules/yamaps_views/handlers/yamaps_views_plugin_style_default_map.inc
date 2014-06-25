@@ -383,11 +383,11 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       'polygons' => NULL,
       'routes' => NULL,
       'edit' => FALSE,
-    );
-    $map['init'] = array(
-      'type' => 'yandex#map',
-      'zoom' => 4,
-      'behaviors' => array_values(array_filter($this->options['behaviors'])),
+      'init' => array(
+        'type' => 'yandex#map',
+        'zoom' => $this->options['zoom'],
+        'behaviors' => array_values(array_filter($this->options['behaviors'])),
+      ),
     );
 
     if (($this->options['yamaps_center_options']['map_center_type'] == 'geolocation')) {
