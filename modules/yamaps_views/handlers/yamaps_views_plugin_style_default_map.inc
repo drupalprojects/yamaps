@@ -449,7 +449,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     );
     $fields = $this->display->handler->get_handlers('field');
     foreach ($fields as $id => $handler) {
-      if ($handler->field_info['module'] !== 'yamaps') {
+      if (isset($handler->field_info['module']) && $handler->field_info['module'] !== 'yamaps') {
         $field_names[$id] = $handler->human_name;
       }
     }
@@ -464,8 +464,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $field_names = array('' => t('<none>'),);
     $fields = $this->display->handler->get_handlers('field');
     foreach ($fields as $id => $handler) {
-      if ($handler->field_info['module'] == 'yamaps') {
-        $field_names[$id] = $handler->human_name;
+      if (isset($handler->field_info) && $handler->field_info['module'] == 'yamaps') {
+        $field_names[$id] = $handler->definition['title'];
       }
     }
     return $field_names;
