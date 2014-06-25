@@ -362,7 +362,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $id = drupal_html_id(implode('-', array(
       $this->plugin_name,
       $this->view->name,
-      $this->view->current_display
+      $this->view->current_display,
+      $this->view->dom_id,
     )));
     $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
 
