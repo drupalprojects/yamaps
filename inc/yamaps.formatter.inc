@@ -536,18 +536,3 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
 
   return $element;
 }
-
-/**
- * Returns behaviors list.
- */
-function yamaps_get_behaviors_list() {
-  return array(
-    'clickZoom' => t('Click Zoom'),
-    'scrollZoom' => t('Scroll Zoom'),
-    'dblClickZoom' => t('Double click zoom'),
-    'drag' => t('Click and drag'),
-    'multiTouch' => t('Multi Touch support'),
-    'ruler' => t('Ruler'),
-    'rightMouseButtonMagnifier' => t('Right mouse button magnifier'),
-  );
-}

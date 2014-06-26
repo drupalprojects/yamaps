@@ -263,3 +263,32 @@ function yamaps_wrap_items($arr, $wrap_start, $wrap_end) {
 
   return implode('', $items);
 }
+/**
+ * Returns behaviors list.
+ *
+ * @return array
+ */
+function yamaps_get_behaviors_list() {
+  return array(
+    'clickZoom' => t('Click Zoom'),
+    'scrollZoom' => t('Scroll Zoom'),
+    'dblClickZoom' => t('Double click zoom'),
+    'drag' => t('Click and drag'),
+    'multiTouch' => t('Multi Touch support'),
+    'ruler' => t('Ruler'),
+    'rightMouseButtonMagnifier' => t('Right mouse button magnifier'),
+  );
+}
+
+/**
+ * Returns Map type list.
+ *
+ * @return array
+ */
+function yamaps_get_map_types() {
+  return array(
+    'yandex#map' => t('Schema'),
+    'yandex#satellite' => t('Satallite'),
+    'yandex#hybrid' => t('Hybrid'),
+  );
+}
