@@ -403,9 +403,12 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       $map['init']['center_geocode'] = $this->options['map_center'];
     }
     // Adding map to js.
-    drupal_add_js(array('yamaps' => array($id => $map)), 'setting');
 
     $views_output = array();
+    $views_output['#attached']['js'][] = array(
+      'data' => array('yamaps' => array($id => $map)),
+      'type' => 'setting',
+    );
 
     // Load library.
     $views_output['#attached']['library'][] = array('yamaps', 'yamaps.full');
