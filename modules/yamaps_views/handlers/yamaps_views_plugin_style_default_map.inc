@@ -11,9 +11,15 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $options = parent::option_definition();
     $options['controls'] = array('default' => TRUE);
     $options['traffic'] = array('default' => FALSE);
+    $options['placemarks'] = array('default' => '');
+    $options['lines'] = array('default' => '');
+    $options['polygons'] = array('default' => '');
+    $options['routes'] = array('default' => '');
+
     $options['width'] = array('default' => '100%');
     $options['height'] = array('default' => '400px');
     $options['zoom'] = array('default' => '6');
+    $options['coords'] = array('default' => '');
     $options['behaviors'] = array(
       'default' => array(
         'clickZoom',
