@@ -29,12 +29,12 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $options['coords'] = array('default' => '');
     $options['behaviors'] = array(
       'default' => array(
-        'clickZoom',
-        'scrollZoom',
-        'dblClickZoom',
-        'drag',
-        'multiTouch',
-        'rightMouseButtonMagnifier',
+        'clickZoom' => 'clickZoom',
+        'scrollZoom' => 'scrollZoom',
+        'dblClickZoom' => 'dblClickZoom',
+        'drag' => 'drag',
+        'multiTouch' => 'multiTouch',
+        'rightMouseButtonMagnifier' => 'rightMouseButtonMagnifier',
       ),
     );
 
@@ -251,7 +251,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#title' => t('Mouse event settings'),
       '#type' => 'checkboxes',
       '#options' => yamaps_get_behaviors_list(),
-      '#default_value' => $this->options['behaviors'],
+      '#default_value' => array_unique(array_values($this->options['behaviors'])),
     );
 
     $form['yamaps_display_options'] = array(
