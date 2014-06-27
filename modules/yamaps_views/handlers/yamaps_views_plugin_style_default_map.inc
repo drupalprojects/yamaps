@@ -193,7 +193,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       ),
     );
     $form['coords'] = array(
-          '#type' => 'textfield',
+      '#type' => 'textfield',
       '#title' => t('Coordinates'),
       '#default_value' => $this->options['coords'],
       '#attributes' => array(
@@ -214,7 +214,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#type' => 'hidden',
       '#default_value' => $this->options['placemarks'],
       '#attributes' => array('class' => array('field-yamaps-placemarks-' . $id)),
-         );
+    );
 
     $form['lines'] = array(
       '#type' => 'hidden',
@@ -460,21 +460,34 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       ),
     );
 
-    if (($this->options['yamaps_center_options']['map_center_type'] == 'geolocation')) {
-      $parameters = yamaps_geocoding($this->options['yamaps_center_options']['map_center_geolocation']);
-    }
 
-    if (isset($parameters) && $parameters !== FALSE) {
-      $map['init']['center'] = $parameters['map_center'];
-      $map['init']['bounds'] = $parameters['bounds'];
-    }
 
-    if (!empty($this->options['map_center'])) {
-      $map['init']['center_geocode'] = $this->options['map_center'];
+    switch ($this->options['yamaps_center_options']['map_center_type']) {
+      case 'geolocation':
+        if (($this->options['yamaps_center_options']['map_center_type'] == 'geolocation')) {
+          $parameters = yamaps_geocoding($this->options['yamaps_center_options']['map_center_geolocation']);
+        }
+        if (isset($parameters) && $parameters !== FALSE) {
+          $map['init']['center'] = $parameters['map_center'];
+          $map['init']['zoom'] = ++$this->options['yamaps_center_options']['zoom'];
+          //      $map['init']['bounds'] = $parameters['bounds'];
+        }
+        /*if (!empty($this->options['map_center'])) {
+          $map['init']['center_geocode'] = $this->options['map_center'];
+        }*/
+        break;
+      case 'mini_map':
+        if ($this->options['coords']) {
+          $coords = json_decode($this->options['coords']);
+          $map['init']['center'] = $coords->center;
+          $map['init']['zoom'] = $coords->zoom;
+        }
+        break;
     }
-    // Adding map to js.
 
     $views_output = array();
+
+    // Adding map to js.
     $views_output['#attached']['js'][] = array(
       'data' => array('yamaps' => array($id => $map)),
       'type' => 'setting',
