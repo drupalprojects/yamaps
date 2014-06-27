@@ -1,7 +1,11 @@
 <?php
+/**
+ * @file
+ * Hook views file.
+ */
 
 /**
- * Implementation of hook_views_plugins().
+ * Implements hook_views_plugins().
  */
 function yamaps_views_views_plugins() {
   return array(
