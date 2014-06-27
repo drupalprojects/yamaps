@@ -95,6 +95,7 @@ function yamaps_delete_blocks_variables() {
 
 /**
  * Implements hook_update_N().
+ *
  * Alters yamaps_field schema and adds 'hide' column.
  */
 function yamaps_update_7000() {

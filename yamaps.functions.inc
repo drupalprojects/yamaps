@@ -6,15 +6,24 @@
  */
 
 /**
- * Adds to any 'edit' form (block, field etc) standard "Yandex Maps" controls and hidden fields.
- * The basic idea here is to provide method to add "Yandex Maps" widget to any admin form.
- * @TODO: for now function is used for blocks only, support for other entities will be added in the future.
+ * Form for admin pages.
  *
- * @param $element
- * @param $form_state
- * @param $complete_form
+ * Adds to any 'edit' form (block, field etc) standard "Yandex Maps" controls
+ * and hidden fields.
+ * The basic idea here is to provide method to add "Yandex Maps" widget
+ * to any admin form.
+ * @TODO: for now function is used for blocks only, support for other entities
+ * will be added in the future.
+ *
+ * @param array $element
+ *   Field form element.
+ * @param array $form_state
+ *   Field form state.
+ * @param array $complete_form
+ *   Complete form array.
  *
  * @return mixed
+ *   Form array.
  */
 function yamaps_admin_form_process($element, $form_state, $complete_form) {
   // Issue #1712292 fix.
@@ -182,8 +191,10 @@ function yamaps_admin_form_process($element, $form_state, $complete_form) {
 /**
  * Validate pixels or percentage value.
  *
- * @param $element
- * @param $form_state
+ * @param array $element
+ *   Field form element.
+ * @param array $form_state
+ *   Field form state.
  */
 function yamaps_field_validate_pixels_percentage($element, &$form_state) {
   $value = $element['#value'];
@@ -196,8 +207,10 @@ function yamaps_field_validate_pixels_percentage($element, &$form_state) {
  * Get geo data for string.
  *
  * @param string $geolocation_string
+ *   Name of geographical object.
  *
  * @return array|bool
+ *   Geocoding array.
  */
 function yamaps_geocoding($geolocation_string) {
   if (!$geolocation_string) {
@@ -220,13 +233,13 @@ function yamaps_geocoding($geolocation_string) {
 
   if ($geolocation_request->response->GeoObjectCollection->metaDataProperty->GeocoderResponseMetaData->found > 0) {
     $map_center = $geolocation_request->response->GeoObjectCollection->featureMember[0]->GeoObject->Point->pos;
-    $boundedBy = array();
-    $boundedBy[] = array_map('yamaps_var_to_float', array_reverse(explode(' ', $geolocation_request->response->GeoObjectCollection->featureMember[0]->GeoObject->boundedBy->Envelope->lowerCorner)));
-    $boundedBy[] = array_map('yamaps_var_to_float', array_reverse(explode(' ', $geolocation_request->response->GeoObjectCollection->featureMember[0]->GeoObject->boundedBy->Envelope->upperCorner)));
+    $bounded_by = array();
+    $bounded_by[] = array_map('yamaps_var_to_float', array_reverse(explode(' ', $geolocation_request->response->GeoObjectCollection->featureMember[0]->GeoObject->boundedBy->Envelope->lowerCorner)));
+    $bounded_by[] = array_map('yamaps_var_to_float', array_reverse(explode(' ', $geolocation_request->response->GeoObjectCollection->featureMember[0]->GeoObject->boundedBy->Envelope->upperCorner)));
 
     return array(
       'map_center' => array_map('yamaps_var_to_float', array_reverse(explode(' ', $map_center))),
-      'bounds' => $boundedBy,
+      'bounds' => $bounded_by,
     );
   }
   else {
@@ -237,9 +250,11 @@ function yamaps_geocoding($geolocation_string) {
 /**
  * Set variable to float.
  *
- * @param $val
+ * @param string $val
+ *   Variable that need to be set to float.
  *
  * @return float
+ *   Float value.
  */
 function yamaps_var_to_float($val) {
   return (float) $val;
@@ -248,11 +263,15 @@ function yamaps_var_to_float($val) {
 /**
  * Wraps each element in array with specified tag and implodes array.
  *
- * @param $arr
- * @param $wrap_start
- * @param $wrap_end
+ * @param array $arr
+ *   Item that need to be wrapped.
+ * @param string $wrap_start
+ *   Wrap start string.
+ * @param string $wrap_end
+ *   Wrap end string.
  *
  * @return string
+ *   String with wrapped elements.
  */
 function yamaps_wrap_items($arr, $wrap_start, $wrap_end) {
   $items = array();
@@ -263,10 +282,12 @@ function yamaps_wrap_items($arr, $wrap_start, $wrap_end) {
 
   return implode('', $items);
 }
+
 /**
  * Returns behaviors list.
  *
  * @return array
+ *   Types of behaviours.
  */
 function yamaps_get_behaviors_list() {
   return array(
@@ -284,6 +305,7 @@ function yamaps_get_behaviors_list() {
  * Returns Map type list.
  *
  * @return array
+ *   Types of maps.
  */
 function yamaps_get_map_types() {
   return array(

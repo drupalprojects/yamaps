@@ -34,7 +34,7 @@ function yamaps_block_info() {
  */
 function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
   $form['global_conf'] = array(
-    '#markup' => l('Global configuration for "Yandex Maps" blocks', 'admin/config/services/yamaps'),
+    '#markup' => l(t('Global configuration for "Yandex Maps" blocks'), 'admin/config/services/yamaps'),
   );
 
   $form[$delta . '_block_display_options'] = array(
@@ -244,7 +244,7 @@ function yamaps_block_content($delta) {
           '#value' => t($display_options['open_button_text']),
           '#attributes' => array(
             'id' => $open_button_id,
-            'class'=>'open_yamap_button',
+            'class' => 'open_yamap_button',
             'mapId' => $id,
           ),
         );
@@ -257,7 +257,6 @@ function yamaps_block_content($delta) {
       );
       // Load library.
       $block_output['#attached']['library'][] = array('yamaps', 'yamaps.full');
-
       break;
     case 'static':
       $params = array();
@@ -382,7 +381,10 @@ function yamaps_block_content($delta) {
           'style' => 'width:' . $width . 'px; height:' . $height . 'px' . $map_display_style,
         ),
         '#value' => theme('image', array(
-          'path' => url(YAMAPS_STATIC_API_URL, array('query' => $params, 'external' => TRUE)),
+          'path' => url(YAMAPS_STATIC_API_URL, array(
+            'query' => $params,
+            'external' => TRUE,
+          )),
           'width' => $width,
           'height' => $height,
           'title' => t('Yandex Map'),
@@ -415,7 +417,6 @@ function yamaps_block_content($delta) {
       drupal_add_js(array('yamapsStatic' => $maps), 'setting');
       // Load library.
       $block_output['#attached']['library'][] = array('yamaps', 'yamaps.full');
-
       break;
   }
 

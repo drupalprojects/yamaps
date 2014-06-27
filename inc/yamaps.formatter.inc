@@ -131,8 +131,8 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
           ),
         ),
       );
-
       break;
+
     case 'field_yamaps_formatter_static':
       $element['s_traffic'] = array(
         '#title' => t('Show traffic'),
@@ -186,7 +186,6 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
           ),
         ),
       );
-
       break;
   }
   return $element;
@@ -206,7 +205,7 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
       $summary[] = t('Show traffic: @traffic', array('@traffic' => $settings['traffic'] ? t('Yes') : t('No')));
       $summary[] = t('Map size: @width x @height', array(
         '@width' => $settings['width'],
-        '@height' => $settings['height']
+        '@height' => $settings['height'],
       ));
 
       if (count($display['settings']['behaviors']) > 0) {
@@ -229,14 +228,13 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
       if ($settings['yamaps_display_options']['display_type'] == 'map_button') {
         $summary[] = t('Button text: @text', array('@text' => $settings['yamaps_display_options']['open_button_text']));
       }
-
       break;
 
     case 'field_yamaps_formatter_static':
       $summary[] = t('Show traffic: @traffic', array('@traffic' => $settings['s_traffic'] ? t('Yes') : t('No')));
       $summary[] = t('Map size: @width x @height', array(
         '@width' => $settings['s_width'] . 'px',
-        '@height' => $settings['s_height'] . 'px'
+        '@height' => $settings['s_height'] . 'px',
       ));
 
       $summary[] = t('Display type: @type', array('@type' => $settings['yamaps_display_options_static']['display_type_static']));
@@ -346,8 +344,8 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
       // Adding map to js and load library.
       drupal_add_js(array('yamaps' => $maps), 'setting');
       $element['#attached']['library'][] = array('yamaps', 'yamaps.full');
-
       break;
+
     case 'field_yamaps_formatter_static':
       foreach ($items as $delta => $item) {
         // Ensure that field with empty coordinates doesn't show up.
@@ -530,7 +528,6 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         drupal_add_js(array('yamapsStatic' => $maps), 'setting');
         $element['#attached']['library'][] = array('yamaps', 'yamaps.full');
       }
-
       break;
   }
 

@@ -49,7 +49,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
   $default_js = _yamaps_format_values_to_js($value);
 
   // Issue #1712292 fix.
-  // Display default position on edit form
+  // Display default position on edit form.
   if (!$element['#default_value']) {
     if (isset($element['#entity']) && $entity = $element['#entity']) {
       $default_value = field_get_default_value($element['#entity_type'], $entity, $field, $instance);
@@ -203,7 +203,8 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
 /**
  * Helper function for cleanup values.
  *
- * @param $value
+ * @param array $value
+ *   Values of map.
  */
 function _yamaps_cleanup_values(&$value) {
   $value['coords'] = isset($value['coords']) ? $value['coords'] : NULL;
@@ -218,9 +219,11 @@ function _yamaps_cleanup_values(&$value) {
 /**
  * Helper function to pass values to js.
  *
- * @param $clean_values
+ * @param array $clean_values
+ *   Values of map.
  *
  * @return array
+ *   Prepared values.
  */
 function _yamaps_format_values_to_js($clean_values) {
   return array(
