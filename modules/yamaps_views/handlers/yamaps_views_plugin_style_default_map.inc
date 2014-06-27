@@ -60,9 +60,23 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    */
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
-    $fields = $this->get_fields();
+    //$fields = $this->get_fields();
     $yandex_fields = $this->get_yandex_maps_fields();
+    $form['map_type'] = array(
+      '#title' => t('Yandex Map type'),
+      '#type' => 'select',
+      '#options' => yamaps_get_map_types(),
+      '#default_value' => $this->options['map_type'],
+    );
 
+    $form['yandex_map_field'] = array(
+      '#title' => t('Yandex Map Field'),
+      '#description' => t('Choose Yandex Maps field. Add if views fields this field for the first.'),
+      '#type' => 'select',
+      '#options' => $yandex_fields,
+      '#required' => TRUE,
+      '#default_value' => $this->options['yandex_map_field'],
+    );
     $form['controls'] = array(
       '#title' => t('Controls'),
       '#type' => 'checkbox',
@@ -95,33 +109,21 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#required' => TRUE,
     );
 
-    $form['zoom'] = array(
-      '#title' => t('Zoom'),
-      '#type' => 'select',
-      '#description' => t('Zoom of map'),
-      '#options' => range(1, 20),
-      '#default_value' => $this->options['zoom'],
-    );
 
     $form['yamaps_center_options'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Display options'),
+      '#title' => t('Map center'),
     );
-
     $form['yamaps_center_options']['map_center_type'] = array(
       '#type' => 'radios',
-      '#title' => t('How display map for admins'),
+      '#title' => t('Choose map center type'),
       '#options' => array(
         'geolocation' => t('Geolocation.'),
-        //  'mini_map' => t('Choose on map.'),
+        'mini_map' => t('Choose on map.'),
       ),
       '#default_value' => $this->options['yamaps_center_options']['map_center_type'],
       '#required' => FALSE,
       '#description' => t('Type of map displaying.'),
-    );
-    $settings = array(
-      '#delta' => 0,
-
     );
 
     $form['yamaps_center_options']['map_center_geolocation'] = array(
@@ -136,16 +138,108 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
         ),
       ),
     );
-    /*
-        $form['yamaps_center_options']['map_center_string'] = array(
-          '#title' => t('Map center'),
-          '#description' => t(''),
-          '#type' => 'textfield',
-          '#default_value' => $this->options['map_center'],
-          '#size' => 5,
+    $form['yamaps_center_options']['zoom'] = array(
+      '#title' => t('Zoom'),
+      '#type' => 'select',
+      '#description' => t('Zoom of map'),
+      '#options' => range(1, 15),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="style_options[yamaps_center_options][map_center_type]"]' => array('value' => 'geolocation'),
+        ),
+      ),
+      '#default_value' => $this->options['yamaps_center_options']['zoom'],
+    );
 
+    // Map initialization parameters.
+    $map = array(
+      'init' => array(
+        'type' => 'yandex#map',
+        'behaviors' => array('scrollZoom', 'dblClickZoom', 'drag'),
+      ),
+      'display_options' => array(
+        'display_type' => 'map',
+      ),
+      'controls' => 1,
+      'traffic' => 0,
+      'placemarks' => $this->options['placemarks'],
+      'lines' => $this->options['lines'],
+      'polygons' => $this->options['polygons'],
+      'routes' => $this->options['routes'],
+      'edit' => TRUE,
+    );
+    if ($this->options['coords']) {
+      $coords = json_decode($this->options['coords']);
+      $map['init']['center'] = $coords->center;
+      $map['init']['zoom'] = $coords->zoom;
+    }
+    $id = 'test';
+    // Map container.
+    $form['yamaps_center_options']['map'] = array(
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#value' => '',
+      '#description' => t('Map view will be used when "Choose on map." radio is active'),
+      '#attributes' => array(
+        'id' => $id,
+        'class' => array(
+          'yamaps-map-container',
+        ),
+      ),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="style_options[yamaps_center_options][map_center_type]"]' => array('value' => 'mini_map'),
+        ),
+      ),
+    );
+    $form['coords'] = array(
+          '#type' => 'textfield',
+      '#title' => t('Coordinates'),
+      '#default_value' => $this->options['coords'],
+      '#attributes' => array(
+        'class' => array('field-yamaps-coords-' . $id),
+        'style' => 'width: 100%;',
+      ),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="style_options[yamaps_center_options][map_center_type]"]' => array('value' => 'mini_map'),
+        ),
+      ),
+      '#description' => t('Search for object on the map to fill this field or leave it blank (if field is not required).'),
+    );
+
+    // Hidden elements to saving map information.
+
+    $form['placemarks'] = array(
+      '#type' => 'hidden',
+      '#default_value' => $this->options['placemarks'],
+      '#attributes' => array('class' => array('field-yamaps-placemarks-' . $id)),
          );
-    */
+
+    $form['lines'] = array(
+      '#type' => 'hidden',
+      '#default_value' => $this->options['lines'],
+      '#attributes' => array('class' => array('field-yamaps-lines-' . $id)),
+    );
+
+    $form['polygons'] = array(
+      '#type' => 'hidden',
+      '#default_value' => $this->options['polygons'],
+      '#attributes' => array('class' => array('field-yamaps-polygons-' . $id)),
+    );
+
+    $form['routes'] = array(
+      '#type' => 'hidden',
+      '#default_value' => $this->options['routes'],
+      '#attributes' => array('class' => array('field-yamaps-routes-' . $id)),
+    );
+
+
+    $form['#attached']['js'][] = array(
+      'data' => array('yamaps' => array($id => $map)),
+      'type' => 'setting',
+    );
+
     $form['behaviors'] = array(
       '#title' => t('Mouse event settings'),
       '#type' => 'checkboxes',
