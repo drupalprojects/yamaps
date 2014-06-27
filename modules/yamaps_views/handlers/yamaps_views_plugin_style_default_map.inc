@@ -344,12 +344,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     }
     return $fields;
   }
-  /*
-    function render_fields($result) {
-      // @todo recheck
-     = parent::render_fields($result);
-    }
-  */
+
   /**
    * Preparing data for render.
    */
@@ -399,7 +394,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
 
         $prepared_placemarks += drupal_json_decode($placemark['raw']['placemarks']);
       }
-      $marker_title = '';
+      //$marker_title = '';
 
 
       if ($this->options['baloon_title']) {
@@ -459,7 +454,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       'routes' => NULL,
       'edit' => FALSE,
       'init' => array(
-        'type' => 'yandex#map',
+        'type' => $this->options['map_type'],
         'zoom' => $this->options['zoom'],
         'behaviors' => array_values(array_filter($this->options['behaviors'])),
       ),
@@ -524,7 +519,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
   function get_fields() {
     $field_names = array(
       '' => t('<none>'),
-      '<default>' => t('Default baloon value')
+      '<default>' => t('Default baloon value'),
     );
     $fields = $this->display->handler->get_handlers('field');
     foreach ($fields as $id => $handler) {
@@ -537,10 +532,12 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
 
   /**
    * Getting yandex maps fields.
+   *
    * @return array
+   *   List of yandex maps fields.
    */
   function get_yandex_maps_fields() {
-    $field_names = array('' => t('<none>'),);
+    $field_names = array('' => t('<none>'));
     $fields = $this->display->handler->get_handlers('field');
     foreach ($fields as $id => $handler) {
       if (isset($handler->field_info) && $handler->field_info['module'] == 'yamaps') {
