@@ -252,18 +252,14 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#title' => t('Display options'),
       '#tree' => TRUE,
     );
+
     $display_type = array(
       'map' => t('Map'),
       'map_button' => t('Map opened by button click'),
     );
-    if (module_enable(array('yamaps_modal'))) {
+    /*if (module_enable(array('yamaps_modal'))) {
       $display_type['map_modal'] = t('Map opened in modal window');
-      $modal_type = array(
-        'colorbox' => t('Colorbox'),
-        'fancybox' => t('Fancybox'),
-        'shadoxbox' => t('Shadowbox'),
-      );
-    }
+    }*/
     $form['yamaps_display_options']['display_type'] = array(
       '#type' => 'radios',
       '#title' => t('How display map for admins'),
@@ -282,6 +278,11 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
         ),
       ),
     );
+
+    // Load library.
+    $form['#attached']['library'][] = array('yamaps', 'yamaps.full');
+
+
     /*
     $form['yamaps_display_options']['modal_type'] = array(
       '#type' => 'radios',
@@ -312,32 +313,6 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       );
 
     */
-
-    $form['map_type'] = array(
-      '#title' => t('Yandex Map Field'),
-      '#type' => 'select',
-      '#options' => array('map_type'),
-      '#default_value' => $this->options['map_type'],
-    );
-
-    $form['yandex_map_field'] = array(
-      '#title' => t('Yandex Map Field'),
-      '#description' => t('Choose Yandex Maps field. Add if views fields this field for the first.'),
-      '#type' => 'select',
-      '#options' => $yandex_fields,
-      '#required' => TRUE,
-      '#default_value' => $this->options['yandex_map_field'],
-    );
-
-    $form['map_grouping_cat'] = array(
-      '#title' => t('Yandex group type'),
-      '#type' => 'select',
-      '#description' => t('Standart'),
-      '#options' => array('standart' => t('standart'),),
-      '#default_value' => $this->options['map_grouping_cat'],
-    );
-
-
   }
 
   /**
