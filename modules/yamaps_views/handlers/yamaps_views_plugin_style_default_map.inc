@@ -416,6 +416,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
 
       $prepared_placemarks = array();
       $yandexmap_field_name = 'field_' . $this->options['yandex_map_field'];
+
       // Fix yandex cart.
       foreach ($row->$yandexmap_field_name as $yandexmap_field_coords) {
         $maps_coords_item = drupal_json_decode($yandexmap_field_coords['raw']['coords']);
@@ -449,8 +450,15 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           unset($ballon_body);
           $objects[] = $placemark;
         }
-      }
 
+        // Preparing lines.
+        $decoded_lines = drupal_json_decode($yandexmap_field_coords['raw']['lines']);
+        if (is_array($decoded_lines)) {
+          foreach ($decoded_lines as $lines) {
+            $prepared_lines[] = $lines;
+          }
+        }
+      }
     }
 
     unset($this->view->row_index);
@@ -469,6 +477,11 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
 
     $prepared_params = _yamaps_format_values_to_js($this->options);
+    if (is_array($prepared_params['lines'])) {
+      foreach ($prepared_params['lines'] as $lines) {
+        $prepared_lines[] = $lines;
+      }
+    }
     // Map initialization parameters.
     $map = array(
       'id' => $id,
@@ -480,9 +493,9 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       'controls' => $this->options['controls'],
       'traffic' => $this->options['traffic'],
       'placemarks' => $objects,
-      'lines' => $prepared_params['lines'],
       'polygons' => $prepared_params['polygons'],
       'routes' => $prepared_params['routes'],
+      'lines' => $prepared_lines,
       'edit' => FALSE,
       'init' => array(
         'type' => ($this->options['type']) ? ($this->options['type']) : 'yandex#map',
