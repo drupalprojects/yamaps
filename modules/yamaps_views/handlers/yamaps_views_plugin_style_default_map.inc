@@ -458,6 +458,14 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
             $prepared_lines[] = $lines;
           }
         }
+
+        // Preparing polygons.
+        $decoded_polygons = drupal_json_decode($yandexmap_field_coords['raw']['polygons']);
+        if (is_array($decoded_polygons)) {
+          foreach ($decoded_polygons as $polygons) {
+            $prepared_polygons[] = $polygons;
+          }
+        }
       }
     }
 
@@ -468,8 +476,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       $this->view->name,
       $this->view->current_display,
     );
-    
-    if(isset($this->view->dom_id)){
+
+    if (isset($this->view->dom_id)) {
       $array_of_unique_params[] = $this->view->dom_id;
     }
     // Unique map id.
@@ -480,6 +488,11 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     if (is_array($prepared_params['lines'])) {
       foreach ($prepared_params['lines'] as $lines) {
         $prepared_lines[] = $lines;
+      }
+    }
+    if (is_array($prepared_params['polygons'])) {
+      foreach ($prepared_params['polygons'] as $polygon) {
+        $prepared_polygons[] = $polygon;
       }
     }
     // Map initialization parameters.
@@ -493,9 +506,9 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       'controls' => $this->options['controls'],
       'traffic' => $this->options['traffic'],
       'placemarks' => $objects,
-      'polygons' => $prepared_params['polygons'],
       'routes' => $prepared_params['routes'],
       'lines' => $prepared_lines,
+      'polygons' => $prepared_polygons,
       'edit' => FALSE,
       'init' => array(
         'type' => ($this->options['type']) ? ($this->options['type']) : 'yandex#map',
