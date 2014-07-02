@@ -59,7 +59,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $options['placemark_title'] = array('default' => $this::PLACEMARK_DEFAULT_FIELD);
     $options['baloon_title'] = array('default' => $this::PLACEMARK_DEFAULT_FIELD);
     $options['baloon_body'] = array('default' => $this::PLACEMARK_DEFAULT_FIELD);
-    $options['map_type'] = array('default' => 'yandex#map');
+    $options['type'] = array('default' => 'yandex#map');
 
     $options['map_center'] = array('default' => '');
     $options['map_grouping_cat'] = array('default' => 'standart');
@@ -77,11 +77,11 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     parent::options_form($form, $form_state);
     $fields = $this->getFields();
     $yandex_fields = $this->getYandexMapsFields();
-    $form['map_type'] = array(
+    $form['type'] = array(
       '#title' => t('Yandex Map type'),
       '#type' => 'select',
       '#options' => yamaps_get_map_types(),
-      '#default_value' => $this->options['map_type'],
+      '#default_value' => ($this->options['type']) ? ($this->options['type']) : 'yandex#map',
     );
 
     $form['yandex_map_field'] = array(
@@ -475,7 +475,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       'routes' => NULL,
       'edit' => FALSE,
       'init' => array(
-        'type' => $this->options['map_type'],
+        'type' => ($this->options['type']) ? ($this->options['type']) : 'yandex#map',
         'zoom' => $this->options['zoom'],
         'behaviors' => array_values(array_filter($this->options['behaviors'])),
       ),
