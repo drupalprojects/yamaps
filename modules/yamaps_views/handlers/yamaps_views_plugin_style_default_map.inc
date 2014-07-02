@@ -187,7 +187,12 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       $map['init']['center'] = $coords->center;
       $map['init']['zoom'] = $coords->zoom;
     }
-    $id = 'test';
+    $id = drupal_html_id(implode('-', array(
+      $this->plugin_name,
+      $this->view->name,
+      $this->view->current_display,
+      'style_options_form',
+    )));
     // Map container.
     $form['yamaps_center_options']['map'] = array(
       '#type' => 'html_tag',
@@ -450,13 +455,17 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
 
     unset($this->view->row_index);
 
-    // Unique map id.
-    $id = drupal_html_id(implode('-', array(
+    $array_of_unique_params = array(
       $this->plugin_name,
       $this->view->name,
       $this->view->current_display,
-      $this->view->dom_id,
-    )));
+    );
+    
+    if(isset($this->view->dom_id)){
+      $array_of_unique_params[] = $this->view->dom_id;
+    }
+    // Unique map id.
+    $id = drupal_html_id(implode('-', $array_of_unique_params));
     $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
 
     $prepared_params = _yamaps_format_values_to_js($this->options);
