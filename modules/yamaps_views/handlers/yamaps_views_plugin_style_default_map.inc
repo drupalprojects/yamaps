@@ -412,47 +412,40 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       $prepared_placemarks = array();
       $yandexmap_field_name = 'field_' . $this->options['yandex_map_field'];
       // Fix yandex cart.
-      foreach ($row->$yandexmap_field_name as $placemark) {
-        $maps_coords_item = drupal_json_decode($placemark['raw']['coords']);
+      foreach ($row->$yandexmap_field_name as $yandexmap_field_coords) {
+        $maps_coords_item = drupal_json_decode($yandexmap_field_coords['raw']['coords']);
         if (count($maps_coords_item['center']) > 0) {
           $map_coords['lattitude'][] = $maps_coords_item['center'][0];
           $map_coords['longitude'][] = $maps_coords_item['center'][1];
         }
-
-        $decoded_placemark = drupal_json_decode($placemark['raw']['placemarks']);
-        foreach ($decoded_placemark as $dec) {
-          $prepared_placemarks[] = $dec;
-        }
-      }
-
-      // $marker_title = '';
-
-      if ($this->options['baloon_title']) {
-        if ($this->options['baloon_title'] !== '<default>') {
-          $marker_title = $this->get_field($row_index, $this->options['baloon_title']);
-          $marker_title = strip_tags($marker_title);
-          $marker_title = decode_entities($marker_title);
-          foreach ($prepared_placemarks as &$placemark) {
+        $decoded_placemarks = drupal_json_decode($yandexmap_field_coords['raw']['placemarks']);
+        foreach ($decoded_placemarks as $placemark) {
+          // $marker_title = '';
+          if (isset($this->options['placemark_title']) && $this->options['placemark_title'] !== $this::PLACEMARK_DEFAULT_FIELD) {
+            // Prepare placemark title.
+            $marker_title = $this->preparePlacemarkTitle($row_index);
             $placemark['params'][$this::PLACEMARK_TITLE] = $marker_title;
           }
+          // Prepare Baloon title.
+          if ($this->options['baloon_title'] && $this->options['baloon_title'] !== $this::PLACEMARK_DEFAULT_FIELD) {
+            $placemark['params'][$this::PLACEMARK_BALLON_HEADER] = $this->rendered_fields[$row_index][$this->options['baloon_title']];
+          }
+          // Prepare Baloon body.
+          if (is_array($this->options['baloon_body'])) {
+            foreach ($this->options['baloon_body'] as $bkey => $bval) {
+              //$this->rendered_fields[$row_index][$this->options['placemark_title']];
+              $ballon_body[] = $this->get_field($row_index, $bval);
+            }
+            $placemark['params'][$this::PLACEMARK_BALLON_BODY] = $this->prepareBody($ballon_body);
+          }
+
+          $this->view->row_index = $row_index;
+          // $marker_content = $this->row_plugin->render($row);
+          unset($ballon_body);
+          $objects[] = $placemark;
         }
       }
 
-      if ($this->options['baloon_body']) {
-        foreach ($this->options['baloon_body'] as $bkey => $bval) {
-          $ballon_body[] = $this->get_field($row_index, $bval);
-        }
-        $ballon_body = $this->prepareBody($ballon_body);
-
-      }
-
-      $this->view->row_index = $row_index;
-      // $marker_content = $this->row_plugin->render($row);
-
-      unset($ballon_body);
-      foreach ($prepared_placemarks as $val) {
-        $objects[] = $val;
-      }
     }
 
     unset($this->view->row_index);
@@ -574,6 +567,21 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       }
     }
     return $field_names;
+  }
+
+  function preparePlacemark() {
+
+  }
+
+  /**
+   * Clearing
+   *
+   * @param $row_index
+   * @return string
+   */
+  function preparePlacemarkTitle($row_index) {
+    $title = $this->get_field($row_index, $this->options['placemark_title']);
+    return check_plain(strip_tags($title));
   }
 
   /**
