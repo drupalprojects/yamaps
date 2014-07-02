@@ -5,8 +5,10 @@
  * Class yamaps_views_plugin_style_default_map.
  */
 class yamaps_views_plugin_style_default_map extends views_plugin_style {
-  const PLACEMARK_TITLE = 'balloonContentHeader';
-  const PLACEMARK_BALLON = 'balloonContentBody';
+  const PLACEMARK_TITLE = 'iconContent';
+  const PLACEMARK_BALLON_HEADER = 'balloonContentHeader';
+  const PLACEMARK_BALLON_BODY = 'balloonContentBody';
+  const PLACEMARK_DEFAULT_FIELD = '<default>';
 
   /**
    * Default settings for map.
@@ -52,8 +54,9 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     );
 
     $options['yandex_map_field'] = array('default' => '');
-    $options['baloon_title'] = array('default' => '<default>');
-    $options['baloon_body'] = array('default' => '');
+    $options['placemark_title'] = array('default' => $this::PLACEMARK_DEFAULT_FIELD);
+    $options['baloon_title'] = array('default' => $this::PLACEMARK_DEFAULT_FIELD);
+    $options['baloon_body'] = array('default' => $this::PLACEMARK_DEFAULT_FIELD);
     $options['map_type'] = array('default' => 'yandex#map');
 
     $options['map_center'] = array('default' => '');
