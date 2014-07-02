@@ -399,11 +399,12 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
 
     $objects = array();
     $map_coords = array('lattitude' => array(), 'longitude' => array());
+
     foreach ($this->view->result as $row_index => $row) {
 
       $prepared_placemarks = array();
       $yandexmap_field_name = 'field_' . $this->options['yandex_map_field'];
-
+      // Fix yandex cart.
       foreach ($row->$yandexmap_field_name as $placemark) {
         $maps_coords_item = drupal_json_decode($placemark['raw']['coords']);
         if (count($maps_coords_item['center']) > 0) {
@@ -411,8 +412,12 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           $map_coords['longitude'][] = $maps_coords_item['center'][1];
         }
 
-        $prepared_placemarks += drupal_json_decode($placemark['raw']['placemarks']);
+        $decoded_placemark = drupal_json_decode($placemark['raw']['placemarks']);
+        foreach ($decoded_placemark as $dec) {
+          $prepared_placemarks[] = $dec;
+        }
       }
+
       // $marker_title = '';
 
       if ($this->options['baloon_title']) {
@@ -438,10 +443,11 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       // $marker_content = $this->row_plugin->render($row);
 
       unset($ballon_body);
-      foreach ($prepared_placemarks as $placemark) {
-        $objects[] = $placemark;
+      foreach ($prepared_placemarks as $val) {
+        $objects[] = $val;
       }
     }
+
     unset($this->view->row_index);
 
     // Unique map id.
