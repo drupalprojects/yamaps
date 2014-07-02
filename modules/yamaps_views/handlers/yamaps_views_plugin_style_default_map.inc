@@ -73,7 +73,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    */
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
-    // $fields = $this->get_fields();
+    $fields = $this->getFields();
     $yandex_fields = $this->getYandexMapsFields();
     $form['map_type'] = array(
       '#title' => t('Yandex Map type'),
@@ -303,23 +303,27 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           ':input[name="style_options[yamaps_display_options][display_type]"]' => array('value' => 'map_modal'),
         ),
       ),
+    );*/
+    $form['placemark_title'] = array(
+      '#title' => t('Placemark title'),
+      '#type' => 'select',
+      '#options' => $fields,
+      '#default_value' => $this->options['placemark_title'],
     );
     $form['baloon_title'] = array(
-        '#title' => t('Baloon title'),
-        '#type' => 'select',
-        '#options' => $fields,
-        '#default_value' => $this->options['baloon_title'],
-      );
+      '#title' => t('Baloon title'),
+      '#type' => 'select',
+      '#options' => $fields,
+      '#default_value' => $this->options['baloon_title'],
+    );
 
-      $form['baloon_body'] = array(
-        '#title' => t('Balloon body Field'),
-        '#type' => 'select',
-        '#multiple' => TRUE,
-        '#options' => $fields,
-        '#default_value' => $this->options['baloon_body'],
-      );
-
-    */
+    $form['baloon_body'] = array(
+      '#title' => t('Balloon body Field'),
+      '#type' => 'select',
+      '#multiple' => TRUE,
+      '#options' => $fields,
+      '#default_value' => $this->options['baloon_body'],
+    );
   }
 
   /**
