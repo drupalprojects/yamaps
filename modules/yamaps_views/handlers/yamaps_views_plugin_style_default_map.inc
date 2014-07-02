@@ -164,7 +164,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       ),
       '#default_value' => $this->options['yamaps_center_options']['zoom'],
     );
-
+    $prepared_params = _yamaps_format_values_to_js($this->options);
     // Map initialization parameters.
     $map = array(
       'init' => array(
@@ -176,10 +176,10 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       ),
       'controls' => 1,
       'traffic' => 0,
-      'placemarks' => $this->options['placemarks'],
-      'lines' => $this->options['lines'],
-      'polygons' => $this->options['polygons'],
-      'routes' => $this->options['routes'],
+      'placemarks' => $prepared_params['placemarks'],
+      'lines' => $prepared_params['lines'],
+      'polygons' => $prepared_params['polygons'],
+      'routes' => $prepared_params['routes'],
       'edit' => TRUE,
     );
     if ($this->options['coords']) {
@@ -459,6 +459,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     )));
     $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
 
+    $prepared_params = _yamaps_format_values_to_js($this->options);
     // Map initialization parameters.
     $map = array(
       'id' => $id,
@@ -470,9 +471,9 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       'controls' => $this->options['controls'],
       'traffic' => $this->options['traffic'],
       'placemarks' => $objects,
-      'lines' => NULL,
-      'polygons' => NULL,
-      'routes' => NULL,
+      'lines' => $prepared_params['lines'],
+      'polygons' => $prepared_params['polygons'],
+      'routes' => $prepared_params['routes'],
       'edit' => FALSE,
       'init' => array(
         'type' => ($this->options['type']) ? ($this->options['type']) : 'yandex#map',
@@ -499,9 +500,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
         break;
       case 'mini_map':
         if ($this->options['coords']) {
-          $coords = json_decode($this->options['coords']);
-          $map['init']['center'] = $coords->center;
-          $map['init']['zoom'] = $coords->zoom;
+          $map['init']['center'] = $prepared_params['coords']['center'];
+          $map['init']['zoom'] = $prepared_params['coords']['zoom'];
         }
         break;
     }
