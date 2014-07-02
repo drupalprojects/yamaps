@@ -424,6 +424,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           $map_coords['lattitude'][] = $maps_coords_item['center'][0];
           $map_coords['longitude'][] = $maps_coords_item['center'][1];
         }
+        // Preparing placemarks.
         $decoded_placemarks = drupal_json_decode($yandexmap_field_coords['raw']['placemarks']);
         foreach ($decoded_placemarks as $placemark) {
           // $marker_title = '';
@@ -466,6 +467,13 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
             $prepared_polygons[] = $polygons;
           }
         }
+        // Preparing routes.
+        $decoded_routes = drupal_json_decode($yandexmap_field_coords['raw']['routes']);
+        if (is_array($decoded_routes)) {
+          foreach ($decoded_routes as $route) {
+            $prepared_route[] = $route;
+          }
+        }
       }
     }
 
@@ -495,6 +503,13 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
         $prepared_polygons[] = $polygon;
       }
     }
+
+    if (is_array($prepared_params['routes'])) {
+      foreach ($prepared_params['routes'] as $route) {
+        $prepared_route[] = $route;
+      }
+    }
+
     // Map initialization parameters.
     $map = array(
       'id' => $id,
@@ -506,9 +521,9 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       'controls' => $this->options['controls'],
       'traffic' => $this->options['traffic'],
       'placemarks' => $objects,
-      'routes' => $prepared_params['routes'],
       'lines' => $prepared_lines,
       'polygons' => $prepared_polygons,
+      'routes' => $prepared_route,
       'edit' => FALSE,
       'init' => array(
         'type' => ($this->options['type']) ? ($this->options['type']) : 'yandex#map',
