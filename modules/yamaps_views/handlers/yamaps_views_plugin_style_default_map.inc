@@ -566,8 +566,11 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     );
     $fields = $this->display->handler->get_handlers('field');
     foreach ($fields as $id => $handler) {
-      if (isset($handler->field_info['module']) && $handler->field_info['module'] !== 'yamaps') {
+      if (isset($handler->human_name)) {
         $field_names[$id] = $handler->human_name;
+      }
+      else {
+        $field_names[$id] = $handler->definition['title'];
       }
     }
     return $field_names;
