@@ -193,6 +193,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#value' => '',
       '#description' => t('Map view will be used when "Choose on map." radio is active'),
       '#attributes' => array(
+        'style' => ' width: ' . $this->options['width'] . '; height:' . $this->options['height'],
         'id' => $id,
         'class' => array(
           'yamaps-map-container',
@@ -525,6 +526,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#type' => 'html_tag',
       '#tag' => 'div',
       '#attributes' => array(
+        'style' => ' width: ' . $this->options['width'] . '; height:' . $this->options['height'],
         'id' => $id,
         'class' => array(
           'yamaps-map-container',
