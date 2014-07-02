@@ -9,6 +9,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
   const PLACEMARK_BALLON_HEADER = 'balloonContentHeader';
   const PLACEMARK_BALLON_BODY = 'balloonContentBody';
   const PLACEMARK_DEFAULT_FIELD = '<default>';
+  const PLACEMARK_NONE_FIELD = '<none>';
+
 
   /**
    * Default settings for map.
@@ -559,8 +561,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    */
   function getFields() {
     $field_names = array(
-      '' => t('<none>'),
-      '<default>' => t('Default baloon value'),
+      $this::PLACEMARK_NONE_FIELD => t('<none>'),
+      $this::PLACEMARK_DEFAULT_FIELD => t('Default baloon value'),
     );
     $fields = $this->display->handler->get_handlers('field');
     foreach ($fields as $id => $handler) {
@@ -578,7 +580,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    *   List of yandex maps fields.
    */
   function getYandexMapsFields() {
-    $field_names = array('' => t('<none>'));
+    $field_names = array($this::PLACEMARK_NONE_FIELD => t('<none>'));
     $fields = $this->display->handler->get_handlers('field');
     foreach ($fields as $id => $handler) {
       if (isset($handler->field_info) && $handler->field_info['module'] == 'yamaps') {
