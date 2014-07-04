@@ -5,8 +5,12 @@
  * Class yamaps_views_plugin_style_default_map.
  */
 class yamaps_views_plugin_style_default_map extends views_plugin_style {
-  const PLACEMARK_TITLE = 'balloonContentHeader';
-  const PLACEMARK_BALLON = 'balloonContentBody';
+  const PLACEMARK_TITLE = 'iconContent';
+  const PLACEMARK_BALLON_HEADER = 'balloonContentHeader';
+  const PLACEMARK_BALLON_BODY = 'balloonContentBody';
+  const PLACEMARK_DEFAULT_FIELD = '<default>';
+  const PLACEMARK_NONE_FIELD = '<none>';
+
 
   /**
    * Default settings for map.
@@ -52,9 +56,10 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     );
 
     $options['yandex_map_field'] = array('default' => '');
-    $options['baloon_title'] = array('default' => '<default>');
-    $options['baloon_body'] = array('default' => '');
-    $options['map_type'] = array('default' => 'yandex#map');
+    $options['placemark_title'] = array('default' => $this::PLACEMARK_DEFAULT_FIELD);
+    $options['baloon_title'] = array('default' => $this::PLACEMARK_DEFAULT_FIELD);
+    $options['baloon_body'] = array('default' => $this::PLACEMARK_DEFAULT_FIELD);
+    $options['type'] = array('default' => 'yandex#map');
 
     $options['map_center'] = array('default' => '');
     $options['map_grouping_cat'] = array('default' => 'standart');
@@ -70,13 +75,13 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    */
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
-    // $fields = $this->get_fields();
+    $fields = $this->getFields();
     $yandex_fields = $this->getYandexMapsFields();
-    $form['map_type'] = array(
+    $form['type'] = array(
       '#title' => t('Yandex Map type'),
       '#type' => 'select',
       '#options' => yamaps_get_map_types(),
-      '#default_value' => $this->options['map_type'],
+      '#default_value' => ($this->options['type']) ? ($this->options['type']) : 'yandex#map',
     );
 
     $form['yandex_map_field'] = array(
@@ -159,7 +164,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       ),
       '#default_value' => $this->options['yamaps_center_options']['zoom'],
     );
-
+    $prepared_params = _yamaps_format_values_to_js($this->options);
     // Map initialization parameters.
     $map = array(
       'init' => array(
@@ -171,10 +176,10 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       ),
       'controls' => 1,
       'traffic' => 0,
-      'placemarks' => $this->options['placemarks'],
-      'lines' => $this->options['lines'],
-      'polygons' => $this->options['polygons'],
-      'routes' => $this->options['routes'],
+      'placemarks' => $prepared_params['placemarks'],
+      'lines' => $prepared_params['lines'],
+      'polygons' => $prepared_params['polygons'],
+      'routes' => $prepared_params['routes'],
       'edit' => TRUE,
     );
     if ($this->options['coords']) {
@@ -182,7 +187,12 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       $map['init']['center'] = $coords->center;
       $map['init']['zoom'] = $coords->zoom;
     }
-    $id = 'test';
+    $id = drupal_html_id(implode('-', array(
+      $this->plugin_name,
+      $this->view->name,
+      $this->view->current_display,
+      'style_options_form',
+    )));
     // Map container.
     $form['yamaps_center_options']['map'] = array(
       '#type' => 'html_tag',
@@ -190,6 +200,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#value' => '',
       '#description' => t('Map view will be used when "Choose on map." radio is active'),
       '#attributes' => array(
+        'style' => ' width: ' . $this->options['width'] . '; height:' . $this->options['height'],
         'id' => $id,
         'class' => array(
           'yamaps-map-container',
@@ -248,7 +259,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     );
 
     $form['behaviors'] = array(
-      '#title' => t('Available mouse events'),
+      '#title' => t('Mouse event settings'),
       '#type' => 'checkboxes',
       '#options' => yamaps_get_behaviors_list(),
       '#default_value' => array_unique(array_values($this->options['behaviors'])),
@@ -300,23 +311,27 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           ':input[name="style_options[yamaps_display_options][display_type]"]' => array('value' => 'map_modal'),
         ),
       ),
+    );*/
+    $form['placemark_title'] = array(
+      '#title' => t('Placemark title'),
+      '#type' => 'select',
+      '#options' => $fields,
+      '#default_value' => $this->options['placemark_title'],
     );
     $form['baloon_title'] = array(
-        '#title' => t('Baloon title'),
-        '#type' => 'select',
-        '#options' => $fields,
-        '#default_value' => $this->options['baloon_title'],
-      );
+      '#title' => t('Baloon title'),
+      '#type' => 'select',
+      '#options' => $fields,
+      '#default_value' => $this->options['baloon_title'],
+    );
 
-      $form['baloon_body'] = array(
-        '#title' => t('Balloon body Field'),
-        '#type' => 'select',
-        '#multiple' => TRUE,
-        '#options' => $fields,
-        '#default_value' => $this->options['baloon_body'],
-      );
-
-    */
+    $form['baloon_body'] = array(
+      '#title' => t('Balloon body Field'),
+      '#type' => 'select',
+      '#multiple' => TRUE,
+      '#options' => $fields,
+      '#default_value' => $this->options['baloon_body'],
+    );
   }
 
   /**
@@ -396,62 +411,104 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
 
     $objects = array();
     $map_coords = array('lattitude' => array(), 'longitude' => array());
+
     foreach ($this->view->result as $row_index => $row) {
 
       $prepared_placemarks = array();
       $yandexmap_field_name = 'field_' . $this->options['yandex_map_field'];
 
-      foreach ($row->$yandexmap_field_name as $placemark) {
-        $maps_coords_item = drupal_json_decode($placemark['raw']['coords']);
+      // Fix yandex cart.
+      foreach ($row->$yandexmap_field_name as $yandexmap_field_coords) {
+        $maps_coords_item = drupal_json_decode($yandexmap_field_coords['raw']['coords']);
         if (count($maps_coords_item['center']) > 0) {
           $map_coords['lattitude'][] = $maps_coords_item['center'][0];
           $map_coords['longitude'][] = $maps_coords_item['center'][1];
         }
-
-        $placemark_decoded = drupal_json_decode($placemark['raw']['placemarks']);
-        if ($placemark_decoded) {
-          $prepared_placemarks += drupal_json_decode($placemark['raw']['placemarks']);
-        }
-      }
-      // $marker_title = '';
-
-      if ($this->options['baloon_title']) {
-        if ($this->options['baloon_title'] !== '<default>') {
-          $marker_title = $this->get_field($row_index, $this->options['baloon_title']);
-          $marker_title = strip_tags($marker_title);
-          $marker_title = decode_entities($marker_title);
-          foreach ($prepared_placemarks as &$placemark) {
+        // Preparing placemarks.
+        $decoded_placemarks = drupal_json_decode($yandexmap_field_coords['raw']['placemarks']);
+        foreach ($decoded_placemarks as $placemark) {
+          // $marker_title = '';
+          if (isset($this->options['placemark_title']) && $this->options['placemark_title'] !== $this::PLACEMARK_DEFAULT_FIELD) {
+            // Prepare placemark title.
+            $marker_title = $this->preparePlacemarkTitle($row_index);
             $placemark['params'][$this::PLACEMARK_TITLE] = $marker_title;
+          }
+          // Prepare Baloon title.
+          if ($this->options['baloon_title'] && $this->options['baloon_title'] !== $this::PLACEMARK_DEFAULT_FIELD) {
+            $placemark['params'][$this::PLACEMARK_BALLON_HEADER] = $this->rendered_fields[$row_index][$this->options['baloon_title']];
+          }
+          // Prepare Baloon body.
+          if (is_array($this->options['baloon_body'])) {
+            foreach ($this->options['baloon_body'] as $bkey => $bval) {
+              //$this->rendered_fields[$row_index][$this->options['placemark_title']];
+              $ballon_body[] = $this->get_field($row_index, $bval);
+            }
+            $placemark['params'][$this::PLACEMARK_BALLON_BODY] = $this->prepareBody($ballon_body);
+          }
+
+          $this->view->row_index = $row_index;
+          // $marker_content = $this->row_plugin->render($row);
+          unset($ballon_body);
+          $objects[] = $placemark;
+        }
+
+        // Preparing lines.
+        $decoded_lines = drupal_json_decode($yandexmap_field_coords['raw']['lines']);
+        if (is_array($decoded_lines)) {
+          foreach ($decoded_lines as $lines) {
+            $prepared_lines[] = $lines;
+          }
+        }
+
+        // Preparing polygons.
+        $decoded_polygons = drupal_json_decode($yandexmap_field_coords['raw']['polygons']);
+        if (is_array($decoded_polygons)) {
+          foreach ($decoded_polygons as $polygons) {
+            $prepared_polygons[] = $polygons;
+          }
+        }
+        // Preparing routes.
+        $decoded_routes = drupal_json_decode($yandexmap_field_coords['raw']['routes']);
+        if (is_array($decoded_routes)) {
+          foreach ($decoded_routes as $route) {
+            $prepared_route[] = $route;
           }
         }
       }
-
-      if ($this->options['baloon_body']) {
-        foreach ($this->options['baloon_body'] as $bkey => $bval) {
-          $ballon_body[] = $this->get_field($row_index, $bval);
-        }
-        $ballon_body = $this->prepareBody($ballon_body);
-
-      }
-
-      $this->view->row_index = $row_index;
-      // $marker_content = $this->row_plugin->render($row);
-
-      unset($ballon_body);
-      foreach ($prepared_placemarks as $placemark) {
-        $objects[] = $placemark;
-      }
     }
+
     unset($this->view->row_index);
 
-    // Unique map id.
-    $id = drupal_html_id(implode('-', array(
+    $array_of_unique_params = array(
       $this->plugin_name,
       $this->view->name,
       $this->view->current_display,
-      $this->view->dom_id,
-    )));
+    );
+
+    if (isset($this->view->dom_id)) {
+      $array_of_unique_params[] = $this->view->dom_id;
+    }
+    // Unique map id.
+    $id = drupal_html_id(implode('-', $array_of_unique_params));
     $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
+
+    $prepared_params = _yamaps_format_values_to_js($this->options);
+    if (is_array($prepared_params['lines'])) {
+      foreach ($prepared_params['lines'] as $lines) {
+        $prepared_lines[] = $lines;
+      }
+    }
+    if (is_array($prepared_params['polygons'])) {
+      foreach ($prepared_params['polygons'] as $polygon) {
+        $prepared_polygons[] = $polygon;
+      }
+    }
+
+    if (is_array($prepared_params['routes'])) {
+      foreach ($prepared_params['routes'] as $route) {
+        $prepared_route[] = $route;
+      }
+    }
 
     // Map initialization parameters.
     $map = array(
@@ -464,12 +521,12 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       'controls' => $this->options['controls'],
       'traffic' => $this->options['traffic'],
       'placemarks' => $objects,
-      'lines' => NULL,
-      'polygons' => NULL,
-      'routes' => NULL,
+      'lines' => $prepared_lines,
+      'polygons' => $prepared_polygons,
+      'routes' => $prepared_route,
       'edit' => FALSE,
       'init' => array(
-        'type' => $this->options['map_type'],
+        'type' => ($this->options['type']) ? ($this->options['type']) : 'yandex#map',
         'zoom' => $this->options['zoom'],
         'behaviors' => array_values(array_filter($this->options['behaviors'])),
       ),
@@ -493,9 +550,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
         break;
       case 'mini_map':
         if ($this->options['coords']) {
-          $coords = json_decode($this->options['coords']);
-          $map['init']['center'] = $coords->center;
-          $map['init']['zoom'] = $coords->zoom;
+          $map['init']['center'] = $prepared_params['coords']['center'];
+          $map['init']['zoom'] = $prepared_params['coords']['zoom'];
         }
         break;
     }
@@ -515,6 +571,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#type' => 'html_tag',
       '#tag' => 'div',
       '#attributes' => array(
+        'style' => ' width: ' . $this->options['width'] . '; height:' . $this->options['height'],
         'id' => $id,
         'class' => array(
           'yamaps-map-container',
@@ -547,16 +604,34 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    */
   function getFields() {
     $field_names = array(
-      '' => t('<none>'),
-      '<default>' => t('Default baloon value'),
+      $this::PLACEMARK_NONE_FIELD => t('<none>'),
+      $this::PLACEMARK_DEFAULT_FIELD => t('Default baloon value'),
     );
     $fields = $this->display->handler->get_handlers('field');
     foreach ($fields as $id => $handler) {
-      if (isset($handler->field_info['module']) && $handler->field_info['module'] !== 'yamaps') {
+      if (isset($handler->human_name)) {
         $field_names[$id] = $handler->human_name;
+      }
+      else {
+        $field_names[$id] = $handler->definition['title'];
       }
     }
     return $field_names;
+  }
+
+  function preparePlacemark() {
+
+  }
+
+  /**
+   * Clearing
+   *
+   * @param $row_index
+   * @return string
+   */
+  function preparePlacemarkTitle($row_index) {
+    $title = $this->get_field($row_index, $this->options['placemark_title']);
+    return check_plain(strip_tags($title));
   }
 
   /**
@@ -566,7 +641,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    *   List of yandex maps fields.
    */
   function getYandexMapsFields() {
-    $field_names = array('' => t('<none>'));
+    $field_names = array($this::PLACEMARK_NONE_FIELD => t('<none>'));
     $fields = $this->display->handler->get_handlers('field');
     foreach ($fields as $id => $handler) {
       if (isset($handler->field_info) && $handler->field_info['module'] == 'yamaps') {
