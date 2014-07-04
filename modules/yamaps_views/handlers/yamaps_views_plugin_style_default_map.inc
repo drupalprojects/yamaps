@@ -374,6 +374,28 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
   }
 
   /**
+   * Validation.
+   *
+   * @return array
+   *   Errors list.
+   */
+  function validate() {
+    $errors = parent::validate();
+
+    // Checking of existanse of pager settings.
+    if ($this->display->handler->use_pager()) {
+      $errors[] = t('The Yandex Maps style cannot be used with a pager. Disable the "Use pager" option for this display.');
+    }
+
+    // Checking for existans of yandex map field.
+    if (empty($this->options['yandex_map_field']) || $this->options['yandex_map_field'] == '<none>') {
+      $errors[] = t('The Yandex Maps style cannot be used with a pager. Please add "Yandex Maps" field and chose it in views settings form.');
+    }
+
+    return $errors;
+  }
+
+  /**
    * Preparing data for render.
    */
   function pre_render($result) {
