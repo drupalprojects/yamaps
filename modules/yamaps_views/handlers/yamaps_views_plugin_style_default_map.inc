@@ -373,7 +373,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    */
   function render() {
     if (isset($this->view->live_preview) && $this->view->live_preview) {
-      return t('Selected style is not compatible with live preview.');
+      return t("Selected view format doesn't support live preview.");
     }
 
     // @todo remove.
