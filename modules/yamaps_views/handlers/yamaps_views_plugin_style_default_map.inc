@@ -408,7 +408,10 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           $map_coords['longitude'][] = $maps_coords_item['center'][1];
         }
 
-        $prepared_placemarks += drupal_json_decode($placemark['raw']['placemarks']);
+        $placemark_decoded = drupal_json_decode($placemark['raw']['placemarks']);
+        if ($placemark_decoded) {
+          $prepared_placemarks += drupal_json_decode($placemark['raw']['placemarks']);
+        }
       }
       // $marker_title = '';
 
