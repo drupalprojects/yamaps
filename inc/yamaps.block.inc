@@ -87,6 +87,13 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
     '#title' => t('Show controls'),
     '#type' => 'checkbox',
     '#default_value' => variable_get($delta . '_block_controls', TRUE),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="' . $delta . '_block_display_options[map_type]"]' => array(
+          'value' => 'dynamic',
+        ),
+      ),
+    ),
   );
 
   $form[$delta . '_block_traffic'] = array(
@@ -96,10 +103,17 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
   );
 
   $form[$delta . '_block_behaviors'] = array(
-    '#title' => t('Mouse event settings'),
+    '#title' => t('Available mouse events'),
     '#type' => 'checkboxes',
     '#options' => yamaps_get_behaviors_list(),
     '#default_value' => variable_get($delta . '_block_behaviors', array()),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="' . $delta . '_block_display_options[map_type]"]' => array(
+          'value' => 'dynamic',
+        ),
+      ),
+    ),
   );
 
   $form[$delta . '_block_width'] = array(

@@ -310,7 +310,7 @@ function yamaps_get_behaviors_list() {
 function yamaps_get_map_types() {
   return array(
     'yandex#map' => t('Schema'),
-    'yandex#satellite' => t('Satallite'),
+    'yandex#satellite' => t('Satellite'),
     'yandex#hybrid' => t('Hybrid'),
   );
 }

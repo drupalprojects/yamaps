@@ -248,7 +248,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     );
 
     $form['behaviors'] = array(
-      '#title' => t('Mouse event settings'),
+      '#title' => t('Available mouse events'),
       '#type' => 'checkboxes',
       '#options' => yamaps_get_behaviors_list(),
       '#default_value' => array_unique(array_values($this->options['behaviors'])),
@@ -373,7 +373,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    */
   function render() {
     if (isset($this->view->live_preview) && $this->view->live_preview) {
-      return t('Selected style are not compatible with live preview.');
+      return t('Selected style is not compatible with live preview.');
     }
 
     // @todo remove.

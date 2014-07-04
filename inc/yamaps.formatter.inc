@@ -60,45 +60,6 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
 
   switch ($display['type']) {
     case 'field_yamaps_formatter_dynamic':
-      $element['controls'] = array(
-        '#title' => t('Show controls'),
-        '#type' => 'checkbox',
-        '#default_value' => $settings['controls'],
-      );
-
-      $element['traffic'] = array(
-        '#title' => t('Show traffic'),
-        '#type' => 'checkbox',
-        '#default_value' => $settings['traffic'],
-      );
-
-      $element['width'] = array(
-        '#title' => t('Map width'),
-        '#field_suffix' => ' ' . t('in pixels or in percentage'),
-        '#type' => 'textfield',
-        '#default_value' => $settings['width'],
-        '#size' => 5,
-        '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
-        '#required' => TRUE,
-      );
-
-      $element['height'] = array(
-        '#title' => t('Map height'),
-        '#field_suffix' => ' ' . t('in pixels or in percentage'),
-        '#type' => 'textfield',
-        '#default_value' => $settings['height'],
-        '#size' => 5,
-        '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
-        '#required' => TRUE,
-      );
-
-      $element['behaviors'] = array(
-        '#title' => t('Mouse event settings'),
-        '#type' => 'checkboxes',
-        '#options' => yamaps_get_behaviors_list(),
-        '#default_value' => $settings['behaviors'],
-      );
-
       $element['yamaps_display_options'] = array(
         '#type' => 'fieldset',
         '#title' => t('Display options'),
@@ -131,35 +92,48 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
           ),
         ),
       );
+
+      $element['controls'] = array(
+        '#title' => t('Show controls'),
+        '#type' => 'checkbox',
+        '#default_value' => $settings['controls'],
+      );
+
+      $element['traffic'] = array(
+        '#title' => t('Show traffic'),
+        '#type' => 'checkbox',
+        '#default_value' => $settings['traffic'],
+      );
+
+      $element['behaviors'] = array(
+        '#title' => t('Available mouse events'),
+        '#type' => 'checkboxes',
+        '#options' => yamaps_get_behaviors_list(),
+        '#default_value' => $settings['behaviors'],
+      );
+
+      $element['width'] = array(
+        '#title' => t('Map width'),
+        '#field_suffix' => ' ' . t('in pixels or in percentage'),
+        '#type' => 'textfield',
+        '#default_value' => $settings['width'],
+        '#size' => 5,
+        '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
+        '#required' => TRUE,
+      );
+
+      $element['height'] = array(
+        '#title' => t('Map height'),
+        '#field_suffix' => ' ' . t('in pixels or in percentage'),
+        '#type' => 'textfield',
+        '#default_value' => $settings['height'],
+        '#size' => 5,
+        '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
+        '#required' => TRUE,
+      );
       break;
 
     case 'field_yamaps_formatter_static':
-      $element['s_traffic'] = array(
-        '#title' => t('Show traffic'),
-        '#type' => 'checkbox',
-        '#default_value' => $settings['s_traffic'],
-      );
-
-      $element['s_width'] = array(
-        '#title' => t('Map width'),
-        '#field_suffix' => ' ' . t('pixels'),
-        '#type' => 'textfield',
-        '#default_value' => $settings['s_width'],
-        '#size' => 5,
-        '#element_validate' => array('element_validate_integer_positive'),
-        '#required' => TRUE,
-      );
-
-      $element['s_height'] = array(
-        '#title' => t('Map height'),
-        '#field_suffix' => ' ' . t('pixels'),
-        '#type' => 'textfield',
-        '#default_value' => $settings['s_height'],
-        '#size' => 5,
-        '#element_validate' => array('element_validate_integer_positive'),
-        '#required' => TRUE,
-      );
-
       $element['yamaps_display_options_static']['display_type_static'] = array(
         '#type' => 'radios',
         '#title' => t('Map display style for end user'),
@@ -185,6 +159,32 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
             ),
           ),
         ),
+      );
+
+      $element['s_traffic'] = array(
+        '#title' => t('Show traffic'),
+        '#type' => 'checkbox',
+        '#default_value' => $settings['s_traffic'],
+      );
+
+      $element['s_width'] = array(
+        '#title' => t('Map width'),
+        '#field_suffix' => ' ' . t('pixels'),
+        '#type' => 'textfield',
+        '#default_value' => $settings['s_width'],
+        '#size' => 5,
+        '#element_validate' => array('element_validate_integer_positive'),
+        '#required' => TRUE,
+      );
+
+      $element['s_height'] = array(
+        '#title' => t('Map height'),
+        '#field_suffix' => ' ' . t('pixels'),
+        '#type' => 'textfield',
+        '#default_value' => $settings['s_height'],
+        '#size' => 5,
+        '#element_validate' => array('element_validate_integer_positive'),
+        '#required' => TRUE,
       );
       break;
   }
