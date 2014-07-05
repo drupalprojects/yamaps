@@ -20,47 +20,23 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    */
   function option_definition() {
     $options = parent::option_definition();
-    $options['controls'] = array('default' => TRUE);
-    $options['traffic'] = array('default' => FALSE);
     $options['placemarks'] = array('default' => '');
     $options['lines'] = array('default' => '');
     $options['polygons'] = array('default' => '');
     $options['routes'] = array('default' => '');
-
-    $options['width'] = array('default' => '100%');
-    $options['height'] = array('default' => '400px');
     $options['zoom'] = array('default' => '6');
     $options['coords'] = array('default' => '');
-    $options['behaviors'] = array(
-      'default' => array(
-        'clickZoom' => 'clickZoom',
-        'scrollZoom' => 'scrollZoom',
-        'dblClickZoom' => 'dblClickZoom',
-        'drag' => 'drag',
-        'multiTouch' => 'multiTouch',
-        'rightMouseButtonMagnifier' => 'rightMouseButtonMagnifier',
-      ),
-    );
-
     $options['yamaps_center_options'] = array(
       'default' => array(
         'map_center_type' => 'geolocation',
         'map_center_geolocation' => '',
       ),
     );
-    $options['yamaps_display_options'] = array(
-      'default' => array(
-        'display_type' => 'map',
-        'open_button_type' => 'Open map',
-      ),
-    );
-
     $options['yandex_map_field'] = array('default' => '');
     $options['placemark_title'] = array('default' => $this::PLACEMARK_DEFAULT_FIELD);
     $options['baloon_title'] = array('default' => $this::PLACEMARK_DEFAULT_FIELD);
     $options['baloon_body'] = array('default' => $this::PLACEMARK_DEFAULT_FIELD);
     $options['type'] = array('default' => 'yandex#map');
-
     $options['map_center'] = array('default' => '');
     $options['map_grouping_cat'] = array('default' => 'standart');
 
@@ -77,12 +53,6 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     parent::options_form($form, $form_state);
     $fields = $this->getFields();
     $yandex_fields = $this->getYandexMapsFields();
-    $form['type'] = array(
-      '#title' => t('Yandex Map type'),
-      '#type' => 'select',
-      '#options' => yamaps_get_map_types(),
-      '#default_value' => ($this->options['type']) ? ($this->options['type']) : 'yandex#map',
-    );
 
     $form['yandex_map_field'] = array(
       '#title' => t('Yandex Map Field'),
@@ -92,38 +62,6 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#required' => TRUE,
       '#default_value' => $this->options['yandex_map_field'],
     );
-    $form['controls'] = array(
-      '#title' => t('Controls'),
-      '#type' => 'checkbox',
-      '#default_value' => $this->options['controls'],
-    );
-
-    $form['traffic'] = array(
-      '#title' => t('Show traffic'),
-      '#type' => 'checkbox',
-      '#default_value' => $this->options['traffic'],
-    );
-
-    $form['width'] = array(
-      '#title' => t('Map width'),
-      '#field_suffix' => ' ' . t('in pixels or in percentage'),
-      '#type' => 'textfield',
-      '#default_value' => $this->options['width'],
-      '#size' => 5,
-      '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
-      '#required' => TRUE,
-    );
-
-    $form['height'] = array(
-      '#title' => t('Map height'),
-      '#field_suffix' => ' ' . t('in pixels or in percentage'),
-      '#type' => 'textfield',
-      '#default_value' => $this->options['height'],
-      '#size' => 5,
-      '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
-      '#required' => TRUE,
-    );
-
     $form['yamaps_center_options'] = array(
       '#type' => 'fieldset',
       '#title' => t('Map center'),
@@ -168,7 +106,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     // Map initialization parameters.
     $map = array(
       'init' => array(
-        'type' => 'yandex#map',
+        'type' => $this->options['type'] ? $this->options['type'] : 'yandex#map',
         'behaviors' => array('scrollZoom', 'dblClickZoom', 'drag'),
       ),
       'display_options' => array(
@@ -228,6 +166,14 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#description' => t('Search for object on the map to fill this field or leave it blank (if field is not required).'),
     );
 
+    // Hidden elements to save map information.
+    $form['type'] = array(
+      '#type' => 'hidden',
+      '#title' => t('Type'),
+      '#default_value' => $this->options['type'],
+      '#attributes' => array('class' => array('field-yamaps-type-' . $id)),
+    );
+
     // Hidden elements to saving map information.
     $form['placemarks'] = array(
       '#type' => 'hidden',
@@ -256,43 +202,6 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $form['#attached']['js'][] = array(
       'data' => array('yamaps' => array($id => $map)),
       'type' => 'setting',
-    );
-
-    $form['behaviors'] = array(
-      '#title' => t('Mouse event settings'),
-      '#type' => 'checkboxes',
-      '#options' => yamaps_get_behaviors_list(),
-      '#default_value' => array_unique(array_values($this->options['behaviors'])),
-    );
-
-    $form['yamaps_display_options'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Display options'),
-      '#tree' => TRUE,
-    );
-
-    $display_type = array(
-      'map' => t('Map'),
-      'map_button' => t('Map opened by button click'),
-    );
-
-    $form['yamaps_display_options']['display_type'] = array(
-      '#type' => 'radios',
-      '#title' => t('How display map for admins'),
-      '#options' => $display_type,
-      '#default_value' => $this->options['yamaps_display_options']['display_type'],
-      '#description' => t('Type of map displaying.'),
-    );
-    $form['yamaps_display_options']['open_button_text'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Button text'),
-      '#default_value' => $this->options['yamaps_display_options']['open_button_text'],
-      '#description' => t('Text of button that opens map.'),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="style_options[yamaps_display_options][display_type]"]' => array('value' => 'map_button'),
-        ),
-      ),
     );
 
     // Load library.
@@ -438,7 +347,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
 
       $prepared_placemarks = array();
       $yandexmap_field_name = 'field_' . $this->options['yandex_map_field'];
-
+      $yandexmap_field_settings = $this->view->field[$this->options['yandex_map_field']]->options['settings'];
       // Fix yandex cart.
       foreach ($row->$yandexmap_field_name as $yandexmap_field_coords) {
         $maps_coords_item = drupal_json_decode($yandexmap_field_coords['raw']['coords']);
@@ -531,17 +440,16 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
         $prepared_route[] = $route;
       }
     }
-
     // Map initialization parameters.
     $map = array(
       'id' => $id,
       'display_options' => array(
-        'display_type' => (isset($this->options['yamaps_display_options']['display_type'])) ? $this->options['yamaps_display_options']['display_type'] : 'map',
-        'open_button_text' => t((isset($this->options['yamaps_display_options']['open_button_text'])) ? $this->options['yamaps_display_options']['open_button_text'] : 'Open map'),
+        'display_type' => $yandexmap_field_settings['yamaps_display_options']['display_type'],
+        'open_button_text' => t($yandexmap_field_settings['yamaps_display_options']['open_button_text']),
         'open_button_id' => $open_button_id,
       ),
-      'controls' => $this->options['controls'],
-      'traffic' => $this->options['traffic'],
+      'controls' => $yandexmap_field_settings['controls'],
+      'traffic' => $yandexmap_field_settings['traffic'],
       'placemarks' => $objects,
       'lines' => $prepared_lines,
       'polygons' => $prepared_polygons,
@@ -550,7 +458,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       'init' => array(
         'type' => ($this->options['type']) ? ($this->options['type']) : 'yandex#map',
         'zoom' => $this->options['zoom'],
-        'behaviors' => array_values(array_filter($this->options['behaviors'])),
+        'behaviors' => array_values(array_filter($yandexmap_field_settings['behaviors'])),
       ),
     );
 
@@ -589,11 +497,24 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     // Load library.
     $views_output['#attached']['library'][] = array('yamaps', 'yamaps.full');
 
+    if (isset($yandexmap_field_settings['yamaps_display_options']['display_type']) && $yandexmap_field_settings['yamaps_display_options']['display_type'] == 'map_button') {
+      $views_output[]['open_button_text'] = array(
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => t((isset($settings['yamaps_display_options']['open_button_text'])) ?
+          $settings['yamaps_display_options']['open_button_text'] : 'Open button'),
+        '#attributes' => array(
+          'id' => $open_button_id,
+          'class' => 'open_yamap_button',
+          'mapId' => $id,
+        ),
+      );
+    }
     $views_output[] = array(
       '#type' => 'html_tag',
       '#tag' => 'div',
       '#attributes' => array(
-        'style' => ' width: ' . $this->options['width'] . '; height:' . $this->options['height'],
+        'style' => ' width: ' . $yandexmap_field_settings['width'] . '; height:' . $yandexmap_field_settings['height'],
         'id' => $id,
         'class' => array(
           'yamaps-map-container',
