@@ -209,6 +209,16 @@ function yamaps_help($path, $arg) {
     );
     $output .= yamaps_wrap_items($about, '<p>', '</p>');
 
+    $output .= '<h3>' . t('Modules') . '</h3>';
+    $modules = array(
+      t('<strong>Yandex Maps</strong> (main module, description provided below).'),
+      t('<strong>Yandex Maps Example</strong> (submodule). Feature-based module which demonstrates example content type containing
+      "Yandex Map" field and view to output maps. <strong>For demo purposes only!</strong>'),
+      t('<strong>Yandex Maps Views</strong> (submodule). Enables integration with Views for "Yandex Map" field and provides "Yandex Maps"
+      display plugin.'),
+    );
+    $output .= theme('item_list', array('items' => $modules));
+
     $output .= '<h3>' . t('Options') . '</h3>';
     $options = array(
       t('Map can be displayed as interactive object ("dynamic map") or image ("static map").'),
