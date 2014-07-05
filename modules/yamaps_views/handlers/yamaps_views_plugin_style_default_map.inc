@@ -318,8 +318,13 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    *   Rendered string.
    */
   function render() {
+    $objects = array();
+    $prepared_lines = array();
+    $prepared_polygons = array();
+    $prepared_route = array();
+
     if (isset($this->view->live_preview) && $this->view->live_preview) {
-      return t('Selected style is not compatible with live preview.');
+      return t("Selected view format doesn't support live preview.");
     }
 
     // @todo remove.
@@ -340,12 +345,10 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $this->view->field[$yandexmap_field]->options['exclude'] = TRUE;
     $this->render_fields($this->view->result);
 
-    $objects = array();
     $map_coords = array('lattitude' => array(), 'longitude' => array());
 
     foreach ($this->view->result as $row_index => $row) {
 
-      $prepared_placemarks = array();
       $yandexmap_field_name = 'field_' . $this->options['yandex_map_field'];
       $yandexmap_field_settings = $this->view->field[$this->options['yandex_map_field']]->options['settings'];
       // Fix yandex cart.
@@ -357,30 +360,33 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
         }
         // Preparing placemarks.
         $decoded_placemarks = drupal_json_decode($yandexmap_field_coords['raw']['placemarks']);
-        foreach ($decoded_placemarks as $placemark) {
-          // $marker_title = '';
-          if (isset($this->options['placemark_title']) && $this->options['placemark_title'] !== $this::PLACEMARK_DEFAULT_FIELD) {
-            // Prepare placemark title.
-            $marker_title = $this->preparePlacemarkTitle($row_index);
-            $placemark['params'][$this::PLACEMARK_TITLE] = $marker_title;
-          }
-          // Prepare Baloon title.
-          if ($this->options['baloon_title'] && $this->options['baloon_title'] !== $this::PLACEMARK_DEFAULT_FIELD) {
-            $placemark['params'][$this::PLACEMARK_BALLON_HEADER] = $this->rendered_fields[$row_index][$this->options['baloon_title']];
-          }
-          // Prepare Baloon body.
-          if (is_array($this->options['baloon_body'])) {
-            foreach ($this->options['baloon_body'] as $bkey => $bval) {
-              //$this->rendered_fields[$row_index][$this->options['placemark_title']];
-              $ballon_body[] = $this->get_field($row_index, $bval);
-            }
-            $placemark['params'][$this::PLACEMARK_BALLON_BODY] = $this->prepareBody($ballon_body);
-          }
 
-          $this->view->row_index = $row_index;
-          // $marker_content = $this->row_plugin->render($row);
-          unset($ballon_body);
-          $objects[] = $placemark;
+        if (is_array($decoded_placemarks)) {
+          foreach ($decoded_placemarks as $placemark) {
+            // $marker_title = '';
+            if (isset($this->options['placemark_title']) && $this->options['placemark_title'] !== $this::PLACEMARK_DEFAULT_FIELD) {
+              // Prepare placemark title.
+              $marker_title = $this->preparePlacemarkTitle($row_index);
+              $placemark['params'][$this::PLACEMARK_TITLE] = $marker_title;
+            }
+            // Prepare Baloon title.
+            if ($this->options['baloon_title'] && $this->options['baloon_title'] !== $this::PLACEMARK_DEFAULT_FIELD) {
+              $placemark['params'][$this::PLACEMARK_BALLON_HEADER] = $this->rendered_fields[$row_index][$this->options['baloon_title']];
+            }
+            // Prepare Baloon body.
+            if (is_array($this->options['baloon_body'])) {
+              foreach ($this->options['baloon_body'] as $bkey => $bval) {
+                //$this->rendered_fields[$row_index][$this->options['placemark_title']];
+                $ballon_body[] = $this->get_field($row_index, $bval);
+              }
+              $placemark['params'][$this::PLACEMARK_BALLON_BODY] = $this->prepareBody($ballon_body);
+            }
+
+            $this->view->row_index = $row_index;
+            // $marker_content = $this->row_plugin->render($row);
+            unset($ballon_body);
+            $objects[] = $placemark;
+          }
         }
 
         // Preparing lines.
@@ -460,10 +466,10 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       ),
       'controls' => $yandexmap_field_settings['controls'],
       'traffic' => $yandexmap_field_settings['traffic'],
-      'placemarks' => $objects,
-      'lines' => $prepared_lines,
-      'polygons' => $prepared_polygons,
-      'routes' => $prepared_route,
+      'placemarks' => empty($objects) ? NULL : $objects,
+      'lines' => empty($prepared_lines) ? NULL : $prepared_lines,
+      'polygons' => empty($prepared_polygons) ? NULL : $prepared_polygons,
+      'routes' => empty($prepared_route) ? NULL : $prepared_route,
       'edit' => FALSE,
       'init' => array(
         'type' => ($this->options['type']) ? ($this->options['type']) : 'yandex#map',

@@ -208,7 +208,9 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
         '@height' => $settings['height'],
       ));
 
-      if (count($display['settings']['behaviors']) > 0) {
+      $available_events = array_filter($display['settings']['behaviors']);
+
+      if (count($available_events) > 0) {
         $behaviors_list = yamaps_get_behaviors_list();
         $active_behaviors = array_values(array_filter($display['settings']['behaviors']));
         $prepared_behaviors_list = array();
@@ -220,7 +222,7 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
         $summary[] = t('Enabled mouse event: !list', array('!list' => implode(', ', $prepared_behaviors_list)));
       }
       else {
-        $summary[] = t('All mouse event are disabled.');
+        $summary[] = t('All mouse events are disabled.');
       }
 
       $summary[] = t('Display type: @type', array('@type' => $settings['yamaps_display_options']['display_type']));
