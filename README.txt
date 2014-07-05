@@ -1,11 +1,19 @@
 
 -- ABOUT --
 
-Module for Drupal 7.
+Project contains a set of modules for Drupal 7.
 Uses http://api.yandex.ru/maps/ (API 2.x).
 
 Project page: https://drupal.org/project/yamaps.
 To submit bug reports and feature suggestions, or to track changes: https://drupal.org/project/issues/yamaps.
+
+-- MODULES --
+
+* Yandex Maps (main module, description provided below).
+* Yandex Maps Example (submodule). Feature-based module which demonstrates example content type containing "Yandex Map" field
+and view to output maps. For demo purposes only!
+* Yandex Maps Views (submodule). Enables integration with Views for "Yandex Map" field and provides "Yandex Maps"
+display plugin.
 
 -- OPTIONS --
 

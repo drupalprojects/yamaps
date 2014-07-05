@@ -1,4 +1,4 @@
-name = Yandex Maps example
+name = Yandex Maps Example
 description = Feature-based module which demonstrates example content type containing "Yandex Map" field and view to output maps. For demo purposes only!
 core = 7.x
 package = Yandex
