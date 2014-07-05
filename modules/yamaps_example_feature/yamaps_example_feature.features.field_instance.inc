@@ -103,7 +103,7 @@ function yamaps_example_feature_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_yandex_maps_example_field',
-    'label' => 'Yandex Maps example field',
+    'label' => 'Yandex Map',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -120,7 +120,7 @@ function yamaps_example_feature_field_default_field_instances() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Body');
-  t('Yandex Maps example field');
+  t('Yandex Map');
 
   return $field_instances;
 }
