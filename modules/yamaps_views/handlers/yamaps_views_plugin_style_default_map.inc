@@ -424,17 +424,27 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
 
     $prepared_params = _yamaps_format_values_to_js($this->options);
+    // Merging placemark.
+    if (is_array($prepared_params['lines'])) {
+      foreach ($prepared_params['placemarks'] as $p) {
+        $objects[] = $p;
+      }
+    }
+
+    // Merging lines.
     if (is_array($prepared_params['lines'])) {
       foreach ($prepared_params['lines'] as $lines) {
         $prepared_lines[] = $lines;
       }
     }
+
+    // Merging polygons.
     if (is_array($prepared_params['polygons'])) {
       foreach ($prepared_params['polygons'] as $polygon) {
         $prepared_polygons[] = $polygon;
       }
     }
-
+    // Merging routes.
     if (is_array($prepared_params['routes'])) {
       foreach ($prepared_params['routes'] as $route) {
         $prepared_route[] = $route;
