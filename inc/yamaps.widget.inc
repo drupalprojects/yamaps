@@ -191,7 +191,9 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
   $element['#description'] .= '<br/>' . render($themed_description);
 
   // Add information about this map to js.
-  $form['#attached']['js'][] = array(
+  // Settings should be attached to each element, because element changes its ID when reloaded via Ajax
+  // in case of multi value field.
+  $element['#attached']['js'][] = array(
     'data' => array('yamaps' => array($id => $map)),
     'type' => 'setting',
   );
