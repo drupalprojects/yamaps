@@ -1,28 +1,30 @@
 /* 
  * @file
- * Scripts helps to work with the multiple fields.
+ * Script helps to work with multiple fields.
  */
 
-jQuery('document').ready(function ()
-{
-  jQuery('div.form-wrapper').delegate('.remove_yamap_button', 'click', function ()
-  {
-    // Get parent table row
-    var row = jQuery(this).closest('td').parent('tr');
+(function($) {
+  Drupal.behaviors.yamapsField = {
+    attach: function (context, settings) {
+      $('div.form-wrapper').delegate('.remove_yamap_button', 'click', function() {
+        // Get parent table row.
+        var row = $(this).closest('td').parent('tr');
 
-    // Hide and empty values
-    jQuery(row).hide().find('input').val('');
+        // Hide and empty value.
+        $(row).hide().find('input').val('');
 
-    // Fix table row classes.
-    var table_id = jQuery(row).parent('tbody').parent('table').attr('id');
-    jQuery('#' + table_id + ' tr.draggable:visible').each(function (index, element)
-    {
-      jQuery(element).removeClass('odd').removeClass('even');
-      if ((index % 2) == 0) {
-        jQuery(element).addClass('odd');
-      } else {
-        jQuery(element).addClass('even');
-      }
-    });
-  });
-});
+        // Fix table row classes.
+        var table_id = $(row).parent('tbody').parent('table').attr('id');
+        $('#' + table_id + ' tr.draggable:visible').each(function (index, element) {
+          $(element).removeClass('odd').removeClass('even');
+          if ((index % 2) == 0) {
+            $(element).addClass('odd');
+          }
+          else {
+            $(element).addClass('even');
+          }
+        });
+      });
+	  }
+  }
+})(jQuery);
