@@ -163,7 +163,7 @@ function yamaps_library() {
     'js' => array(
       $api_url => array(
         'type' => 'external',
-        'scope' => 'footer',
+        'scope' => 'header',
         'weight' => $w++,
       ),
       $path . 'yamaps.init.js' => array('scope' => 'footer', 'weight' => $w++),
@@ -201,7 +201,7 @@ function yamaps_help($path, $arg) {
   if ($path == 'admin/help#yamaps') {
     $output = '<h3>' . t('About') . '</h3>';
     $about = array(
-      t('Module for Drupal 7.'),
+      t('Project contains a set of modules for Drupal 7.'),
       t('Uses !api (API 2.x).', array('!api' => l('http://api.yandex.ru/maps/', 'http://api.yandex.ru/maps/', array('absolute' => TRUE)))),
       t('Project page') . ': ' . l('https://drupal.org/project/yamaps', 'https://drupal.org/project/yamaps', array('absolute' => TRUE)) . '.',
       t('To submit bug reports and feature suggestions, or to track changes') . ': ' . l('https://drupal.org/project/issues/yamaps',
