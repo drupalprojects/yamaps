@@ -131,7 +131,23 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       $this->view->current_display,
       'style_options_form',
     )));
-    $yandexmap_field_settings = $this->view->field[$this->options['yandex_map_field']]->options['settings'];
+
+    $yandexmap_field_settings = $this->view->display_handler->handlers['field'][$this->options['yandex_map_field']]->options['settings'];
+    // Set width and height.
+    if (isset($yandexmap_field_settings['width']) && isset($yandexmap_field_settings['height'])) {
+      $width = $yandexmap_field_settings['width'];
+      $height = $yandexmap_field_settings['height'];
+    }
+    elseif (isset($yandexmap_field_settings['s_width']) && isset($yandexmap_field_settings['s_height'])) {
+      $width = $yandexmap_field_settings['s_width'];
+      $height = $yandexmap_field_settings['s_height'];
+    }
+    else {
+      $width = '100%';
+      $height = '400px';
+    }
+
+
     // Map container.
     $form['yamaps_center_options']['map'] = array(
       '#type' => 'html_tag',
@@ -139,7 +155,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#value' => '',
       '#description' => t('Map view will be used when "Choose on map." radio is active'),
       '#attributes' => array(
-        'style' => ' width: ' . $yandexmap_field_settings['width'] . '; height:' . $yandexmap_field_settings['height'],
+        'style' => ' width: ' . $width . '; height:' . $height,
         'id' => $id,
         'class' => array(
           'yamaps-map-container',
