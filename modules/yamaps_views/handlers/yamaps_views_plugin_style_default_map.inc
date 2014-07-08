@@ -131,6 +131,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       $this->view->current_display,
       'style_options_form',
     )));
+    $yandexmap_field_settings = $this->view->field[$this->options['yandex_map_field']]->options['settings'];
     // Map container.
     $form['yamaps_center_options']['map'] = array(
       '#type' => 'html_tag',
@@ -138,7 +139,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#value' => '',
       '#description' => t('Map view will be used when "Choose on map." radio is active'),
       '#attributes' => array(
-        'style' => ' width: ' . $this->options['width'] . '; height:' . $this->options['height'],
+        'style' => ' width: ' . $yandexmap_field_settings['width'] . '; height:' . $yandexmap_field_settings['height'],
         'id' => $id,
         'class' => array(
           'yamaps-map-container',
@@ -444,8 +445,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           $parameters = yamaps_geocoding($this->options['yamaps_center_options']['map_center_geolocation']);
         }
         if (isset($parameters) && $parameters !== FALSE) {
-          $map['init']['center'] = $parameters['map_center'];
-          $map['init']['zoom'] = ++$this->options['yamaps_center_options']['zoom'];
+          $prepared_params['coords']['center'] = $parameters['map_center'];
+          $prepared_params['coords']['zoom'] = ++$this->options['yamaps_center_options']['zoom'];
           // $map['init']['bounds'] = $parameters['bounds'];
         }
         /**
@@ -456,12 +457,10 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
         break;
       case 'mini_map':
         if ($this->options['coords']) {
-          $map['init']['center'] = $prepared_params['coords']['center'];
-          $map['init']['zoom'] = $prepared_params['coords']['zoom'];
+
         }
         break;
     }
-
     $views_output = array();
 
     // Adding map to js.
