@@ -327,37 +327,18 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       return t("Selected view format doesn't support live preview.");
     }
 
-    // @todo remove.
-    $yandexmap_field = '';
-    foreach ($this->view->field as $field_name => $field_handler) {
-      if (isset($field_handler->field_info) && $field_handler->field_info['type'] == 'field_yamaps') {
-        $yandexmap_field = $field_name;
-        break;
-      }
-    }
-
-    // No yandex maps field error message.
-    if (!$yandexmap_field) {
-      return t('Add Yandex Maps field to fields list.');
-    }
-
-    // Excluded field.
-    $this->view->field[$yandexmap_field]->options['exclude'] = TRUE;
     $this->render_fields($this->view->result);
 
-    $map_coords = array('lattitude' => array(), 'longitude' => array());
+    $yandexmap_field_name = 'field_' . $this->options['yandex_map_field'];
+    // Excluded field.
+    $this->view->field[$yandexmap_field_name]->options['exclude'] = TRUE;
+    $yandexmap_field_settings = $this->view->field[$this->options['yandex_map_field']]->options['settings'];
+    $yandexmap_field_type = $this->view->field[$this->options['yandex_map_field']]->options['type'];
 
     foreach ($this->view->result as $row_index => $row) {
-
-      $yandexmap_field_name = 'field_' . $this->options['yandex_map_field'];
-      $yandexmap_field_settings = $this->view->field[$this->options['yandex_map_field']]->options['settings'];
+      // $rendered_row = $this->row_plugin->render($row);
       // Fix yandex cart.
       foreach ($row->$yandexmap_field_name as $yandexmap_field_coords) {
-        $maps_coords_item = drupal_json_decode($yandexmap_field_coords['raw']['coords']);
-        if (count($maps_coords_item['center']) > 0) {
-          $map_coords['lattitude'][] = $maps_coords_item['center'][0];
-          $map_coords['longitude'][] = $maps_coords_item['center'][1];
-        }
         // Preparing placemarks.
         $decoded_placemarks = drupal_json_decode($yandexmap_field_coords['raw']['placemarks']);
 
@@ -383,7 +364,6 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
             }
 
             $this->view->row_index = $row_index;
-            // $marker_content = $this->row_plugin->render($row);
             unset($ballon_body);
             $objects[] = $placemark;
           }
@@ -430,6 +410,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
 
     $prepared_params = _yamaps_format_values_to_js($this->options);
+
     // Merging placemark.
     if (is_array($prepared_params['lines'])) {
       foreach ($prepared_params['placemarks'] as $p) {
@@ -456,27 +437,6 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
         $prepared_route[] = $route;
       }
     }
-    // Map initialization parameters.
-    $map = array(
-      'id' => $id,
-      'display_options' => array(
-        'display_type' => $yandexmap_field_settings['yamaps_display_options']['display_type'],
-        'open_button_text' => t($yandexmap_field_settings['yamaps_display_options']['open_button_text']),
-        'open_button_id' => $open_button_id,
-      ),
-      'controls' => $yandexmap_field_settings['controls'],
-      'traffic' => $yandexmap_field_settings['traffic'],
-      'placemarks' => empty($objects) ? NULL : $objects,
-      'lines' => empty($prepared_lines) ? NULL : $prepared_lines,
-      'polygons' => empty($prepared_polygons) ? NULL : $prepared_polygons,
-      'routes' => empty($prepared_route) ? NULL : $prepared_route,
-      'edit' => FALSE,
-      'init' => array(
-        'type' => ($this->options['type']) ? ($this->options['type']) : 'yandex#map',
-        'zoom' => $this->options['zoom'],
-        'behaviors' => array_values(array_filter($yandexmap_field_settings['behaviors'])),
-      ),
-    );
 
     switch ($this->options['yamaps_center_options']['map_center_type']) {
       case 'geolocation':
