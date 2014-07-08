@@ -462,55 +462,260 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
         break;
     }
     $views_output = array();
+    switch ($yandexmap_field_type) {
+      case 'field_yamaps_formatter_dynamic':
+        // Map initialization parameters.
+        $map = array(
+          'id' => $id,
+          'display_options' => array(
+            'display_type' => $yandexmap_field_settings['yamaps_display_options']['display_type'],
+            'open_button_text' => t($yandexmap_field_settings['yamaps_display_options']['open_button_text']),
+            'open_button_id' => $open_button_id,
+          ),
+          'controls' => $yandexmap_field_settings['controls'],
+          'traffic' => $yandexmap_field_settings['traffic'],
+          'placemarks' => empty($objects) ? NULL : $objects,
+          'lines' => empty($prepared_lines) ? NULL : $prepared_lines,
+          'polygons' => empty($prepared_polygons) ? NULL : $prepared_polygons,
+          'routes' => empty($prepared_route) ? NULL : $prepared_route,
+          'edit' => FALSE,
+          'init' => array(
+            'type' => ($this->options['type']) ? ($this->options['type']) : 'yandex#map',
+            'center' => $prepared_params['coords']['center'],
+            'zoom' => $prepared_params['coords']['zoom'],
+            'behaviors' => array_values(array_filter($yandexmap_field_settings['behaviors'])),
+          ),
+        );
 
-    // Adding map to js.
-    $views_output['#attached']['js'][] = array(
-      'data' => array('yamaps' => array($id => $map)),
-      'type' => 'setting',
-    );
 
-    // Load library.
-    $views_output['#attached']['library'][] = array('yamaps', 'yamaps.full');
+        // Adding map to js.
+        $views_output['#attached']['js'][] = array(
+          'data' => array('yamaps' => array($id => $map)),
+          'type' => 'setting',
+        );
 
-    if (isset($yandexmap_field_settings['yamaps_display_options']['display_type']) && $yandexmap_field_settings['yamaps_display_options']['display_type'] == 'map_button') {
-      $views_output[]['open_button_text'] = array(
-        '#type' => 'html_tag',
-        '#tag' => 'div',
-        '#value' => t((isset($settings['yamaps_display_options']['open_button_text'])) ?
-          $settings['yamaps_display_options']['open_button_text'] : 'Open button'),
-        '#attributes' => array(
-          'id' => $open_button_id,
-          'class' => 'open_yamap_button',
-          'mapId' => $id,
-        ),
-      );
+        // Load library.
+        $views_output['#attached']['library'][] = array(
+          'yamaps',
+          'yamaps.full'
+        );
+
+        if (isset($yandexmap_field_settings['yamaps_display_options']['display_type']) && $yandexmap_field_settings['yamaps_display_options']['display_type'] == 'map_button') {
+          $views_output[]['open_button_text'] = array(
+            '#type' => 'html_tag',
+            '#tag' => 'div',
+            '#value' => t((isset($settings['yamaps_display_options']['open_button_text'])) ?
+              $settings['yamaps_display_options']['open_button_text'] : 'Open button'),
+            '#attributes' => array(
+              'id' => $open_button_id,
+              'class' => 'open_yamap_button',
+              'mapId' => $id,
+            ),
+          );
+        }
+        $views_output[] = array(
+          '#type' => 'html_tag',
+          '#tag' => 'div',
+          '#attributes' => array(
+            'style' => ' width: ' . $yandexmap_field_settings['width'] . '; height:' . $yandexmap_field_settings['height'],
+            'id' => $id,
+            'class' => array(
+              'yamaps-map-container',
+            ),
+          ),
+          '#value' => '',
+        );
+
+        if (isset($this->options['yamaps_display_options']['display_type']) && $this->options['yamaps_display_options']['display_type'] == 'map_button') {
+          $views_output['open_map_button'] = array(
+            '#type' => 'html_tag',
+            '#tag' => 'div',
+            '#value' => t((isset($this->options['yamaps_display_options']['open_button_text'])) ? $this->options['yamaps_display_options']['open_button_text'] : 'Open map'),
+            '#attributes' => array(
+              'id' => $open_button_id,
+              'class' => 'open_yamap_button',
+              'mapId' => $id,
+            ),
+          );
+        }
+
+
+        break;
+      case 'field_yamaps_formatter_static':
+        $params = array();
+
+
+        $params['ll'] = end($prepared_params['coords']['center']) . ',' . reset($prepared_params['coords']['center']);
+        $params['z'] = $prepared_params['coords']['zoom'];
+        $params['size'] = $yandexmap_field_settings['s_width'] . ',' . $yandexmap_field_settings['s_height'];
+
+        // 2.x to 1.x types.
+        $map_types = array(
+          'yandex#map' => 'map',
+          'yandex#satellite' => 'sat',
+          'yandex#hybrid' => 'sat,skl',
+          'yandex#publicMap' => 'pmap',
+          'yandex#publicMapHybrid' => 'sat,pskl',
+        );
+
+        $params['l'] = $map_types[$prepared_params['type']];
+
+        if ($yandexmap_field_settings['s_traffic']) {
+          $params['l'] .= ',trf';
+        }
+
+        // 2.x to 1.x colors.
+        $colors21 = array(
+          'blue' => 'bl',
+          'lightblue' => 'lb',
+          'night' => 'nt',
+          'darkblue' => 'db',
+          'green' => 'gn',
+          'white' => 'wt',
+          'red' => 'rd',
+          'orange' => 'or',
+          'darkorange' => 'do',
+          'yellow' => 'yw',
+          'violet' => 'vv',
+          'pink' => 'pn',
+        );
+
+        // 2.x to hex colors.
+        $colors = array(
+          'blue' => '006cff',
+          'lightblue' => '66c7ff',
+          'night' => '004056',
+          'darkblue' => '00339a',
+          'green' => '33cc00',
+          'white' => 'ffffff',
+          'red' => 'ff0000',
+          'orange' => 'ffb400',
+          'darkorange' => 'ff6600',
+          'yellow' => 'ffea00',
+          'violet' => 'b832fd',
+          'pink' => 'fd32fb',
+        );
+        // Placemarks.
+        if (!empty($objects)) {
+          $pt = array();
+
+          foreach ($objects as $placemark) {
+            $pm = end($placemark['coords']) . ',' . reset($placemark['coords']) . ',';
+            $pm .= 'pm2';
+            $pm .= $colors21[$placemark['params']['color']];
+            $pm .= 'm';
+            $pt[] = $pm;
+          }
+
+          $params['pt'] = implode('~', $pt);
+        }
+
+        // Lines and polygons.
+        $pl = array();
+
+        if ($prepared_lines) {
+          foreach ($prepared_lines as $line) {
+            $opts = $line['params'];
+            $pm = 'c:' . $colors[$opts['strokeColor']] . dechex(255 * $opts['opacity']) . ',';
+            $pm .= 'w:' . $opts['strokeWidth'] . ',';
+            $c = array();
+
+            foreach ($line['coords'] as $coords) {
+              $c[] = end($coords);
+              $c[] = reset($coords);
+            }
+
+            $pm .= implode(',', $c);
+            $pl[] = $pm;
+          }
+        }
+        if ($prepared_polygons) {
+          foreach ($prepared_polygons as $polygon) {
+            $opts = $polygon['params'];
+            $opa = dechex(255 * $opts['opacity']);
+            $pm = 'c:' . $colors[$opts['strokeColor']] . $opa . ',';
+            $pm .= 'f:' . $colors[$opts['fillColor']] . $opa . ',';
+            $pm .= 'w:' . $opts['strokeWidth'] . ',';
+            $c = array();
+
+            foreach ($polygon['coords'] as $coords_array) {
+              foreach ($coords_array as $coords) {
+                $c[] = end($coords);
+                $c[] = reset($coords);
+              }
+            }
+
+            $pm .= implode(',', $c);
+            $pl[] = $pm;
+          }
+        }
+
+        if (!empty($pl)) {
+          $params['pl'] = implode('~', $pl);
+        }
+
+        $open_button_id = drupal_html_id(implode('-', array(
+          $id,
+          'open_button',
+        )));
+
+        $hide_map = (isset($yandexmap_field_settings['yamaps_display_options_static']['display_type_static']) &&
+          $yandexmap_field_settings['yamaps_display_options_static']['display_type_static'] == 'map_button');
+        $map_display_style = $hide_map ? '; display: none' : '';
+
+        // Return map container div with image.
+        $views_output['map_container'] = array(
+          '#type' => 'html_tag',
+          '#tag' => 'div',
+          '#attributes' => array(
+            'id' => $id,
+            'style' => 'width:' . $yandexmap_field_settings['s_width'] . 'px; height:' . $yandexmap_field_settings['s_height'] . 'px' . $map_display_style,
+          ),
+          '#value' => theme('image', array(
+            'path' => url(YAMAPS_STATIC_API_URL, array(
+              'query' => $params,
+              'external' => TRUE
+            )),
+            'width' => $yandexmap_field_settings['s_width'],
+            'height' => $yandexmap_field_settings['s_height'],
+            'title' => t('Yandex Map'),
+          )),
+        );
+        if ($hide_map) {
+          $views_output['open_button_text'] = array(
+            '#type' => 'html_tag',
+            '#tag' => 'div',
+            '#value' => t((isset($yandexmap_field_settings['yamaps_display_options_static']['open_button_text_static'])) ?
+              $yandexmap_field_settings['yamaps_display_options_static']['open_button_text_static'] : 'Open button'),
+            '#attributes' => array(
+              'id' => $open_button_id,
+              'class' => 'open_yamap_button_static',
+              'mapId' => $id,
+            ),
+          );
+        }
+
+        // Map initialization parameters.
+        $maps[$id] = array(
+          'display_options' => array(
+            'display_type' => $yandexmap_field_settings['yamaps_display_options_static']['display_type_static'],
+            'open_button_text' => $yandexmap_field_settings['yamaps_display_options_static']['open_button_text_static'],
+            'open_button_id' => $open_button_id,
+          ),
+        );
+
+        // Adding CSS for button.
+        drupal_add_css(drupal_get_path('module', 'yamaps') . '/misc/yamaps.css');
+
+        // Adding map to js.
+        drupal_add_js(array('yamapsStatic' => $maps), 'setting');
+        $views_output['#attached']['library'][] = array(
+          'yamaps',
+          'yamaps.full'
+        );
+
+        break;
     }
-    $views_output[] = array(
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#attributes' => array(
-        'style' => ' width: ' . $yandexmap_field_settings['width'] . '; height:' . $yandexmap_field_settings['height'],
-        'id' => $id,
-        'class' => array(
-          'yamaps-map-container',
-        ),
-      ),
-      '#value' => '',
-    );
-
-    if (isset($this->options['yamaps_display_options']['display_type']) && $this->options['yamaps_display_options']['display_type'] == 'map_button') {
-      $views_output['open_map_button'] = array(
-        '#type' => 'html_tag',
-        '#tag' => 'div',
-        '#value' => t((isset($this->options['yamaps_display_options']['open_button_text'])) ? $this->options['yamaps_display_options']['open_button_text'] : 'Open map'),
-        '#attributes' => array(
-          'id' => $open_button_id,
-          'class' => 'open_yamap_button',
-          'mapId' => $id,
-        ),
-      );
-    }
-
     return $views_output;
   }
 
