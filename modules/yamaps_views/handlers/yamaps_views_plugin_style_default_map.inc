@@ -312,12 +312,12 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     if ($this->display->handler->use_pager()) {
       $errors[] = t('The Yandex Maps style cannot be used with a pager. Disable the "Use pager" option for this display.');
     }
-
+/*
     // Checking for existans of yandex map field.
     if (empty($this->options['yandex_map_field']) || $this->options['yandex_map_field'] == '<none>') {
       $errors[] = t('The Yandex Maps style cannot be used with a pager. Please add "Yandex Maps" field and chose it in views settings form.');
     }
-
+*/
     return $errors;
   }
 
@@ -343,10 +343,13 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     if (isset($this->view->live_preview) && $this->view->live_preview) {
       return t("Selected view format doesn't support live preview.");
     }
-
+    if(empty($this->options['yandex_map_field'])){
+      return t('The Yandex Maps style cannot be used with a pager. Please add "Yandex Maps" field and chose it in views settings form.');
+    }
     $this->render_fields($this->view->result);
 
     $yandexmap_field_name = 'field_' . $this->options['yandex_map_field'];
+
     // Excluded field.
     $this->view->field[$yandexmap_field_name]->options['exclude'] = TRUE;
     $yandexmap_field_settings = $this->view->field[$this->options['yandex_map_field']]->options['settings'];
