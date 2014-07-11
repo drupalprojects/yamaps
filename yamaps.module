@@ -78,7 +78,9 @@ function yamaps_field_info() {
  * Implements hook_field_is_empty().
  */
 function yamaps_field_is_empty($item, $field) {
-  return empty($item['coords']);
+  if ($field['type'] == 'field_yamaps') {
+    return empty($item['coords']);
+  }
 }
 
 /**
@@ -284,35 +286,37 @@ function yamaps_help($path, $arg) {
  * Implements hook_field_validate().
  */
 function yamaps_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
-  // Perform validation on empty coordinates only for field attached to entity.
-  if ($entity_type && $entity) {
-    if ($instance['required']) {
-      $items_total = count($items);
-      $items_empty = 0;
-      foreach ($items as $item) {
-        if (empty($item['coords'])) {
-          $items_empty++;
+  if ($field['type'] == 'field_yamaps') {
+    // Perform validation on empty coordinates only for field attached to entity.
+    if ($entity_type && $entity) {
+      if ($instance['required']) {
+        $items_total = count($items);
+        $items_empty = 0;
+        foreach ($items as $item) {
+          if (empty($item['coords'])) {
+            $items_empty++;
+          }
+        }
+
+        if ($items_total == $items_empty) {
+          $errors[$field['field_name']][$langcode][0][] = array(
+            'error' => 'coords',
+            'message' => t('Cooordinates cannot be empty for required field "!field_name".',
+              array('!field_name' => $instance['label'])),
+          );
         }
       }
-
-      if ($items_total == $items_empty) {
-        $errors[$field['field_name']][$langcode][0][] = array(
-          'error' => 'coords',
-          'message' => t('Cooordinates cannot be empty for required field "!field_name".',
-            array('!field_name' => $instance['label'])),
-        );
-      }
     }
-  }
-  else {
-    // Validation for fields settings form.
-    foreach ($items as $delta => $item) {
-      if (empty($item['coords']) && $item['hide'] == 1) {
-        $errors[$field['field_name']][$langcode][$delta][] = array(
-          'error' => 'coords',
-          'message' => t('"!field_name" with empty coordinates cannot be hidden by default.',
-            array('!field_name' => $instance['label'])),
-        );
+    else {
+      // Validation for fields settings form.
+      foreach ($items as $delta => $item) {
+        if (empty($item['coords']) && $item['hide'] == 1) {
+          $errors[$field['field_name']][$langcode][$delta][] = array(
+            'error' => 'coords',
+            'message' => t('"!field_name" with empty coordinates cannot be hidden by default.',
+              array('!field_name' => $instance['label'])),
+          );
+        }
       }
     }
   }
