@@ -20,6 +20,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    */
   function option_definition() {
     $options = parent::option_definition();
+    $options['yandex_map_field'] = array('default' => '');
     $options['placemarks'] = array('default' => '');
     $options['lines'] = array('default' => '');
     $options['polygons'] = array('default' => '');
@@ -32,7 +33,6 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
         'map_center_geolocation' => '',
       ),
     );
-    $options['yandex_map_field'] = array('default' => '');
     $options['placemark_title'] = array('default' => $this::PLACEMARK_DEFAULT_FIELD);
     $options['baloon_title'] = array('default' => $this::PLACEMARK_DEFAULT_FIELD);
     $options['baloon_body'] = array('default' => $this::PLACEMARK_DEFAULT_FIELD);
@@ -746,7 +746,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    */
   function getFields() {
     $field_names = array(
-      $this::PLACEMARK_NONE_FIELD => t('<none>'),
+      '' => t($this::PLACEMARK_NONE_FIELD),
       $this::PLACEMARK_DEFAULT_FIELD => t('Default baloon value'),
     );
     $fields = $this->display->handler->get_handlers('field');
@@ -783,7 +783,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    *   List of yandex maps fields.
    */
   function getYandexMapsFields() {
-    $field_names = array($this::PLACEMARK_NONE_FIELD => t('<none>'));
+    $field_names = array('' => t($this::PLACEMARK_NONE_FIELD));
     $fields = $this->display->handler->get_handlers('field');
     foreach ($fields as $id => $handler) {
       if (isset($handler->field_info) && $handler->field_info['module'] == 'yamaps') {
