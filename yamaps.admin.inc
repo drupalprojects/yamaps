@@ -57,7 +57,7 @@ function yamaps_settings_page($form, &$form_state) {
   $form['yamaps_block_edit_display_options']['open_button_text'] = array(
     '#type' => 'textfield',
     '#title' => t('Button text'),
-    '#default_value' => (isset($display_options['open_button_text'])) ? $display_options['open_button_text'] : 'Open map',
+    '#default_value' => isset($display_options['open_button_text']) ? t($display_options['open_button_text']) : t('Open map'),
     '#required' => FALSE,
     '#description' => t('Specify text to display on the button opening map in case of "Map opened by button click" option.
     This setting applies to admin UI only. To configure text on the button opening map for end users select appropriate
@@ -69,6 +69,28 @@ function yamaps_settings_page($form, &$form_state) {
         ),
       ),
     ),
+  );
+
+  $form['yamaps_block_edit_display_options']['width'] = array(
+    '#title' => t('Map width in admin UI'),
+    '#field_suffix' => ' ' . t('in pixels or in percentage'),
+    '#type' => 'textfield',
+    '#default_value' => isset($display_options['width']) ? $display_options['width'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH,
+    '#size' => 5,
+    '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
+    '#required' => TRUE,
+    '#description' => t('Set width for the map in "block edit" form.'),
+  );
+
+  $form['yamaps_block_edit_display_options']['height'] = array(
+    '#title' => t('Map height in admin UI'),
+    '#field_suffix' => ' ' . t('in pixels or in percentage'),
+    '#type' => 'textfield',
+    '#default_value' => isset($display_options['height']) ? $display_options['height'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT,
+    '#size' => 5,
+    '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
+    '#required' => TRUE,
+    '#description' => t('Set height for the map in "block edit" form.'),
   );
 
   return system_settings_form($form);

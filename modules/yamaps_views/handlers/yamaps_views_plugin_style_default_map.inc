@@ -173,7 +173,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       '#value' => '',
       '#description' => t('Map view will be used when "Choose on map." radio is active'),
       '#attributes' => array(
-        'style' => ' width: ' . $width . '; height:' . $height,
+        'style' => ' width: ' . $width . '; height:' . $height . ';',
         'id' => $id,
         'class' => array(
           'yamaps-map-container',
@@ -545,7 +545,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           '#type' => 'html_tag',
           '#tag' => 'div',
           '#attributes' => array(
-            'style' => ' width: ' . $yandexmap_field_settings['width'] . '; height:' . $yandexmap_field_settings['height'],
+            'style' => ' width: ' . $yandexmap_field_settings['width'] . '; height:' . $yandexmap_field_settings['height'] . ';',
             'id' => $id,
             'class' => array(
               'yamaps-map-container',
@@ -558,7 +558,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           $views_output['open_map_button'] = array(
             '#type' => 'html_tag',
             '#tag' => 'div',
-            '#value' => t((isset($this->options['yamaps_display_options']['open_button_text'])) ? $this->options['yamaps_display_options']['open_button_text'] : 'Open map'),
+            '#value' => isset($this->options['yamaps_display_options']['open_button_text']) ? t($this->options['yamaps_display_options']['open_button_text']) : t('Open map'),
             '#attributes' => array(
               'id' => $open_button_id,
               'class' => 'open_yamap_button',
@@ -693,7 +693,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           '#tag' => 'div',
           '#attributes' => array(
             'id' => $id,
-            'style' => 'width:' . $yandexmap_field_settings['s_width'] . 'px; height:' . $yandexmap_field_settings['s_height'] . 'px' . $map_display_style,
+            'style' => 'width:' . $yandexmap_field_settings['s_width'] . 'px; height:' . $yandexmap_field_settings['s_height'] . 'px' . $map_display_style . ';',
           ),
           '#value' => theme('image', array(
             'path' => url(YAMAPS_STATIC_API_URL, array(

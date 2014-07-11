@@ -102,6 +102,9 @@ function yamaps_admin_form_process($element, $form_state, $complete_form) {
     'edit' => TRUE,
   );
 
+  $container_width = isset($display_options['width']) ? $display_options['width'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH;
+  $container_height = isset($display_options['height']) ? $display_options['height'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT;
+
   // Map container.
   $element['map'] = array(
     '#type' => 'html_tag',
@@ -112,6 +115,7 @@ function yamaps_admin_form_process($element, $form_state, $complete_form) {
       'class' => array(
         'yamaps-map-container',
       ),
+      'style' => 'width: ' . $container_width . '; height: ' . $container_height . ';',
     ),
   );
 

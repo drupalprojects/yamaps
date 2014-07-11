@@ -83,6 +83,11 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       'edit' => TRUE,
     );
 
+    $container_width = isset($field['settings']['display_options']['width']) ?
+      $field['settings']['display_options']['width'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH;
+    $container_height = isset($field['settings']['display_options']['height']) ?
+      $field['settings']['display_options']['height'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT;
+
     // Map container.
     $element['map_wrapper']['map'] = array(
       '#type' => 'html_tag',
@@ -93,6 +98,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
         'class' => array(
           'yamaps-map-container',
         ),
+        'style' => 'width: ' . $container_width . '; height: ' . $container_height . ';',
       ),
     );
 
@@ -157,12 +163,6 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
           'id' => $remove_button_id,
           'class' => 'remove_yamap_button',
         ),
-      );
-
-      $element['remove_yamap_field_item'] = array(
-        '#type' => 'submit',
-        '#value' => t('Remove item'), // @todo rename and delete fake button
-        '#name' => 'remove_yamap_field_item_' . $delta,
       );
     }
 

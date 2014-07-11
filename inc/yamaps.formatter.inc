@@ -323,7 +323,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           '#tag' => 'div',
           '#attributes' => array(
             'id' => $id,
-            'style' => 'width:' . $settings['width'] . '; height:' . $settings['height'],
+            'style' => 'width:' . $settings['width'] . '; height:' . $settings['height'] . ';',
           ),
           '#value' => '',
         );
@@ -493,7 +493,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           '#tag' => 'div',
           '#attributes' => array(
             'id' => $id,
-            'style' => 'width:' . $settings['s_width'] . 'px; height:' . $settings['s_height'] . 'px' . $map_display_style,
+            'style' => 'width:' . $settings['s_width'] . 'px; height:' . $settings['s_height'] . 'px' . $map_display_style . ';',
           ),
           '#value' => theme('image', array(
             'path' => url(YAMAPS_STATIC_API_URL, array('query' => $params, 'external' => TRUE)),

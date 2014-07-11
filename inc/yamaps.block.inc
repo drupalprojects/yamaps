@@ -71,7 +71,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
   $form[$delta . '_block_display_options']['open_button_text'] = array(
     '#type' => 'textfield',
     '#title' => t('Button text'),
-    '#default_value' => (isset($display_options['open_button_text'])) ? $display_options['open_button_text'] : 'Open map',
+    '#default_value' => isset($display_options['open_button_text']) ? t($display_options['open_button_text']) : t('Open map'),
     '#required' => FALSE,
     '#description' => t('Text of button that opens map for end user.'),
     '#states' => array(
@@ -198,7 +198,7 @@ function yamaps_block_content($delta) {
 
   $id = drupal_html_id(implode('-', array('ymap', 'block', $delta)));
   $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
-  $open_button_text = isset($display_options['open_button_text']) ? $display_options['open_button_text'] : t('Open map');
+  $open_button_text = isset($display_options['open_button_text']) ? t($display_options['open_button_text']) : t('Open map');
 
   $width = variable_get($delta . '_block_width', YAMAPS_DEFAULT_BLOCK_MAP_WIDTH);
   $height = variable_get($delta . '_block_height', YAMAPS_DEFAULT_BLOCK_MAP_HEIGHT);
@@ -246,7 +246,7 @@ function yamaps_block_content($delta) {
         '#tag' => 'div',
         '#attributes' => array(
           'id' => $id,
-          'style' => 'width:' . $width . '; height:' . $height,
+          'style' => 'width:' . $width . '; height:' . $height . ';',
         ),
         '#value' => '',
       );
@@ -392,7 +392,7 @@ function yamaps_block_content($delta) {
         '#tag' => 'div',
         '#attributes' => array(
           'id' => $id,
-          'style' => 'width:' . $width . 'px; height:' . $height . 'px' . $map_display_style,
+          'style' => 'width:' . $width . 'px; height:' . $height . 'px' . $map_display_style . ';',
         ),
         '#value' => theme('image', array(
           'path' => url(YAMAPS_STATIC_API_URL, array(
