@@ -151,6 +151,7 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
     '#size' => 5,
     '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
     '#required' => TRUE,
+    '#description' => t('Set width for the map in field widget of "entity edit" form.'),
   );
 
   $form['display_options']['height'] = array(
@@ -162,6 +163,7 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
     '#size' => 5,
     '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
     '#required' => TRUE,
+    '#description' => t('Set height for the map in field widget of "entity edit" form.'),
   );
 
   return $form;
