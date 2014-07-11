@@ -52,6 +52,6 @@ function yamaps_views_help($path, $arg) {
   switch ($path) {
     case 'admin/help#yamaps_views':
       return t('Check !link for tutorials and videos on how to use this module.',
-        array('!link' => l('Yandex Maps page', 'admin/help/yamaps')));
+        array('!link' => l(t('Yandex Maps page'), 'admin/help/yamaps')));
   }
 }

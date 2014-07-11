@@ -1,6 +1,6 @@
 /**
  * @file
- * Initialize object extended to jQuery for global operations
+ * Initialize object extended to jQuery for global operations.
  */
 
 (function($) {

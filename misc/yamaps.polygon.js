@@ -1,6 +1,6 @@
 /**
  * @file
- * Polygons support plugin
+ * Polygons support plugin.
  */
 
 (function($) {

@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Stylesheet for the 'Yandex Maps' module.
+ */
+
 .ymaps-map label {
   display: inline;
 }

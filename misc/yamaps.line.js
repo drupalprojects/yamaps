@@ -1,6 +1,6 @@
 /**
  * @file
- * Polylines support plugin
+ * Polylines support plugin.
  */
 
 (function($) {

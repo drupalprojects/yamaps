@@ -1,4 +1,4 @@
-/* 
+/**
  * @file
  * Script helps to work with multiple fields.
  */

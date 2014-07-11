@@ -1,6 +1,6 @@
 /**
  * @file
- * Run map.
+ * Runs map.
  */
 
 (function($) {
