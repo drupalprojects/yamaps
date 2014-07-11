@@ -152,9 +152,17 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       $height = '400px';
     }
 
-
+    $form['yamaps_center_options']['map_container']= array(
+      '#type' => 'fieldset',
+      '#title' => t('Map center'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="style_options[yamaps_center_options][map_center_type]"]' => array('value' => 'mini_map'),
+        ),
+      ),
+    );
     // Map container.
-    $form['yamaps_center_options']['map'] = array(
+    $form['yamaps_center_options']['map_container']['map'] = array(
       '#type' => 'html_tag',
       '#tag' => 'div',
       '#value' => '',
@@ -166,11 +174,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           'yamaps-map-container',
         ),
       ),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="style_options[yamaps_center_options][map_center_type]"]' => array('value' => 'mini_map'),
-        ),
-      ),
+
     );
     $form['coords'] = array(
       '#type' => 'textfield',
