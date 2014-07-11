@@ -354,9 +354,6 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $prepared_polygons = array();
     $prepared_route = array();
 
-    if (isset($this->view->live_preview) && $this->view->live_preview) {
-      return t("Selected view format doesn't support live preview.");
-    }
     if (empty($this->options['yandex_map_field'])) {
       return t('The Yandex Maps style cannot be used with a pager. Please add "Yandex Maps" field and chose it in views settings form.');
     }
