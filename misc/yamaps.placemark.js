@@ -1,7 +1,8 @@
 /**
  * @file
- * Placemarks support plugin
+ * Placemarks support plugin.
  */
+
 (function($) {
   Drupal.behaviors.yamapsPlacemarks = {
     attach: function (context, settings) {

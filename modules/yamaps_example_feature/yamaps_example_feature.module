@@ -12,6 +12,6 @@ include_once 'yamaps_example_feature.features.inc';
 function yamaps_example_feature_help($path, $arg) {
   if ($path == 'admin/help#yamaps_example_feature') {
     return t('Check !link for tutorials and videos on how to use this module.',
-      array('!link' => l('Yandex Maps page', 'admin/help/yamaps')));
+      array('!link' => l(t('Yandex Maps page'), 'admin/help/yamaps')));
   }
 }

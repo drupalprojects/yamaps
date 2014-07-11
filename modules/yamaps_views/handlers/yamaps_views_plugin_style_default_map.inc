@@ -553,8 +553,20 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           ),
           '#value' => '',
         );
-        break;
 
+        if (isset($this->options['yamaps_display_options']['display_type']) && $this->options['yamaps_display_options']['display_type'] == 'map_button') {
+          $views_output['open_map_button'] = array(
+            '#type' => 'html_tag',
+            '#tag' => 'div',
+            '#value' => t((isset($this->options['yamaps_display_options']['open_button_text'])) ? $this->options['yamaps_display_options']['open_button_text'] : 'Open map'),
+            '#attributes' => array(
+              'id' => $open_button_id,
+              'class' => 'open_yamap_button',
+              'mapId' => $id,
+            ),
+          );
+        }
+        break;
       case 'field_yamaps_formatter_static':
         $params = array();
         $params['ll'] = end($prepared_params['coords']['center']) . ',' . reset($prepared_params['coords']['center']);
@@ -717,15 +729,14 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
         );
 
         // Adding CSS for button.
-        drupal_add_css(drupal_get_path('module', 'yamaps') . '/misc/yamaps.css');
+        $views_output['#attached']['css'][] = drupal_get_path('module', 'yamaps') . '/misc/yamaps.css';
 
-        // Adding map to js.
-        drupal_add_js(array('yamapsStatic' => $maps), 'setting');
-        $views_output['#attached']['library'][] = array(
-          'yamaps',
-          'yamaps.full',
+        // Adding map to js and load library.
+        $views_output['#attached']['js'][] = array(
+          'data' => array('yamapsStatic' => $maps),
+          'type' => 'setting',
         );
-
+        $views_output['#attached']['library'][] = array('yamaps', 'yamaps.full');
         break;
     }
     return $views_output;

@@ -32,13 +32,12 @@ module_load_include('inc', 'yamaps', 'inc/yamaps.block');
 function yamaps_menu() {
   $items['admin/config/services/yamaps'] = array(
     'title' => 'Yandex Maps configuration',
-    'description' => t('Yandex Maps configuration'),
+    'description' => 'Yandex Maps configuration',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('yamaps_settings_page'),
     'access arguments' => array('administer yamaps settings'),
     'file' => 'yamaps.admin.inc',
     'type' => MENU_LOCAL_TASK,
-    'weight' => 4,
   );
 
   return $items;
@@ -79,7 +78,9 @@ function yamaps_field_info() {
  * Implements hook_field_is_empty().
  */
 function yamaps_field_is_empty($item, $field) {
-  return empty($item['coords']);
+  if ($field['type'] == 'field_yamaps') {
+    return empty($item['coords']);
+  }
 }
 
 /**
@@ -252,7 +253,7 @@ function yamaps_help($path, $arg) {
     $output .= yamaps_wrap_items($config_fields, '<p>', '</p>');
 
     $config_fields_options = array(
-      t('Navigate to !content_type and select content type.', array('!content_type' => l('"Content Types" page', 'admin/structure/types'))),
+      t('Navigate to !content_type and select content type.', array('!content_type' => l(t('"Content Types" page'), 'admin/structure/types'))),
       t('Navigate to admin/structure/types/manage/{CONTENT-TYPE}/fields ("Manage Fields" page) of the selected content type.'),
       t('Configure and add field of "Yandex map" type.'),
       t('Navigate to admin/structure/types/manage/{CONTENT-TYPE}/display ("Manage Display" page) of the selected content type.'),
@@ -269,9 +270,9 @@ function yamaps_help($path, $arg) {
 
     $config_blocks_options = array(
       t('Navigate to !yamaps_admin and set required amount of "Yandex Maps" blocks.',
-        array('!yamaps_admin' => l('"Yandex Maps" configuration page', 'admin/config/services/yamaps'))),
+        array('!yamaps_admin' => l(t('"Yandex Maps" configuration page'), 'admin/config/services/yamaps'))),
       t('Navigate to !blocks_page, scroll down to find "Disabled" section and find block called "Yandex Map #{NUMBER}".', array(
-        '!blocks_page' => l('"Blocks" page', 'admin/structure/block'),
+        '!blocks_page' => l(t('"Blocks" page'), 'admin/structure/block'),
       )),
       t('Configure the block and pull it into the required region.'),
     );
@@ -285,35 +286,37 @@ function yamaps_help($path, $arg) {
  * Implements hook_field_validate().
  */
 function yamaps_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
-  // Perform validation on empty coordinates only for field attached to entity.
-  if ($entity_type && $entity) {
-    if ($instance['required']) {
-      $items_total = count($items);
-      $items_empty = 0;
-      foreach ($items as $item) {
-        if (empty($item['coords'])) {
-          $items_empty++;
+  if ($field['type'] == 'field_yamaps') {
+    // Perform validation on empty coordinates only for field attached to entity.
+    if ($entity_type && $entity) {
+      if ($instance['required']) {
+        $items_total = count($items);
+        $items_empty = 0;
+        foreach ($items as $item) {
+          if (empty($item['coords'])) {
+            $items_empty++;
+          }
+        }
+
+        if ($items_total == $items_empty) {
+          $errors[$field['field_name']][$langcode][0][] = array(
+            'error' => 'coords',
+            'message' => t('Cooordinates cannot be empty for required field "!field_name".',
+              array('!field_name' => $instance['label'])),
+          );
         }
       }
-
-      if ($items_total == $items_empty) {
-        $errors[$field['field_name']][$langcode][0][] = array(
-          'error' => 'coords',
-          'message' => t('Cooordinates cannot be empty for required field "!field_name".',
-            array('!field_name' => $instance['label'])),
-        );
-      }
     }
-  }
-  else {
-    // Validation for fields settings form.
-    foreach ($items as $delta => $item) {
-      if (empty($item['coords']) && $item['hide'] == 1) {
-        $errors[$field['field_name']][$langcode][$delta][] = array(
-          'error' => 'coords',
-          'message' => t('"!field_name" with empty coordinates cannot be hidden by default.',
-            array('!field_name' => $instance['label'])),
-        );
+    else {
+      // Validation for fields settings form.
+      foreach ($items as $delta => $item) {
+        if (empty($item['coords']) && $item['hide'] == 1) {
+          $errors[$field['field_name']][$langcode][$delta][] = array(
+            'error' => 'coords',
+            'message' => t('"!field_name" with empty coordinates cannot be hidden by default.',
+              array('!field_name' => $instance['label'])),
+          );
+        }
       }
     }
   }

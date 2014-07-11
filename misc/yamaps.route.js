@@ -1,6 +1,6 @@
 /**
  * @file
- * Routes support plugin
+ * Routes support plugin.
  */
 
 (function($) {

@@ -12,22 +12,6 @@ function yamaps_views_views_api() {
 }
 
 /**
- * Implements hook_theme().
- */
-function yamaps_views_theme() {
-  return array(
-    'yandex_balloon_content' => array(
-      'template' => 'yandex-balloon-content',
-      'variables' => array(
-        'view' => NULL,
-        'rendered_fields' => NULL,
-        'item' => NULL,
-      ),
-    ),
-  );
-}
-
-/**
  * Implements hook_page_alter().
  */
 function yamaps_views_page_alter(&$page) {
@@ -52,6 +36,6 @@ function yamaps_views_help($path, $arg) {
   switch ($path) {
     case 'admin/help#yamaps_views':
       return t('Check !link for tutorials and videos on how to use this module.',
-        array('!link' => l('Yandex Maps page', 'admin/help/yamaps')));
+        array('!link' => l(t('Yandex Maps page'), 'admin/help/yamaps')));
   }
 }

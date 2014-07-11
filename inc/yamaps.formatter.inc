@@ -344,7 +344,10 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
       }
 
       // Adding map to js and load library.
-      drupal_add_js(array('yamaps' => $maps), 'setting');
+      $element['#attached']['js'][] = array(
+        'data' => array('yamaps' => $maps),
+        'type' => 'setting',
+      );
       $element['#attached']['library'][] = array('yamaps', 'yamaps.full');
       break;
 
@@ -524,10 +527,13 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         );
 
         // Adding CSS for button.
-        drupal_add_css(drupal_get_path('module', 'yamaps') . '/misc/yamaps.css');
+        $element['#attached']['css'][] = drupal_get_path('module', 'yamaps') . '/misc/yamaps.css';
 
-        // Adding map to js.
-        drupal_add_js(array('yamapsStatic' => $maps), 'setting');
+        // Adding map to js and load library.
+        $element['#attached']['js'][] = array(
+          'data' => array('yamapsStatic' => $maps),
+          'type' => 'setting',
+        );
         $element['#attached']['library'][] = array('yamaps', 'yamaps.full');
       }
       break;

@@ -427,9 +427,11 @@ function yamaps_block_content($delta) {
         ),
       );
 
-      // Adding map to js.
-      drupal_add_js(array('yamapsStatic' => $maps), 'setting');
-      // Load library.
+      // Adding map to js and load library.
+      $block_output['#attached']['js'][] = array(
+        'data' => array('yamapsStatic' => $maps),
+        'type' => 'setting',
+      );
       $block_output['#attached']['library'][] = array('yamaps', 'yamaps.full');
       break;
   }
