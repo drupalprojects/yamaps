@@ -152,7 +152,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       $height = '400px';
     }
 
-    $form['yamaps_center_options']['map_container']= array(
+    $form['yamaps_center_options']['map_container'] = array(
       '#type' => 'fieldset',
       '#title' => t('Map center'),
       '#states' => array(
@@ -468,6 +468,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           // $map['init']['bounds'] = $parameters['bounds'];
         }
         $prepared_params['coords']['zoom'] = ++$this->options['yamaps_center_options']['zoom'];
+        $prepared_params['type'] = 'yandex#map';
         /**
          * if (!empty($this->options['map_center'])) {
          * $map['init']['center_geocode'] = $this->options['map_center'];
@@ -527,7 +528,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           'routes' => empty($prepared_route) ? NULL : $prepared_route,
           'edit' => FALSE,
           'init' => array(
-            'type' => ($this->options['type']) ? ($this->options['type']) : 'yandex#map',
+            'type' => $prepared_params['type'],
             'center' => $prepared_params['coords']['center'],
             'zoom' => $prepared_params['coords']['zoom'],
             'behaviors' => array_values(array_filter($yandexmap_field_settings['behaviors'])),
