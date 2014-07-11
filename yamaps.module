@@ -17,6 +17,8 @@ define('YAMAPS_DEFAULT_BLOCK_DELTA', 'yamaps');
 define('YAMAPS_DEFAULT_BLOCK_AMOUNT', 1);
 define('YAMAPS_DEFAULT_BLOCK_MAP_WIDTH', '168px');
 define('YAMAPS_DEFAULT_BLOCK_MAP_HEIGHT', '200px');
+define('YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH', '100%');
+define('YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT', '400px');
 
 /**
  * Includes.
@@ -68,6 +70,8 @@ function yamaps_field_info() {
         'display_options' => array(
           'display_type' => 'map',
           'open_button_text' => 'Open map',
+          'height' => YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT,
+          'width' => YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH,
         ),
       ),
     ),
@@ -136,6 +140,28 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
         ),
       ),
     ),
+  );
+
+  $form['display_options']['width'] = array(
+    '#title' => t('Map width in admin UI'),
+    '#field_suffix' => ' ' . t('in pixels or in percentage'),
+    '#type' => 'textfield',
+    '#default_value' => isset($settings['display_options']['width'])
+        ? $settings['display_options']['width'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH,
+    '#size' => 5,
+    '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
+    '#required' => TRUE,
+  );
+
+  $form['display_options']['height'] = array(
+    '#title' => t('Map height in admin UI'),
+    '#field_suffix' => ' ' . t('in pixels or in percentage'),
+    '#type' => 'textfield',
+    '#default_value' => isset($settings['display_options']['height']) ?
+        $settings['display_options']['height'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT,
+    '#size' => 5,
+    '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
+    '#required' => TRUE,
   );
 
   return $form;
