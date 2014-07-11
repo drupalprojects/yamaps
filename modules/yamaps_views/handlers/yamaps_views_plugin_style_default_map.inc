@@ -584,9 +584,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
             ),
           );
         }
-
-
         break;
+
       case 'field_yamaps_formatter_static':
         $params = array();
 
@@ -751,15 +750,14 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
         );
 
         // Adding CSS for button.
-        drupal_add_css(drupal_get_path('module', 'yamaps') . '/misc/yamaps.css');
+        $views_output['#attached']['css'][] = drupal_get_path('module', 'yamaps') . '/misc/yamaps.css';
 
-        // Adding map to js.
-        drupal_add_js(array('yamapsStatic' => $maps), 'setting');
-        $views_output['#attached']['library'][] = array(
-          'yamaps',
-          'yamaps.full'
+        // Adding map to js and load library.
+        $views_output['#attached']['js'][] = array(
+          'data' => array('yamapsStatic' => $maps),
+          'type' => 'setting',
         );
-
+        $views_output['#attached']['library'][] = array('yamaps', 'yamaps.full');
         break;
     }
     return $views_output;
