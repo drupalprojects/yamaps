@@ -25,12 +25,12 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $options['lines'] = array('default' => '');
     $options['polygons'] = array('default' => '');
     $options['routes'] = array('default' => '');
-    $options['zoom'] = array('default' => '6');
     $options['coords'] = array('default' => '');
     $options['yamaps_center_options'] = array(
       'default' => array(
         'map_center_type' => 'geolocation',
         'map_center_geolocation' => '',
+        'zoom' => 6,
       ),
     );
     $options['placemark_title'] = array('default' => $this::PLACEMARK_DEFAULT_FIELD);
@@ -465,9 +465,9 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
         }
         if (isset($parameters) && $parameters !== FALSE) {
           $prepared_params['coords']['center'] = $parameters['map_center'];
-          $prepared_params['coords']['zoom'] = ++$this->options['yamaps_center_options']['zoom'];
           // $map['init']['bounds'] = $parameters['bounds'];
         }
+        $prepared_params['coords']['zoom'] = ++$this->options['yamaps_center_options']['zoom'];
         /**
          * if (!empty($this->options['map_center'])) {
          * $map['init']['center_geocode'] = $this->options['map_center'];
