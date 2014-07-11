@@ -572,19 +572,6 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           '#value' => '',
         );
 
-        if (isset($this->options['yamaps_display_options']['display_type']) && $this->options['yamaps_display_options']['display_type'] == 'map_button') {
-          $views_output['open_map_button'] = array(
-            '#type' => 'html_tag',
-            '#tag' => 'div',
-            '#value' => t((isset($this->options['yamaps_display_options']['open_button_text'])) ? $this->options['yamaps_display_options']['open_button_text'] : 'Open map'),
-            '#attributes' => array(
-              'id' => $open_button_id,
-              'class' => 'open_yamap_button',
-              'mapId' => $id,
-            ),
-          );
-        }
-
 
         break;
       case 'field_yamaps_formatter_static':
