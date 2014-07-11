@@ -446,9 +446,9 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
 
     switch ($this->options['yamaps_center_options']['map_center_type']) {
       case 'geolocation':
-        if (($this->options['yamaps_center_options']['map_center_type'] == 'geolocation')) {
-          $parameters = yamaps_geocoding($this->options['yamaps_center_options']['map_center_geolocation']);
-        }
+        $prepared_params['coords']['center'] = NULL;
+        $parameters = yamaps_geocoding($this->options['yamaps_center_options']['map_center_geolocation']);
+
         if (isset($parameters) && $parameters !== FALSE) {
           $prepared_params['coords']['center'] = $parameters['map_center'];
           // $map['init']['bounds'] = $parameters['bounds'];
@@ -736,7 +736,10 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           'data' => array('yamapsStatic' => $maps),
           'type' => 'setting',
         );
-        $views_output['#attached']['library'][] = array('yamaps', 'yamaps.full');
+        $views_output['#attached']['library'][] = array(
+          'yamaps',
+          'yamaps.full',
+        );
         break;
     }
     return $views_output;
