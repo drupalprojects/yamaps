@@ -46,8 +46,8 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     }
 
     // Map information.
-    _yamaps_cleanup_values($value);
-    $default_js = _yamaps_format_values_to_js($value);
+    yamaps_cleanup_values($value);
+    $default_js = yamaps_format_values_to_js($value);
 
     // Issue #1712292 fix.
     // Display default position on edit form.
@@ -55,8 +55,8 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       if (isset($element['#entity']) && $entity = $element['#entity']) {
         $default_value = field_get_default_value($element['#entity_type'], $entity, $field, $instance);
         $default_value = reset($default_value);
-        _yamaps_cleanup_values($default_value);
-        $default_js = _yamaps_format_values_to_js($default_value);
+        yamaps_cleanup_values($default_value);
+        $default_js = yamaps_format_values_to_js($default_value);
       }
     }
 
@@ -209,40 +209,4 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
   }
 
   return $element;
-}
-
-/**
- * Helper function for cleanup values.
- *
- * @param array $value
- *   Values of map.
- */
-function _yamaps_cleanup_values(&$value) {
-  $value['coords'] = isset($value['coords']) ? $value['coords'] : NULL;
-  $value['type'] = isset($value['type']) ? $value['type'] : 'yandex#map';
-  $value['placemarks'] = isset($value['placemarks']) ? $value['placemarks'] : NULL;
-  $value['lines'] = isset($value['lines']) ? $value['lines'] : NULL;
-  $value['polygons'] = isset($value['polygons']) ? $value['polygons'] : NULL;
-  $value['routes'] = isset($value['routes']) ? $value['routes'] : NULL;
-  $value['hide'] = isset($value['hide']) ? $value['hide'] : 0;
-}
-
-/**
- * Helper function to pass values to js.
- *
- * @param array $clean_values
- *   Values of map.
- *
- * @return array
- *   Prepared values.
- */
-function _yamaps_format_values_to_js($clean_values) {
-  return array(
-    'coords' => drupal_json_decode($clean_values['coords']),
-    'type' => $clean_values['type'],
-    'placemarks' => drupal_json_decode($clean_values['placemarks']),
-    'lines' => drupal_json_decode($clean_values['lines']),
-    'polygons' => drupal_json_decode($clean_values['polygons']),
-    'routes' => drupal_json_decode($clean_values['routes']),
-  );
 }

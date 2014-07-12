@@ -131,3 +131,39 @@ function yamaps_get_map_types() {
     'yandex#hybrid' => t('Hybrid'),
   );
 }
+
+/**
+ * Prepares values for map.
+ *
+ * @param array $value
+ *   Values of map.
+ */
+function yamaps_cleanup_values(&$value) {
+  $value['coords'] = isset($value['coords']) ? $value['coords'] : NULL;
+  $value['type'] = isset($value['type']) ? $value['type'] : 'yandex#map';
+  $value['placemarks'] = isset($value['placemarks']) ? $value['placemarks'] : NULL;
+  $value['lines'] = isset($value['lines']) ? $value['lines'] : NULL;
+  $value['polygons'] = isset($value['polygons']) ? $value['polygons'] : NULL;
+  $value['routes'] = isset($value['routes']) ? $value['routes'] : NULL;
+  $value['hide'] = isset($value['hide']) ? $value['hide'] : 0;
+}
+
+/**
+ * Prepares values for js.
+ *
+ * @param array $clean_values
+ *   Values of map.
+ *
+ * @return array
+ *   Prepared values.
+ */
+function yamaps_format_values_to_js($clean_values) {
+  return array(
+    'coords' => drupal_json_decode($clean_values['coords']),
+    'type' => $clean_values['type'],
+    'placemarks' => drupal_json_decode($clean_values['placemarks']),
+    'lines' => drupal_json_decode($clean_values['lines']),
+    'polygons' => drupal_json_decode($clean_values['polygons']),
+    'routes' => drupal_json_decode($clean_values['routes']),
+  );
+}

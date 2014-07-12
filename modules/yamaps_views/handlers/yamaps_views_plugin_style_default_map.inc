@@ -112,7 +112,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       ),
       '#default_value' => $this->options['yamaps_center_options']['zoom'],
     );
-    $prepared_params = _yamaps_format_values_to_js($this->options);
+    $prepared_params = yamaps_format_values_to_js($this->options);
     // Map initialization parameters.
     $map = array(
       'init' => array(
@@ -439,7 +439,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $id = drupal_html_id(implode('-', $array_of_unique_params));
     $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
 
-    $prepared_params = _yamaps_format_values_to_js($this->options);
+    $prepared_params = yamaps_format_values_to_js($this->options);
 
     switch ($this->options['yamaps_center_options']['map_center_type']) {
       case 'geolocation':
