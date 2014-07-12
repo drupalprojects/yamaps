@@ -60,29 +60,6 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       }
     }
 
-    // Map initialization parameters.
-    $map = array(
-      'init' => array(
-        'center' => $default_js['coords']['center'],
-        'zoom' => $default_js['coords']['zoom'],
-        'type' => $default_js['type'],
-        'behaviors' => array('scrollZoom', 'dblClickZoom', 'drag'),
-      ),
-      'display_options' => array(
-        'display_type' => $field['settings']['display_options']['display_type'],
-        'open_button_text' => $field['settings']['display_options']['open_button_text'],
-        'open_button_id' => $open_button_id,
-        'remove_button_id' => $remove_button_id,
-      ),
-      'controls' => 1,
-      'traffic' => 0,
-      'placemarks' => $default_js['placemarks'],
-      'lines' => $default_js['lines'],
-      'polygons' => $default_js['polygons'],
-      'routes' => $default_js['routes'],
-      'edit' => TRUE,
-    );
-
     $container_width = isset($field['settings']['display_options']['width']) ?
       $field['settings']['display_options']['width'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH;
     $container_height = isset($field['settings']['display_options']['height']) ?
@@ -110,7 +87,8 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
         'class' => array('field-yamaps-coords-' . $id),
         'style' => 'width: 100%;',
       ),
-      '#description' => t('Search for object on the map to fill this field or leave it blank (if field is not required).'),
+      '#description' => t('Search for object on the map to fill this field automatically or leave it blank (if field is not required).
+      Leave this field blank to remove field item.'),
     );
 
     // Hidden elements to saving map information.
@@ -196,6 +174,29 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
 
     // Map description.
     $element['#description'] .= '<br/>' . render($themed_description);
+
+    // Map initialization parameters.
+    $map = array(
+      'init' => array(
+        'center' => $default_js['coords']['center'],
+        'zoom' => $default_js['coords']['zoom'],
+        'type' => $default_js['type'],
+        'behaviors' => array('scrollZoom', 'dblClickZoom', 'drag'),
+      ),
+      'display_options' => array(
+        'display_type' => $field['settings']['display_options']['display_type'],
+        'open_button_text' => $field['settings']['display_options']['open_button_text'],
+        'open_button_id' => $open_button_id,
+        'remove_button_id' => $remove_button_id,
+      ),
+      'controls' => 1,
+      'traffic' => 0,
+      'placemarks' => $default_js['placemarks'],
+      'lines' => $default_js['lines'],
+      'polygons' => $default_js['polygons'],
+      'routes' => $default_js['routes'],
+      'edit' => TRUE,
+    );
 
     // Add information about this map to js.
     // Settings should be attached to each element, because element changes its ID when reloaded via Ajax

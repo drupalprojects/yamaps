@@ -295,28 +295,6 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         // Coordinates of map center.
         $coords = drupal_json_decode($item['coords']);
 
-        // Map initialization parameters.
-        $maps[$id] = array(
-          'init' => array(
-            'center' => $coords['center'],
-            'zoom' => $coords['zoom'],
-            'type' => $item['type'] ? $item['type'] : 'yandex#map',
-            'behaviors' => array_values(array_filter($settings['behaviors'])),
-          ),
-          'display_options' => array(
-            'display_type' => $settings['yamaps_display_options']['display_type'],
-            'open_button_text' => $settings['yamaps_display_options']['open_button_text'],
-            'open_button_id' => $open_button_id,
-          ),
-          'controls' => $settings['controls'],
-          'traffic' => $settings['traffic'],
-          'placemarks' => drupal_json_decode($item['placemarks']),
-          'lines' => drupal_json_decode($item['lines']),
-          'polygons' => drupal_json_decode($item['polygons']),
-          'routes' => drupal_json_decode($item['routes']),
-          'edit' => FALSE,
-        );
-
         // Return map container div.
         $element[$delta]['map_container'] = array(
           '#type' => 'html_tag',
@@ -341,6 +319,28 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
             ),
           );
         }
+
+        // Map initialization parameters.
+        $maps[$id] = array(
+          'init' => array(
+            'center' => $coords['center'],
+            'zoom' => $coords['zoom'],
+            'type' => $item['type'] ? $item['type'] : 'yandex#map',
+            'behaviors' => array_values(array_filter($settings['behaviors'])),
+          ),
+          'display_options' => array(
+            'display_type' => $settings['yamaps_display_options']['display_type'],
+            'open_button_text' => $settings['yamaps_display_options']['open_button_text'],
+            'open_button_id' => $open_button_id,
+          ),
+          'controls' => $settings['controls'],
+          'traffic' => $settings['traffic'],
+          'placemarks' => drupal_json_decode($item['placemarks']),
+          'lines' => drupal_json_decode($item['lines']),
+          'polygons' => drupal_json_decode($item['polygons']),
+          'routes' => drupal_json_decode($item['routes']),
+          'edit' => FALSE,
+        );
       }
 
       // Adding map to js and load library.
