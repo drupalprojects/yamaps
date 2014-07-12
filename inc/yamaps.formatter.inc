@@ -314,7 +314,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
               $settings['yamaps_display_options']['open_button_text'] : 'Open button'),
             '#attributes' => array(
               'id' => $open_button_id,
-              'class' => 'open_yamap_button',
+              'class' => array('open_yamap_button'),
               'mapId' => $id,
             ),
           );
@@ -511,7 +511,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
               $settings['yamaps_display_options_static']['open_button_text_static'] : 'Open button'),
             '#attributes' => array(
               'id' => $open_button_id,
-              'class' => 'open_yamap_button_static',
+              'class' => array('open_yamap_button_static'),
               'mapId' => $id,
             ),
           );

@@ -533,7 +533,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
               $settings['yamaps_display_options']['open_button_text'] : 'Open button'),
             '#attributes' => array(
               'id' => $open_button_id,
-              'class' => 'open_yamap_button',
+              'class' => array('open_yamap_button'),
               'mapId' => $id,
             ),
           );
@@ -558,7 +558,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
             '#value' => isset($this->options['yamaps_display_options']['open_button_text']) ? t($this->options['yamaps_display_options']['open_button_text']) : t('Open map'),
             '#attributes' => array(
               'id' => $open_button_id,
-              'class' => 'open_yamap_button',
+              'class' => array('open_yamap_button'),
               'mapId' => $id,
             ),
           );
@@ -710,7 +710,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
               $yandexmap_field_settings['yamaps_display_options_static']['open_button_text_static'] : 'Open button'),
             '#attributes' => array(
               'id' => $open_button_id,
-              'class' => 'open_yamap_button_static',
+              'class' => array('open_yamap_button_static'),
               'mapId' => $id,
             ),
           );

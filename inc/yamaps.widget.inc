@@ -139,7 +139,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
         '#attributes' => array(
           'name' => $element['#field_name'] . '_' . $element['#delta'] . '_remove_button',
           'id' => $remove_button_id,
-          'class' => 'remove_yamap_button',
+          'class' => array('remove_yamap_button'),
         ),
       );
     }
@@ -151,7 +151,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
         '#value' => t($field['settings']['display_options']['open_button_text']),
         '#attributes' => array(
           'id' => $open_button_id,
-          'class' => 'open_yamap_button',
+          'class' => array('open_yamap_button'),
           'mapId' => $id,
         ),
       );
@@ -166,7 +166,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
         array('attributes' => array('target' => '_blank'))
       ),
       '#attributes' => array(
-        'class' => 'yamaps-terms',
+        'class' => array('yamaps-terms'),
       ),
     );
 

@@ -190,6 +190,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
     '#required' => TRUE,
   );
 
+  $open_map_button = FALSE;
   if (isset($block_form_display_options['display_type']) && ($block_form_display_options['display_type'] == 'map_button')) {
     $form['open_map_button'] = array(
       '#type' => 'html_tag',
@@ -197,10 +198,11 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
       '#value' => t($block_form_display_options['open_button_text']),
       '#attributes' => array(
         'id' => $open_button_id,
-        'class' => 'open_yamap_button',
+        'class' => array('open_yamap_button'),
         'mapId' => $id,
       ),
     );
+    $open_map_button = TRUE;
   }
 
   $container_width = isset($block_form_display_options['width']) ? $block_form_display_options['width'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH;
@@ -213,9 +215,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
     '#value' => '',
     '#attributes' => array(
       'id' => $id,
-      'class' => array(
-        'yamaps-map-container',
-      ),
+      'class' => $open_map_button ? array('yamaps-map-container', 'element-invisible') : array('yamaps-map-container'),
       'style' => 'width: ' . $container_width . '; height: ' . $container_height . ';',
     ),
   );
@@ -278,7 +278,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
       array('attributes' => array('target' => '_blank'))
     ),
     '#attributes' => array(
-      'class' => 'yamaps-terms',
+      'class' => array('yamaps-terms'),
     ),
   );
 
