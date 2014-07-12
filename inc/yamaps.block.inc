@@ -405,6 +405,7 @@ function yamaps_block_content($delta) {
         'edit' => FALSE,
       );
 
+      $open_map_button = FALSE;
       if (isset($display_options['display_type']) && $display_options['display_type'] == 'map_button') {
         $block_output['open_map_button'] = array(
           '#type' => 'html_tag',
@@ -416,6 +417,7 @@ function yamaps_block_content($delta) {
             'mapId' => $id,
           ),
         );
+        $open_map_button = TRUE;
       }
 
       // Return map container div.
@@ -425,7 +427,7 @@ function yamaps_block_content($delta) {
         '#attributes' => array(
           'id' => $id,
           'style' => 'width:' . $width . '; height:' . $height . ';',
-          'class' => array('yamaps-map-container', 'element-invisible'),
+          'class' => $open_map_button ? array('yamaps-map-container', 'element-invisible') : array('yamaps-map-container'),
         ),
         '#value' => '',
       );
@@ -549,6 +551,7 @@ function yamaps_block_content($delta) {
         $params['pl'] = implode('~', $pl);
       }
 
+      $open_map_button = FALSE;
       if ($display_type == 'map_button') {
         $block_output['open_button_text'] = array(
           '#type' => 'html_tag',
@@ -560,6 +563,7 @@ function yamaps_block_content($delta) {
             'mapId' => $id,
           ),
         );
+        $open_map_button = TRUE;
       }
 
       // Return map container div with image.
@@ -569,7 +573,7 @@ function yamaps_block_content($delta) {
         '#attributes' => array(
           'id' => $id,
           'style' => 'width:' . $width . 'px; height:' . $height . 'px;',
-          'class' => array('yamaps-map-container', 'element-invisible'),
+          'class' => $open_map_button ? array('yamaps-map-container', 'element-invisible') : array('yamaps-map-container'),
         ),
         '#value' => theme('image', array(
           'path' => url(YAMAPS_STATIC_API_URL, array(
