@@ -56,11 +56,29 @@ function yamaps_settings_page($form, &$form_state) {
   // Text on button that opens map by click.
   $form['yamaps_block_edit_display_options']['open_button_text'] = array(
     '#type' => 'textfield',
-    '#title' => t('Button text'),
+    '#title' => t('"Open" button text'),
     '#default_value' => isset($display_options['open_button_text']) ? t($display_options['open_button_text']) : t('Open map'),
     '#required' => FALSE,
     '#description' => t('Specify text to display on the button opening map in case of "Map opened by button click" option.
     This setting applies to admin UI only. To configure text on the button opening map for end users select appropriate
+    option in "Manage Display" section of the appropriate block.'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="yamaps_block_edit_display_options[display_type]"]' => array(
+          'value' => 'map_button',
+        ),
+      ),
+    ),
+  );
+
+  // Text on button that closes map by click.
+  $form['yamaps_block_edit_display_options']['close_button_text'] = array(
+    '#type' => 'textfield',
+    '#title' => t('"Close" button text'),
+    '#default_value' => isset($display_options['close_button_text']) ? t($display_options['close_button_text']) : t('Close map'),
+    '#required' => FALSE,
+    '#description' => t('Specify text to display on the button closing map in case of "Map opened by button click" option.
+    This setting applies to admin UI only. To configure text on the button closing map for end users select appropriate
     option in "Manage Display" section of the appropriate block.'),
     '#states' => array(
       'visible' => array(

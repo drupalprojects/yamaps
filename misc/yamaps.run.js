@@ -42,16 +42,18 @@
             for (var mapId in Drupal.settings.yamaps) {
               var options = Drupal.settings.yamaps[mapId];
               if (options.display_options.display_type === 'map_button') {
-                $('#' + mapId).hide();
-                $('#' + options.display_options.remove_button_id).hide();
+                creating_map(mapId, options);
+                $('#' + options.display_options.remove_button_id).hide(); // @todo remove
                 $('#' + options.display_options.open_button_id).bind({
                   click: function () {
-                    mapId = $(this).attr('mapId');
-                    options = Drupal.settings.yamaps[mapId];
-                    creating_map(mapId, options);
-                    $('#' + options.display_options.open_button_id).hide();
-                    $('#' + mapId).show();
-                    $('#' + options.display_options.remove_button_id).show();
+                    if ($('#' + mapId).hasClass('element-invisible')) {
+                      $(this).text(options.display_options.close_button_text);
+                      $('#' + mapId).removeClass('element-invisible');
+                    }
+                    else {
+                      $(this).text(options.display_options.open_button_text);
+                      $('#' + mapId).addClass('element-invisible');
+                    }
                   }
                 });
               }
@@ -67,13 +69,16 @@
             for (var mapId in Drupal.settings.yamapsStatic) {
               var options = Drupal.settings.yamapsStatic[mapId];
               if (options.display_options.display_type === 'map_button') {
-                $('#' + mapId).hide();
                 $('#' + options.display_options.open_button_id).bind({
                   click: function () {
-                    mapId = $(this).attr('mapId');
-                    options = Drupal.settings.yamapsStatic[mapId];
-                    $('#' + options.display_options.open_button_id).hide();
-                    $('#' + mapId).show();
+                    if ($('#' + mapId).hasClass('element-invisible')) {
+                      $(this).text(options.display_options.close_button_text);
+                      $('#' + mapId).removeClass('element-invisible');
+                    }
+                    else {
+                      $(this).text(options.display_options.open_button_text);
+                      $('#' + mapId).addClass('element-invisible');
+                    }
                   }
                 });
               }
