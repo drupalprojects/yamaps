@@ -68,7 +68,6 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
 
   // Unique map button id.
   $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
-  $remove_button_id = drupal_html_id(implode('-', array($id, 'remove_button'))); // @todo remove
   $block_form_display_options = variable_get('yamaps_block_edit_display_options', array());
   $behaviors = array('scrollZoom', 'dblClickZoom', 'drag');
 
@@ -295,7 +294,6 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
       'open_button_text' => isset($block_form_display_options['open_button_text']) ? t($block_form_display_options['open_button_text']) : t('Open map'),
       'open_button_id' => $open_button_id,
       'close_button_text' => isset($block_form_display_options['close_button_text']) ? t($block_form_display_options['close_button_text']) : t('Close map'),
-      'remove_button_id' => $remove_button_id, // @todo remove
     ),
     'controls' => 1,
     'traffic' => 0,

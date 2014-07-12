@@ -43,7 +43,6 @@
               var options = Drupal.settings.yamaps[mapId];
               if (options.display_options.display_type === 'map_button') {
                 creating_map(mapId, options);
-                $('#' + options.display_options.remove_button_id).hide(); // @todo remove
                 $('#' + options.display_options.open_button_id).bind({
                   click: function () {
                     if ($('#' + mapId).hasClass('element-invisible')) {

@@ -32,7 +32,6 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
 
     // Unique map button id.
     $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
-    $remove_button_id = drupal_html_id(implode('-', array($id, 'remove_button')));
     $value = isset($items[$delta]) ? $items[$delta] : array();
 
     $element += array(
@@ -65,6 +64,21 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     $container_height = isset($field['settings']['display_options']['height']) ?
       $field['settings']['display_options']['height'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT;
 
+    $open_map_button = FALSE;
+    if ($field['settings']['display_options']['display_type'] == 'map_button') {
+      $element['open_map_button'] = array(
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => t($field['settings']['display_options']['open_button_text']),
+        '#attributes' => array(
+          'id' => $open_button_id,
+          'class' => array('open_yamap_button'),
+          'mapId' => $id,
+        ),
+      );
+      $open_map_button = TRUE;
+    }
+
     // Map container.
     $element['map_wrapper']['map'] = array(
       '#type' => 'html_tag',
@@ -72,9 +86,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       '#value' => '',
       '#attributes' => array(
         'id' => $id,
-        'class' => array(
-          'yamaps-map-container',
-        ),
+        'class' => $open_map_button ? array('yamaps-map-container', 'element-invisible') : array('yamaps-map-container'),
         'style' => 'width: ' . $container_width . '; height: ' . $container_height . ';',
       ),
     );
@@ -88,7 +100,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
         'style' => 'width: 100%;',
       ),
       '#description' => t('Search for object on the map to fill this field automatically or leave it blank (if field is not required).
-      Leave this field blank to remove field item.'),
+      <strong>Leave this field blank to remove field item.</strong>'),
     );
 
     // Hidden elements to saving map information.
@@ -130,33 +142,6 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     Can be useful when administrator uses field as optional and doesn't intend to display map."),
     );
 
-    if ($delta > 0) {
-      // 'Remove field' button.
-      $element['remove_yamap_field_item'] = array(
-        '#type' => 'html_tag',
-        '#tag' => 'div',
-        '#value' => t('Remove field'),
-        '#attributes' => array(
-          'name' => $element['#field_name'] . '_' . $element['#delta'] . '_remove_button',
-          'id' => $remove_button_id,
-          'class' => array('remove_yamap_button'),
-        ),
-      );
-    }
-
-    if ($field['settings']['display_options']['display_type'] == 'map_button') {
-      $element['open_map_button'] = array(
-        '#type' => 'html_tag',
-        '#tag' => 'div',
-        '#value' => t($field['settings']['display_options']['open_button_text']),
-        '#attributes' => array(
-          'id' => $open_button_id,
-          'class' => array('open_yamap_button'),
-          'mapId' => $id,
-        ),
-      );
-    }
-
     $description_tag = array(
       '#type' => 'html_tag',
       '#tag' => 'div',
@@ -187,7 +172,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
         'display_type' => $field['settings']['display_options']['display_type'],
         'open_button_text' => $field['settings']['display_options']['open_button_text'],
         'open_button_id' => $open_button_id,
-        'remove_button_id' => $remove_button_id,
+        'close_button_text' => $field['settings']['display_options']['close_button_text'],
       ),
       'controls' => 1,
       'traffic' => 0,
