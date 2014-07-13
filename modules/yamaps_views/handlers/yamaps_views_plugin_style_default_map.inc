@@ -25,12 +25,12 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $options['lines'] = array('default' => '');
     $options['polygons'] = array('default' => '');
     $options['routes'] = array('default' => '');
-    $options['coords'] = array('default' => '');
     $options['yamaps_center_options'] = array(
       'default' => array(
         'map_center_type' => 'geolocation',
         'map_center_geolocation' => '',
         'zoom' => 6,
+        'map_container' => array('coords' => ''),
       ),
     );
     $options['placemark_title'] = array('default' => $this::PLACEMARK_DEFAULT_FIELD);
@@ -130,8 +130,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       'routes' => $prepared_params['routes'],
       'edit' => TRUE,
     );
-    if ($this->options['coords']) {
-      $coords = json_decode($this->options['coords']);
+    $coords = json_decode($this->getCoordinates());
+    if (isset($coords->center, $coords->zoom)) {
       $map['init']['center'] = $coords->center;
       $map['init']['zoom'] = $coords->zoom;
     }
@@ -181,10 +181,10 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       ),
 
     );
-    $form['coords'] = array(
+    $form['yamaps_center_options']['map_container']['coords'] = array(
       '#type' => 'textfield',
       '#title' => t('Coordinates'),
-      '#default_value' => $this->options['coords'],
+      '#default_value' => $this->getCoordinates(),
       '#attributes' => array(
         'class' => array('field-yamaps-coords-' . $id),
         'style' => 'width: 100%;',
@@ -438,7 +438,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     // Unique map id.
     $id = drupal_html_id(implode('-', $array_of_unique_params));
     $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
-
+    $this->options['coords'] = $this->getCoordinates();
     $prepared_params = _yamaps_format_values_to_js($this->options);
 
     switch ($this->options['yamaps_center_options']['map_center_type']) {
@@ -480,10 +480,6 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           foreach ($prepared_params['routes'] as $route) {
             $prepared_route[] = $route;
           }
-        }
-
-        if ($this->options['coords']) {
-
         }
         break;
     }
@@ -794,5 +790,26 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       }
     }
     return $field_names;
+  }
+
+  /**
+   * Get coordinates.
+   *
+   * Get coordinates with support of old coordinates place.
+   *
+   * @return string
+   *   List options 'coords'.
+   */
+  function getCoordinates() {
+    dsm($this->options);
+    if (isset($this->options['coords'])) {
+      return $this->options['coords'];
+    }
+    elseif (isset($this->options['yamaps_center_options']['map_container']['coords'])) {
+      return $this->options['yamaps_center_options']['map_container']['coords'];
+    }
+    else {
+      return '';
+    }
   }
 }
