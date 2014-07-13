@@ -37,28 +37,11 @@
           });
         }
 
-        var processMaps = function () {
+        function processMaps() {
           if (Drupal.settings.yamaps) {
             for (var mapId in Drupal.settings.yamaps) {
               var options = Drupal.settings.yamaps[mapId];
-              if (options.display_options.display_type === 'map_button') {
-                creating_map(mapId, options);
-                $('#' + options.display_options.open_button_id).bind({
-                  click: function () {
-                    if ($('#' + mapId).hasClass('element-invisible')) {
-                      $(this).text(options.display_options.close_button_text);
-                      $('#' + mapId).removeClass('element-invisible');
-                    }
-                    else {
-                      $(this).text(options.display_options.open_button_text);
-                      $('#' + mapId).addClass('element-invisible');
-                    }
-                  }
-                });
-              }
-              else {
-                creating_map(mapId, options);
-              }
+              creating_map(mapId, options);
             }
           }
         };
@@ -90,10 +73,24 @@
         processMaps();
         processMapsStatic();
 
-        Drupal.behaviors.yamapsInitBehaviors = {
-          attach: processMaps
-        };
-      });
-	  }
+        $('div.open_yamap_button').click(function() {
+          // @todo it also can be yamapsStatic, so we cannot be sure now which object to use.
+          // @todo first we should define which object contains proper settings.
+          // @todo better to add 'class' or another attr to the button: yamaps or yamapsStatic.
+          // @todo check and rebuild map static open / close.
+          // @todo the problem here is that after adding new item via ajax 'click' event called twice.
+          var buttonMapId = $(this).attr('mapid');
+          var buttonMapOptions = Drupal.settings.yamaps[buttonMapId];
+          if ($('#' + buttonMapId).hasClass('element-invisible')) {
+            $(this).text(buttonMapOptions.display_options.close_button_text);
+            $('#' + buttonMapId).removeClass('element-invisible');
+          }
+          else {
+            $(this).text(buttonMapOptions.display_options.open_button_text);
+            $('#' + buttonMapId).addClass('element-invisible');
+          }
+        })
+      })
+    }
   }
 })(jQuery);
