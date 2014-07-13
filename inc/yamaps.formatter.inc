@@ -295,6 +295,31 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         // Coordinates of map center.
         $coords = drupal_json_decode($item['coords']);
 
+        // Return map container div.
+        $element[$delta]['map_container'] = array(
+          '#type' => 'html_tag',
+          '#tag' => 'div',
+          '#attributes' => array(
+            'id' => $id,
+            'style' => 'width:' . $settings['width'] . '; height:' . $settings['height'] . ';',
+          ),
+          '#value' => '',
+        );
+
+        if (isset($settings['yamaps_display_options']['display_type']) && $settings['yamaps_display_options']['display_type'] == 'map_button') {
+          $element[$delta]['open_button_text'] = array(
+            '#type' => 'html_tag',
+            '#tag' => 'div',
+            '#value' => t((isset($settings['yamaps_display_options']['open_button_text'])) ?
+              $settings['yamaps_display_options']['open_button_text'] : 'Open button'),
+            '#attributes' => array(
+              'id' => $open_button_id,
+              'class' => array('open_yamap_button'),
+              'mapId' => $id,
+            ),
+          );
+        }
+
         // Map initialization parameters.
         $maps[$id] = array(
           'init' => array(
@@ -316,31 +341,6 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           'routes' => drupal_json_decode($item['routes']),
           'edit' => FALSE,
         );
-
-        // Return map container div.
-        $element[$delta]['map_container'] = array(
-          '#type' => 'html_tag',
-          '#tag' => 'div',
-          '#attributes' => array(
-            'id' => $id,
-            'style' => 'width:' . $settings['width'] . '; height:' . $settings['height'] . ';',
-          ),
-          '#value' => '',
-        );
-
-        if (isset($settings['yamaps_display_options']['display_type']) && $settings['yamaps_display_options']['display_type'] == 'map_button') {
-          $element[$delta]['open_button_text'] = array(
-            '#type' => 'html_tag',
-            '#tag' => 'div',
-            '#value' => t((isset($settings['yamaps_display_options']['open_button_text'])) ?
-              $settings['yamaps_display_options']['open_button_text'] : 'Open button'),
-            '#attributes' => array(
-              'id' => $open_button_id,
-              'class' => 'open_yamap_button',
-              'mapId' => $id,
-            ),
-          );
-        }
       }
 
       // Adding map to js and load library.
@@ -511,7 +511,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
               $settings['yamaps_display_options_static']['open_button_text_static'] : 'Open button'),
             '#attributes' => array(
               'id' => $open_button_id,
-              'class' => 'open_yamap_button_static',
+              'class' => array('open_yamap_button_static'),
               'mapId' => $id,
             ),
           );

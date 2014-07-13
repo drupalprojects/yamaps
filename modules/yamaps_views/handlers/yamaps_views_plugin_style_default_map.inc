@@ -11,7 +11,6 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
   const PLACEMARK_DEFAULT_FIELD = '<default>';
   const PLACEMARK_NONE_FIELD = '<none>';
 
-
   /**
    * Default settings for map.
    *
@@ -112,7 +111,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       ),
       '#default_value' => $this->options['yamaps_center_options']['zoom'],
     );
-    $prepared_params = _yamaps_format_values_to_js($this->options);
+    $this->options['coords'] = $this->getCoordinates();
+    $prepared_params = yamaps_format_values_to_js($this->options);
     // Map initialization parameters.
     $map = array(
       'init' => array(
@@ -130,7 +130,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       'routes' => $prepared_params['routes'],
       'edit' => TRUE,
     );
-    $coords = json_decode($this->getCoordinates());
+    $coords = json_decode($this->options['coords']);
     if (isset($coords->center, $coords->zoom)) {
       $map['init']['center'] = $coords->center;
       $map['init']['zoom'] = $coords->zoom;
@@ -439,7 +439,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $id = drupal_html_id(implode('-', $array_of_unique_params));
     $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
     $this->options['coords'] = $this->getCoordinates();
-    $prepared_params = _yamaps_format_values_to_js($this->options);
+    $prepared_params = yamaps_format_values_to_js($this->options);
 
     switch ($this->options['yamaps_center_options']['map_center_type']) {
       case 'geolocation':
@@ -529,7 +529,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
               $settings['yamaps_display_options']['open_button_text'] : 'Open button'),
             '#attributes' => array(
               'id' => $open_button_id,
-              'class' => 'open_yamap_button',
+              'class' => array('open_yamap_button'),
               'mapId' => $id,
             ),
           );
@@ -554,7 +554,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
             '#value' => isset($this->options['yamaps_display_options']['open_button_text']) ? t($this->options['yamaps_display_options']['open_button_text']) : t('Open map'),
             '#attributes' => array(
               'id' => $open_button_id,
-              'class' => 'open_yamap_button',
+              'class' => array('open_yamap_button'),
               'mapId' => $id,
             ),
           );
@@ -706,7 +706,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
               $yandexmap_field_settings['yamaps_display_options_static']['open_button_text_static'] : 'Open button'),
             '#attributes' => array(
               'id' => $open_button_id,
-              'class' => 'open_yamap_button_static',
+              'class' => array('open_yamap_button_static'),
               'mapId' => $id,
             ),
           );
@@ -801,7 +801,6 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    *   List options 'coords'.
    */
   function getCoordinates() {
-    dsm($this->options);
     if (isset($this->options['coords'])) {
       return $this->options['coords'];
     }

@@ -58,36 +58,6 @@ function yamaps_permission() {
 }
 
 /**
- * Implements hook_field_info().
- */
-function yamaps_field_info() {
-  return array(
-    'field_yamaps' => array(
-      'label' => t('Yandex map'),
-      'default_widget' => 'yamaps_field',
-      'default_formatter' => 'field_yamaps_formatter_dynamic',
-      'settings' => array(
-        'display_options' => array(
-          'display_type' => 'map',
-          'open_button_text' => 'Open map',
-          'height' => YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT,
-          'width' => YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH,
-        ),
-      ),
-    ),
-  );
-}
-
-/**
- * Implements hook_field_is_empty().
- */
-function yamaps_field_is_empty($item, $field) {
-  if ($field['type'] == 'field_yamaps') {
-    return empty($item['coords']);
-  }
-}
-
-/**
  * Implements hook_element_info().
  */
 function yamaps_element_info() {
@@ -97,76 +67,6 @@ function yamaps_element_info() {
       '#theme_wrappers' => array('form_element'),
     ),
   );
-}
-
-/**
- * Implements hook_field_settings_form().
- */
-function yamaps_field_settings_form($field, $instance, $has_data) {
-  $settings = $field['settings'];
-
-  $form['display_options'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Display options'),
-    '#tree' => TRUE,
-  );
-
-  $form['display_options']['display_type'] = array(
-    '#type' => 'radios',
-    '#title' => t('Map display style in admin UI for field'),
-    '#options' => array(
-      'map' => t('Map'),
-      'map_button' => t('Map opened by button click'),
-    ),
-    '#default_value' => $settings['display_options']['display_type'],
-    '#required' => FALSE,
-    '#description' => t('Configure how to display "Yandex Map" field while creating new / updating material.
-    This setting applies to admin UI only. To display map opening by button click for end users select appropriate option
-    in "Manage Display" section of the appropriate content type.'),
-  );
-
-  $form['display_options']['open_button_text'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Button text'),
-    '#default_value' => $settings['display_options']['open_button_text'],
-    '#required' => FALSE,
-    '#description' => t('Specify text to display on button that opens map in case of "Map opened by button click" option.
-    This setting applies to admin UI only. To configure text on the button opening map for end users select appropriate
-    option in "Manage Display" section of the appropriate content type.'),
-    '#states' => array(
-      'visible' => array(
-        ':input[name="field[settings][display_options][display_type]"]' => array(
-          'value' => 'map_button',
-        ),
-      ),
-    ),
-  );
-
-  $form['display_options']['width'] = array(
-    '#title' => t('Map width in admin UI'),
-    '#field_suffix' => ' ' . t('in pixels or in percentage'),
-    '#type' => 'textfield',
-    '#default_value' => isset($settings['display_options']['width'])
-        ? $settings['display_options']['width'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH,
-    '#size' => 5,
-    '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
-    '#required' => TRUE,
-    '#description' => t('Set width for the map in field widget of "entity edit" form.'),
-  );
-
-  $form['display_options']['height'] = array(
-    '#title' => t('Map height in admin UI'),
-    '#field_suffix' => ' ' . t('in pixels or in percentage'),
-    '#type' => 'textfield',
-    '#default_value' => isset($settings['display_options']['height']) ?
-        $settings['display_options']['height'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT,
-    '#size' => 5,
-    '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
-    '#required' => TRUE,
-    '#description' => t('Set height for the map in field widget of "entity edit" form.'),
-  );
-
-  return $form;
 }
 
 /**
@@ -212,8 +112,6 @@ function yamaps_library() {
       $path . 'yamaps.route.js' => array('scope' => 'footer', 'weight' => $w++),
       $path . 'yamaps.maps.js' => array('scope' => 'footer', 'weight' => $w++),
       $path . 'yamaps.run.js' => array('scope' => 'footer', 'weight' => $w++),
-      /* field button script */
-      $path . 'yamaps.field.js' => array('scope' => 'footer', 'weight' => $w++),
     ),
     'css' => array(
       $path . 'yamaps.css' => array(),
@@ -308,6 +206,125 @@ function yamaps_help($path, $arg) {
 
     return $output;
   }
+}
+
+/**
+ * Implements hook_field_info().
+ */
+function yamaps_field_info() {
+  return array(
+    'field_yamaps' => array(
+      'label' => t('Yandex map'),
+      'default_widget' => 'yamaps_field',
+      'default_formatter' => 'field_yamaps_formatter_dynamic',
+      'settings' => array(
+        'display_options' => array(
+          'display_type' => 'map',
+          'open_button_text' => 'Open map',
+          'height' => YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT,
+          'width' => YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH,
+        ),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_is_empty().
+ */
+function yamaps_field_is_empty($item, $field) {
+  if ($field['type'] == 'field_yamaps') {
+    return empty($item['coords']);
+  }
+}
+
+/**
+ * Implements hook_field_settings_form().
+ */
+function yamaps_field_settings_form($field, $instance, $has_data) {
+  $settings = $field['settings'];
+
+  $form['display_options'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Display options'),
+    '#tree' => TRUE,
+  );
+
+  $form['display_options']['display_type'] = array(
+    '#type' => 'radios',
+    '#title' => t('Map display style in admin UI for field'),
+    '#options' => array(
+      'map' => t('Map'),
+      'map_button' => t('Map opened by button click'),
+    ),
+    '#default_value' => $settings['display_options']['display_type'],
+    '#required' => FALSE,
+    '#description' => t('Configure how to display "Yandex Map" field while creating new / updating material.
+    This setting applies to admin UI only. To display map opening by button click for end users select appropriate option
+    in "Manage Display" section of the appropriate content type.'),
+  );
+
+  $form['display_options']['open_button_text'] = array(
+    '#type' => 'textfield',
+    '#title' => t('"Open" button text'),
+    '#default_value' => isset($settings['display_options']['open_button_text']) ?
+        $settings['display_options']['open_button_text'] : t('Open map'),
+    '#required' => FALSE,
+    '#description' => t('Specify text to display on button that opens map in case of "Map opened by button click" option.
+    This setting applies to admin UI only. To configure text on the button opening map for end users select appropriate
+    option in "Manage Display" section of the appropriate content type.'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="field[settings][display_options][display_type]"]' => array(
+          'value' => 'map_button',
+        ),
+      ),
+    ),
+  );
+
+  $form['display_options']['close_button_text'] = array(
+    '#type' => 'textfield',
+    '#title' => t('"Close" button text'),
+    '#default_value' => isset($settings['display_options']['close_button_text']) ?
+        $settings['display_options']['close_button_text'] : t('Close map'),
+    '#required' => FALSE,
+    '#description' => t('Specify text to display on button that closes map in case of "Map opened by button click" option.
+    This setting applies to admin UI only. To configure text on the button closing map for end users select appropriate
+    option in "Manage Display" section of the appropriate content type.'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="field[settings][display_options][display_type]"]' => array(
+          'value' => 'map_button',
+        ),
+      ),
+    ),
+  );
+
+  $form['display_options']['width'] = array(
+    '#title' => t('Map width in admin UI'),
+    '#field_suffix' => ' ' . t('in pixels or in percentage'),
+    '#type' => 'textfield',
+    '#default_value' => isset($settings['display_options']['width'])
+        ? $settings['display_options']['width'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH,
+    '#size' => 5,
+    '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
+    '#required' => TRUE,
+    '#description' => t('Set width for the map in field widget of "entity edit" form.'),
+  );
+
+  $form['display_options']['height'] = array(
+    '#title' => t('Map height in admin UI'),
+    '#field_suffix' => ' ' . t('in pixels or in percentage'),
+    '#type' => 'textfield',
+    '#default_value' => isset($settings['display_options']['height']) ?
+        $settings['display_options']['height'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT,
+    '#size' => 5,
+    '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
+    '#required' => TRUE,
+    '#description' => t('Set height for the map in field widget of "entity edit" form.'),
+  );
+
+  return $form;
 }
 
 /**
