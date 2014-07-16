@@ -30,6 +30,7 @@ function yamaps_field_formatter_info() {
         'yamaps_display_options' => array(
           'display_type' => 'map',
           'open_button_text' => 'Open map',
+          'close_button_text' => 'Close map',
         ),
       ),
     ),
@@ -44,6 +45,7 @@ function yamaps_field_formatter_info() {
         'yamaps_display_options_static' => array(
           'display_type_static' => 'map',
           'open_button_text_static' => 'Open map',
+          'close_button_text_static' => 'Close map',
         ),
       ),
     ),
@@ -80,10 +82,25 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
 
       $element['yamaps_display_options']['open_button_text'] = array(
         '#type' => 'textfield',
-        '#title' => t('Button text'),
+        '#title' => t('"Open" button text'),
         '#default_value' => $settings['yamaps_display_options']['open_button_text'],
         '#required' => FALSE,
         '#description' => t('Text of button that opens map for end user.'),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="fields[' . $field['field_name'] . '][settings_edit_form][settings][yamaps_display_options][display_type]"]' => array(
+              'value' => 'map_button',
+            ),
+          ),
+        ),
+      );
+
+      $element['yamaps_display_options']['close_button_text'] = array(
+        '#type' => 'textfield',
+        '#title' => t('"Close" button text'),
+        '#default_value' => $settings['yamaps_display_options']['close_button_text'],
+        '#required' => FALSE,
+        '#description' => t('Text of button that closes map for end user.'),
         '#states' => array(
           'visible' => array(
             ':input[name="fields[' . $field['field_name'] . '][settings_edit_form][settings][yamaps_display_options][display_type]"]' => array(
@@ -148,10 +165,25 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
 
       $element['yamaps_display_options_static']['open_button_text_static'] = array(
         '#type' => 'textfield',
-        '#title' => t('Button text'),
+        '#title' => t('"Open" button text'),
         '#default_value' => $settings['yamaps_display_options_static']['open_button_text_static'],
         '#required' => FALSE,
         '#description' => t('Text of button that opens map for end user.'),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="fields[' . $field['field_name'] . '][settings_edit_form][settings][yamaps_display_options_static][display_type_static]"]' => array(
+              'value' => 'map_button',
+            ),
+          ),
+        ),
+      );
+
+      $element['yamaps_display_options_static']['close_button_text_static'] = array(
+        '#type' => 'textfield',
+        '#title' => t('"Close" button text'),
+        '#default_value' => $settings['yamaps_display_options_static']['close_button_text_static'],
+        '#required' => FALSE,
+        '#description' => t('Text of button that closes map for end user.'),
         '#states' => array(
           'visible' => array(
             ':input[name="fields[' . $field['field_name'] . '][settings_edit_form][settings][yamaps_display_options_static][display_type_static]"]' => array(
@@ -228,7 +260,8 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
       $summary[] = t('Display type: @type', array('@type' => $settings['yamaps_display_options']['display_type']));
 
       if ($settings['yamaps_display_options']['display_type'] == 'map_button') {
-        $summary[] = t('Button text: @text', array('@text' => $settings['yamaps_display_options']['open_button_text']));
+        $summary[] = t('"Open" button text: @text', array('@text' => $settings['yamaps_display_options']['open_button_text']));
+        $summary[] = t('"Close" button text: @text', array('@text' => $settings['yamaps_display_options']['close_button_text']));
       }
       break;
 
@@ -242,7 +275,8 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
       $summary[] = t('Display type: @type', array('@type' => $settings['yamaps_display_options_static']['display_type_static']));
 
       if ($settings['yamaps_display_options_static']['display_type_static'] == 'map_button') {
-        $summary[] = t('Button text: @text', array('@text' => $settings['yamaps_display_options_static']['open_button_text_static']));
+        $summary[] = t('"Open" button text: @text', array('@text' => $settings['yamaps_display_options_static']['open_button_text_static']));
+        $summary[] = t('"Close" button text: @text', array('@text' => $settings['yamaps_display_options_static']['close_button_text_static']));
       }
 
       break;
@@ -287,13 +321,41 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         )));
 
         // Unique map button id.
-        $open_button_id = drupal_html_id(implode('-', array(
-          $id,
-          'open_button',
-        )));
+        $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
+        $close_button_id = drupal_html_id(implode('-', array($id, 'close_button')));
 
         // Coordinates of map center.
         $coords = drupal_json_decode($item['coords']);
+
+        if (isset($settings['yamaps_display_options']['display_type']) && $settings['yamaps_display_options']['display_type'] == 'map_button') {
+          $element[$delta]['open_button_text'] = array(
+            '#type' => 'html_tag',
+            '#tag' => 'div',
+            '#value' => isset($settings['yamaps_display_options']['open_button_text']) ?
+              t($settings['yamaps_display_options']['open_button_text']) : t('Open button'),
+            '#attributes' => array(
+              'id' => $open_button_id,
+              'class' => array('open_yamap_button'),
+              'mapId' => $id,
+            ),
+          );
+
+          $element[$delta]['close_button_text'] = array(
+            '#type' => 'html_tag',
+            '#tag' => 'div',
+            '#value' => isset($settings['yamaps_display_options']['close_button_text']) ?
+              t($settings['yamaps_display_options']['close_button_text']) : t('Close button'),
+            '#attributes' => array(
+              'id' => $close_button_id,
+              'class' => array('close_yamap_button', 'element-invisible'),
+              'mapId' => $id,
+            ),
+          );
+        }
+
+        $hide_map = (isset($settings['yamaps_display_options']['display_type']) &&
+          $settings['yamaps_display_options']['display_type'] == 'map_button');
+        $map_class = $hide_map ? 'element-invisible' : '';
 
         // Return map container div.
         $element[$delta]['map_container'] = array(
@@ -302,23 +364,10 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           '#attributes' => array(
             'id' => $id,
             'style' => 'width:' . $settings['width'] . '; height:' . $settings['height'] . ';',
+            'class' => array($map_class),
           ),
           '#value' => '',
         );
-
-        if (isset($settings['yamaps_display_options']['display_type']) && $settings['yamaps_display_options']['display_type'] == 'map_button') {
-          $element[$delta]['open_button_text'] = array(
-            '#type' => 'html_tag',
-            '#tag' => 'div',
-            '#value' => t((isset($settings['yamaps_display_options']['open_button_text'])) ?
-              $settings['yamaps_display_options']['open_button_text'] : 'Open button'),
-            '#attributes' => array(
-              'id' => $open_button_id,
-              'class' => array('open_yamap_button'),
-              'mapId' => $id,
-            ),
-          );
-        }
 
         // Map initialization parameters.
         $maps[$id] = array(
@@ -330,8 +379,6 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           ),
           'display_options' => array(
             'display_type' => $settings['yamaps_display_options']['display_type'],
-            'open_button_text' => $settings['yamaps_display_options']['open_button_text'],
-            'open_button_id' => $open_button_id,
           ),
           'controls' => $settings['controls'],
           'traffic' => $settings['traffic'],
@@ -478,14 +525,38 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           $delta,
         )));
 
-        $open_button_id = drupal_html_id(implode('-', array(
-          $id,
-          'open_button',
-        )));
+        $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
+        $close_button_id = drupal_html_id(implode('-', array($id, 'close_button')));
 
         $hide_map = (isset($settings['yamaps_display_options_static']['display_type_static']) &&
           $settings['yamaps_display_options_static']['display_type_static'] == 'map_button');
-        $map_display_style = $hide_map ? '; display: none' : '';
+        $map_class = $hide_map ? 'element-invisible' : '';
+
+        if ($hide_map) {
+          $element[$delta]['open_button_text'] = array(
+            '#type' => 'html_tag',
+            '#tag' => 'div',
+            '#value' => isset($settings['yamaps_display_options_static']['open_button_text_static']) ?
+              t($settings['yamaps_display_options_static']['open_button_text_static']) : t('Open button'),
+            '#attributes' => array(
+              'id' => $open_button_id,
+              'class' => array('open_yamap_button_static'),
+              'mapId' => $id,
+            ),
+          );
+
+          $element[$delta]['close_button_text'] = array(
+            '#type' => 'html_tag',
+            '#tag' => 'div',
+            '#value' => isset($settings['yamaps_display_options_static']['close_button_text_static']) ?
+              t($settings['yamaps_display_options_static']['close_button_text_static']) : t('Close button'),
+            '#attributes' => array(
+              'id' => $close_button_id,
+              'class' => array('close_yamap_button', 'element-invisible'),
+              'mapId' => $id,
+            ),
+          );
+        }
 
         // Return map container div with image.
         $element[$delta]['map_container'] = array(
@@ -493,7 +564,8 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           '#tag' => 'div',
           '#attributes' => array(
             'id' => $id,
-            'style' => 'width:' . $settings['s_width'] . 'px; height:' . $settings['s_height'] . 'px' . $map_display_style . ';',
+            'style' => 'width:' . $settings['s_width'] . 'px; height:' . $settings['s_height'] . 'px;',
+            'class' => array($map_class),
           ),
           '#value' => theme('image', array(
             'path' => url(YAMAPS_STATIC_API_URL, array('query' => $params, 'external' => TRUE)),
@@ -503,26 +575,10 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           )),
         );
 
-        if ($hide_map) {
-          $element[$delta]['open_button_text'] = array(
-            '#type' => 'html_tag',
-            '#tag' => 'div',
-            '#value' => t((isset($settings['yamaps_display_options_static']['open_button_text_static'])) ?
-              $settings['yamaps_display_options_static']['open_button_text_static'] : 'Open button'),
-            '#attributes' => array(
-              'id' => $open_button_id,
-              'class' => array('open_yamap_button_static'),
-              'mapId' => $id,
-            ),
-          );
-        }
-
         // Map initialization parameters.
         $maps[$id] = array(
           'display_options' => array(
             'display_type' => $settings['yamaps_display_options_static']['display_type_static'],
-            'open_button_text' => $settings['yamaps_display_options_static']['open_button_text_static'],
-            'open_button_id' => $open_button_id,
           ),
         );
 
