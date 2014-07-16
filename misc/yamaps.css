@@ -105,6 +105,7 @@
   -moz-border-radius: 6px;
 }
 
+.close_yamap_button,
 .open_yamap_button,
 .open_yamap_button_static,
 .remove_yamap_button {

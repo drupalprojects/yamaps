@@ -32,6 +32,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
 
     // Unique map button id.
     $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
+    $close_button_id = drupal_html_id(implode('-', array($id, 'close_button')));
     $value = isset($items[$delta]) ? $items[$delta] : array();
 
     $element += array(
@@ -65,6 +66,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       $field['settings']['display_options']['height'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT;
 
     $open_map_button = FALSE;
+    $close_map_button = FALSE;
     if ($field['settings']['display_options']['display_type'] == 'map_button') {
       $element['open_map_button'] = array(
         '#type' => 'html_tag',
@@ -76,7 +78,19 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
           'mapId' => $id,
         ),
       );
+
+      $element['close_map_button'] = array(
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => t($field['settings']['display_options']['close_button_text']),
+        '#attributes' => array(
+          'id' => $close_button_id,
+          'class' => array('close_yamap_button', 'element-invisible'),
+          'mapId' => $id,
+        ),
+      );
       $open_map_button = TRUE;
+      $close_map_button = TRUE;
     }
 
     // Map container.
@@ -86,8 +100,19 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       '#value' => '',
       '#attributes' => array(
         'id' => $id,
-        'class' => $open_map_button ? array('yamaps-map-container', 'element-invisible') : array('yamaps-map-container'),
+        'class' => $open_map_button && $close_map_button ?
+            array('yamaps-map-container', 'element-invisible') : array('yamaps-map-container'),
         'style' => 'width: ' . $container_width . '; height: ' . $container_height . ';',
+      ),
+    );
+
+    $coords_description = array(
+      t('Search for object on the map to fill this field automatically or leave it blank (if field is not required).'),
+      '<strong>' . t('Leave this field blank to remove field item.') . '</strong>',
+      l(
+        t('Terms of service «API Yandex.Maps»'),
+        YAMAPS_LEGAL_AGREEMENT_URL,
+        array('attributes' => array('target' => '_blank'))
       ),
     );
 
@@ -99,8 +124,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
         'class' => array('field-yamaps-coords-' . $id),
         'style' => 'width: 100%;',
       ),
-      '#description' => t('Search for object on the map to fill this field automatically or leave it blank (if field is not required).
-      <strong>Leave this field blank to remove field item.</strong>'),
+      '#description' => implode(' ', $coords_description),
     );
 
     // Hidden elements to saving map information.
@@ -142,24 +166,6 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     Can be useful when administrator uses field as optional and doesn't intend to display map."),
     );
 
-    $description_tag = array(
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#value' => l(
-        t('Terms of service «API Yandex.Maps»'),
-        YAMAPS_LEGAL_AGREEMENT_URL,
-        array('attributes' => array('target' => '_blank'))
-      ),
-      '#attributes' => array(
-        'class' => array('yamaps-terms'),
-      ),
-    );
-
-    $themed_description = theme('html_tag', array('element' => $description_tag));
-
-    // Map description.
-    $element['#description'] .= '<br/>' . render($themed_description);
-
     // Map initialization parameters.
     $map = array(
       'init' => array(
@@ -170,9 +176,6 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       ),
       'display_options' => array(
         'display_type' => $field['settings']['display_options']['display_type'],
-        'open_button_text' => $field['settings']['display_options']['open_button_text'],
-        'open_button_id' => $open_button_id,
-        'close_button_text' => $field['settings']['display_options']['close_button_text'],
       ),
       'controls' => 1,
       'traffic' => 0,
