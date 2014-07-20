@@ -82,7 +82,8 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       $element['close_map_button'] = array(
         '#type' => 'html_tag',
         '#tag' => 'div',
-        '#value' => t($field['settings']['display_options']['close_button_text']),
+        '#value' => isset($field['settings']['display_options']['close_button_text']) ?
+            t($field['settings']['display_options']['close_button_text']) : t('Close map'),
         '#attributes' => array(
           'id' => $close_button_id,
           'class' => array('close_yamap_button', 'element-invisible'),

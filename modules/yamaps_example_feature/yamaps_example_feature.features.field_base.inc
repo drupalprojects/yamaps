@@ -52,8 +52,11 @@ function yamaps_example_feature_field_default_field_bases() {
     'module' => 'yamaps',
     'settings' => array(
       'display_options' => array(
+        'close_button_text' => 'Close map',
         'display_type' => 'map_button',
+        'height' => '400px',
         'open_button_text' => 'Open map example text',
+        'width' => '100%',
       ),
     ),
     'translatable' => 0,

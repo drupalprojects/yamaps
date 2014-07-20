@@ -30,31 +30,7 @@ function yamaps_example_feature_views_default_views() {
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['style_plugin'] = 'default_map';
-  $handler->display->display_options['style_options']['controls'] = 1;
-  $handler->display->display_options['style_options']['traffic'] = 1;
-  $handler->display->display_options['style_options']['behaviors'] = array(
-    0 => 'clickZoom',
-    1 => 'scrollZoom',
-    2 => 'dblClickZoom',
-    3 => 'drag',
-    4 => 'multiTouch',
-    5 => 'rightMouseButtonMagnifier',
-    'clickZoom' => 'clickZoom',
-    'scrollZoom' => 'scrollZoom',
-    'dblClickZoom' => 'dblClickZoom',
-    'drag' => 'drag',
-    'multiTouch' => 'multiTouch',
-    'rightMouseButtonMagnifier' => 'rightMouseButtonMagnifier',
-    'ruler' => 0,
-  );
-  $handler->display->display_options['style_options']['yamaps_display_options'] = array(
-    'display_type' => 'map_button',
-    'open_button_type' => 'Open map',
-    'open_button_text' => 'Yandex maps example text',
-  );
   $handler->display->display_options['style_options']['yandex_map_field'] = 'field_yandex_maps_example_field';
-  $handler->display->display_options['style_options']['map_type'] = '0';
-  $handler->display->display_options['row_plugin'] = 'fields';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';

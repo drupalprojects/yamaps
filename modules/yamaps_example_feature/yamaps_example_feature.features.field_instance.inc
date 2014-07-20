@@ -57,16 +57,7 @@ function yamaps_example_feature_field_default_field_instances() {
   // Exported field_instance: 'node-yandex_maps_example-field_yandex_maps_example_field'
   $field_instances['node-yandex_maps_example-field_yandex_maps_example_field'] = array(
     'bundle' => 'yandex_maps_example',
-    'default_value' => array(
-      0 => array(
-        'coords' => '',
-        'type' => 'yandex#map',
-        'placemarks' => '[]',
-        'lines' => '',
-        'polygons' => '',
-        'routes' => '',
-      ),
-    ),
+    'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
     'display' => array(
