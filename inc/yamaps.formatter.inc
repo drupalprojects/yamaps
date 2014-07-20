@@ -17,8 +17,8 @@ function yamaps_field_formatter_info() {
       'settings' => array(
         'controls' => TRUE,
         'traffic' => TRUE,
-        'width' => '100%',
-        'height' => '400px',
+        'width' => YAMAPS_DEFAULT_DYNAMIC_WIDTH,
+        'height' => YAMAPS_DEFAULT_DYNAMIC_HEIGHT,
         'behaviors' => array(
           'clickZoom',
           'dblClickZoom',
@@ -40,8 +40,8 @@ function yamaps_field_formatter_info() {
       'field types' => array('field_yamaps'),
       'settings' => array(
         's_traffic' => FALSE,
-        's_width' => 640,
-        's_height' => 400,
+        's_width' => YAMAPS_DEFAULT_STATIC_WIDTH,
+        's_height' => YAMAPS_DEFAULT_STATIC_HEIGHT,
         'yamaps_display_options_static' => array(
           'display_type_static' => 'map',
           'open_button_text_static' => 'Open map',
@@ -540,7 +540,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
               t($settings['yamaps_display_options_static']['open_button_text_static']) : t('Open button'),
             '#attributes' => array(
               'id' => $open_button_id,
-              'class' => array('open_yamap_button_static'),
+              'class' => array('open_yamap_button'),
               'mapId' => $id,
             ),
           );

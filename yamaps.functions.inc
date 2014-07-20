@@ -16,7 +16,8 @@
 function yamaps_field_validate_pixels_percentage($element, &$form_state) {
   $value = $element['#value'];
   if (!preg_match('/^[1-9]{1}[0-9]*(px|%)$/', $value)) {
-    form_error($element, t('%name must be a positive integer or percentage value.', array('%name' => $element['#title'])));
+    form_error($element, t('%name must be a positive integer value and has "%" or "px" at the end.',
+      array('%name' => $element['#title'])));
   }
 }
 

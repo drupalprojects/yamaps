@@ -176,7 +176,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
 
   $form[$delta . '_block_width'] = array(
     '#title' => t('Map width'),
-    '#field_suffix' => ' ' . t('in pixels or in percentage'),
+    '#field_suffix' => ' ' . t('in pixels (px) or percentage (%) for dynamic map, in pixels (px) for static map.'),
     '#type' => 'textfield',
     '#default_value' => variable_get($delta . '_block_width', YAMAPS_DEFAULT_BLOCK_MAP_WIDTH),
     '#size' => 5,
@@ -186,7 +186,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
 
   $form[$delta . '_block_height'] = array(
     '#title' => t('Map height'),
-    '#field_suffix' => ' ' . t('in pixels or in percentage'),
+    '#field_suffix' => ' ' . t('in pixels (px) or percentage (%) for dynamic map, in pixels (px) for static map.'),
     '#type' => 'textfield',
     '#default_value' => variable_get($delta . '_block_height', YAMAPS_DEFAULT_BLOCK_MAP_HEIGHT),
     '#size' => 5,

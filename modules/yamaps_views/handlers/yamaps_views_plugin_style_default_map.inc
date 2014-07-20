@@ -153,8 +153,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       $height = $yandexmap_field_settings['s_height'];
     }
     else {
-      $width = '100%';
-      $height = '400px';
+      $width = YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH;
+      $height = YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT;
     }
 
     $form['yamaps_center_options']['map_container'] = array(

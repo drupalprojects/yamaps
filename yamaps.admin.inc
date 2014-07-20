@@ -91,7 +91,7 @@ function yamaps_settings_page($form, &$form_state) {
 
   $form['yamaps_block_edit_display_options']['width'] = array(
     '#title' => t('Map width in admin UI'),
-    '#field_suffix' => ' ' . t('in pixels or in percentage'),
+    '#field_suffix' => ' ' . t('in pixels (px) or percentage (%).'),
     '#type' => 'textfield',
     '#default_value' => isset($display_options['width']) ? $display_options['width'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH,
     '#size' => 5,
@@ -102,7 +102,7 @@ function yamaps_settings_page($form, &$form_state) {
 
   $form['yamaps_block_edit_display_options']['height'] = array(
     '#title' => t('Map height in admin UI'),
-    '#field_suffix' => ' ' . t('in pixels or in percentage'),
+    '#field_suffix' => ' ' . t('in pixels (px) or percentage (%).'),
     '#type' => 'textfield',
     '#default_value' => isset($display_options['height']) ? $display_options['height'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT,
     '#size' => 5,
