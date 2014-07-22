@@ -50,7 +50,7 @@ function yamaps_example_feature_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => -4,
+      'weight' => 1,
     ),
   );
 
@@ -104,7 +104,7 @@ function yamaps_example_feature_field_default_field_instances() {
       'module' => 'yamaps',
       'settings' => array(),
       'type' => 'yamaps_field',
-      'weight' => -3,
+      'weight' => 2,
     ),
   );
 

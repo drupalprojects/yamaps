@@ -35,7 +35,7 @@ function yamaps_example_feature_strongarm() {
           'weight' => '0',
         ),
         'path' => array(
-          'weight' => '4',
+          'weight' => '3',
         ),
       ),
       'display' => array(),
