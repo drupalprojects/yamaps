@@ -132,7 +132,8 @@ function yamaps_help($path, $arg) {
   if ($path == 'admin/help#yamaps') {
     $output = '<h3>' . t('About') . '</h3>';
     $about = array(
-      t('Project contains a set of modules for Drupal 7.'),
+      t('Project contains a set of modules for Drupal 7 that use Yandex.Maps service available at !link.',
+        array('!link' => l('http://maps.yandex.com/', 'http://maps.yandex.com/'))),
       t('Uses !api (API 2.x).', array('!api' => l('http://api.yandex.ru/maps/', 'http://api.yandex.ru/maps/', array('absolute' => TRUE)))),
       t('Project page') . ': ' . l('https://drupal.org/project/yamaps', 'https://drupal.org/project/yamaps', array('absolute' => TRUE)) . '.',
       t('To submit bug reports and feature suggestions, or to track changes') . ': ' . l('https://drupal.org/project/issues/yamaps',
@@ -163,7 +164,7 @@ function yamaps_help($path, $arg) {
     );
     $output .= theme('item_list', array('items' => $options));
 
-    $output .= '<h3>' . t('Requirements, nstallation and uninstallation') . '</h3>';
+    $output .= '<h3>' . t('Requirements, installation and uninstallation') . '</h3>';
     $reqirements = array(
       t('Requires core "block" and "field" modules.'),
       t("Modules doesn't contain specific installation / uninstallation instructions."),
@@ -174,8 +175,8 @@ function yamaps_help($path, $arg) {
 
     $output .= '<h3>' . t('Configuration and usage') . '</h3>';
     $config_fields = array(
-      t('Provides configurable "Yandex Maps" field, which can be added to any type of Drupal content.'),
-      t('Field may accept "Dynamic" and "Static" formats.'),
+      t('Module provides configurable "Yandex Maps" field, which can be added to any type of Drupal content.'),
+      t('Field may accept "Dynamic" or "Static" formats.'),
       t('"Dynamic" format means that map is displayed as interactive object.'),
       t('"Static" format means that map is displayed as regular image.'),
       t('To add "Yandex Maps" field perform following steps:'),
@@ -192,7 +193,7 @@ function yamaps_help($path, $arg) {
     $output .= theme('item_list', array('items' => $config_fields_options));
 
     $config_blocks = array(
-      t('Provides configurable amount of "Yandex Maps" blocks to display maps in any regions of the website.'),
+      t('Module also provides configurable amount of "Yandex Maps" blocks to display maps in any regions of the website.'),
       t('Block may also present map as a "Dynamic" (interactive object) or "Static" (image).'),
       t('To add "Yandex Maps" block perform following steps:'),
     );
@@ -207,6 +208,13 @@ function yamaps_help($path, $arg) {
       t('Configure the block and pull it into the required region.'),
     );
     $output .= theme('item_list', array('items' => $config_blocks_options));
+
+    $output .= '<h3>' . t('Information') . '</h3>';
+    $information = array(
+      t('Demo: !link.', array('!link' => l('http://yandex.xyz.tom.ru/', 'http://yandex.xyz.tom.ru/'))),
+      t('Blog post: !link.', array('!link' => l('http://yandex.xyz.tom.ru/', 'http://yandex.xyz.tom.ru/'))),
+    );
+    $output .= theme('item_list', array('items' => $information));
 
     return $output;
   }

@@ -1,7 +1,8 @@
 
 -- ABOUT --
 
-Project contains a set of modules for Drupal 7.
+Project contains a set of modules for Drupal 7 that use
+Yandex.Maps service available at http://maps.yandex.com/.
 Uses http://api.yandex.ru/maps/ (API 2.x).
 
 Project page: https://drupal.org/project/yamaps.
@@ -53,3 +54,8 @@ To add "Yandex Maps" block perform following steps:
 * Navigate to /admin/config/services/yamaps and set required amount of "Yandex Maps" blocks.
 * Navigate to /admin/structure/block, scroll down to find "Disabled" section and find block called "Yandex Map #{NUMBER}".
 * Configure the block and pull it into the required region.
+
+-- INFORMATION --
+
+* Demo: http://yandex.xyz.tom.ru/
+* Blog post: http://clubs.ya.ru/company/52369
