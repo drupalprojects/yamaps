@@ -360,9 +360,6 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $this->render_fields($this->view->result);
 
     $yandexmap_field_name = 'field_' . $this->options['yandex_map_field'];
-
-    // Excluded field.
-    $this->view->field[$yandexmap_field_name]->options['exclude'] = TRUE;
     $yandexmap_field_settings = $this->view->field[$this->options['yandex_map_field']]->options['settings'];
     $yandexmap_field_type = $this->view->field[$this->options['yandex_map_field']]->options['type'];
 
@@ -375,7 +372,6 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
 
         if (is_array($decoded_placemarks)) {
           foreach ($decoded_placemarks as $placemark) {
-            // $marker_title = '';
             if (isset($this->options['placemark_title']) && $this->options['placemark_title'] !== $this::PLACEMARK_DEFAULT_FIELD) {
               // Prepare placemark title.
               $marker_title = $this->preparePlacemarkTitle($row_index);
