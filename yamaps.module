@@ -24,6 +24,7 @@ define('YAMAPS_DEFAULT_DYNAMIC_HEIGHT', '400px');
 define('YAMAPS_DEFAULT_STATIC_WIDTH', 640);
 define('YAMAPS_DEFAULT_STATIC_HEIGHT', 400);
 define('YAMAPS_DEFAULT_OPEN_MAP_TEXT', 'Open map');
+define('YAMAPS_DEFAULT_CLOSE_MAP_TEXT', 'Close map');
 
 /**
  * Includes.

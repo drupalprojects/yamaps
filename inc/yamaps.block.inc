@@ -129,7 +129,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
     '#type' => 'textfield',
     '#title' => t('"Close" button text'),
     '#default_value' => isset($block_display_options['close_button_text']) ?
-        t($block_display_options['close_button_text']) : t('Close map'),
+        t($block_display_options['close_button_text']) : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT),
     '#required' => FALSE,
     '#description' => t('Text of button that closes map for end user.'),
     '#states' => array(
@@ -384,7 +384,7 @@ function yamaps_block_content($delta) {
   $open_button_text = isset($display_options['open_button_text']) ?
     t($display_options['open_button_text']) : t(YAMAPS_DEFAULT_OPEN_MAP_TEXT);
   $close_button_text = isset($display_options['close_button_text']) ?
-    t($display_options['close_button_text']) : t('Close map');
+    t($display_options['close_button_text']) : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT);
 
   $width = variable_get($delta . '_block_width', YAMAPS_DEFAULT_BLOCK_MAP_WIDTH);
   $height = variable_get($delta . '_block_height', YAMAPS_DEFAULT_BLOCK_MAP_HEIGHT);

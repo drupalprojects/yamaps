@@ -29,8 +29,8 @@ function yamaps_field_formatter_info() {
         ),
         'yamaps_display_options' => array(
           'display_type' => 'map',
-          'close_button_text' => 'Close map',
           'open_button_text' => YAMAPS_DEFAULT_OPEN_MAP_TEXT,
+          'close_button_text' => YAMAPS_DEFAULT_CLOSE_MAP_TEXT,
         ),
       ),
     ),
@@ -44,8 +44,8 @@ function yamaps_field_formatter_info() {
         's_height' => YAMAPS_DEFAULT_STATIC_HEIGHT,
         'yamaps_display_options_static' => array(
           'display_type_static' => 'map',
-          'close_button_text_static' => 'Close map',
           'open_button_text_static' => YAMAPS_DEFAULT_OPEN_MAP_TEXT,
+          'close_button_text_static' => YAMAPS_DEFAULT_CLOSE_MAP_TEXT,
         ),
       ),
     ),
@@ -99,7 +99,7 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#type' => 'textfield',
         '#title' => t('"Close" button text'),
         '#default_value' => isset($settings['yamaps_display_options']['close_button_text']) ?
-            $settings['yamaps_display_options']['close_button_text'] : t('Close map'),
+            $settings['yamaps_display_options']['close_button_text'] : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT),
         '#required' => FALSE,
         '#description' => t('Text of button that closes map for end user.'),
         '#states' => array(
@@ -184,7 +184,7 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#type' => 'textfield',
         '#title' => t('"Close" button text'),
         '#default_value' => isset($settings['yamaps_display_options_static']['close_button_text_static']) ?
-            $settings['yamaps_display_options_static']['close_button_text_static'] : t('Close map'),
+            $settings['yamaps_display_options_static']['close_button_text_static'] : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT),
         '#required' => FALSE,
         '#description' => t('Text of button that closes map for end user.'),
         '#states' => array(
