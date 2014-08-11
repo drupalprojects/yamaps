@@ -23,6 +23,7 @@ define('YAMAPS_DEFAULT_DYNAMIC_WIDTH', '100%');
 define('YAMAPS_DEFAULT_DYNAMIC_HEIGHT', '400px');
 define('YAMAPS_DEFAULT_STATIC_WIDTH', 640);
 define('YAMAPS_DEFAULT_STATIC_HEIGHT', 400);
+define('YAMAPS_DEFAULT_OPEN_MAP_TEXT', 'Open map');
 
 /**
  * Includes.
@@ -232,7 +233,7 @@ function yamaps_field_info() {
       'settings' => array(
         'display_options' => array(
           'display_type' => 'map',
-          'open_button_text' => 'Open map',
+          'open_button_text' => YAMAPS_DEFAULT_OPEN_MAP_TEXT,
           'height' => YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT,
           'width' => YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH,
         ),
@@ -280,7 +281,7 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
     '#type' => 'textfield',
     '#title' => t('"Open" button text'),
     '#default_value' => isset($settings['display_options']['open_button_text']) ?
-        $settings['display_options']['open_button_text'] : t('Open map'),
+        $settings['display_options']['open_button_text'] : t(YAMAPS_DEFAULT_OPEN_MAP_TEXT),
     '#required' => FALSE,
     '#description' => t('Specify text to display on button that opens map in case of "Map opened by button click" option.
     This setting applies to admin UI only. To configure text on the button opening map for end users select appropriate

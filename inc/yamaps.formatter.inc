@@ -29,8 +29,8 @@ function yamaps_field_formatter_info() {
         ),
         'yamaps_display_options' => array(
           'display_type' => 'map',
-          'open_button_text' => 'Open map',
           'close_button_text' => 'Close map',
+          'open_button_text' => YAMAPS_DEFAULT_OPEN_MAP_TEXT,
         ),
       ),
     ),
@@ -44,8 +44,8 @@ function yamaps_field_formatter_info() {
         's_height' => YAMAPS_DEFAULT_STATIC_HEIGHT,
         'yamaps_display_options_static' => array(
           'display_type_static' => 'map',
-          'open_button_text_static' => 'Open map',
           'close_button_text_static' => 'Close map',
+          'open_button_text_static' => YAMAPS_DEFAULT_OPEN_MAP_TEXT,
         ),
       ),
     ),
@@ -149,6 +149,7 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
         '#required' => TRUE,
       );
+
       break;
 
     case 'field_yamaps_formatter_static':

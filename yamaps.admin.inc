@@ -57,7 +57,7 @@ function yamaps_settings_page($form, &$form_state) {
   $form['yamaps_block_edit_display_options']['open_button_text'] = array(
     '#type' => 'textfield',
     '#title' => t('"Open" button text'),
-    '#default_value' => isset($display_options['open_button_text']) ? t($display_options['open_button_text']) : t('Open map'),
+    '#default_value' => isset($display_options['open_button_text']) ? t($display_options['open_button_text']) : t(YAMAPS_DEFAULT_OPEN_MAP_TEXT),
     '#required' => FALSE,
     '#description' => t('Specify text to display on the button opening map in case of "Map opened by button click" option.
     This setting applies to admin UI only. To configure text on the button opening map for end users select appropriate
