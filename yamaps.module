@@ -135,21 +135,22 @@ function yamaps_help($path, $arg) {
     $output = '<h3>' . t('About') . '</h3>';
     $about = array(
       t('Project contains a set of modules for Drupal 7 that use Yandex.Maps service available at !link.',
-        array('!link' => l('http://maps.yandex.com/', 'http://maps.yandex.com/'))),
-      t('Uses !api (API 2.x).', array('!api' => l('http://api.yandex.ru/maps/', 'http://api.yandex.ru/maps/', array('absolute' => TRUE)))),
-      t('Project page') . ': ' . l('https://drupal.org/project/yamaps', 'https://drupal.org/project/yamaps', array('absolute' => TRUE)) . '.',
-      t('To submit bug reports and feature suggestions, or to track changes') . ': ' . l('https://drupal.org/project/issues/yamaps',
-        'https://drupal.org/project/issues/yamaps', array('absolute' => TRUE)) . '.',
+      array('!link' => l('http://maps.yandex.com/', 'http://maps.yandex.com/'))),
+      t('Uses !api (API 2.x).',
+      array('!api' => l('http://api.yandex.ru/maps/', 'http://api.yandex.ru/maps/'))),
+      t('Project page: !link.',
+      array('!link' => l('https://drupal.org/project/yamaps', 'https://drupal.org/project/yamaps'))),
+      t('To submit bug reports and feature suggestions, or to track changes: !link.',
+      array('!link' => l('https://drupal.org/project/issues/yamaps', 'https://drupal.org/project/issues/yamaps'))),
     );
     $output .= yamaps_wrap_items($about, '<p>', '</p>');
 
     $output .= '<h3>' . t('Modules') . '</h3>';
     $modules = array(
       t('<strong>Yandex Maps</strong> (main module, description provided below).'),
-      t('<strong>Yandex Maps Example</strong> (submodule). Feature-based module which demonstrates example content type containing
-      "Yandex Map" field and view to output maps. <strong>For demo purposes only!</strong>'),
-      t('<strong>Yandex Maps Views</strong> (submodule). Enables integration with Views for "Yandex Map" field and provides "Yandex Maps"
-      display plugin.'),
+      t('<strong>Yandex Maps Example</strong> (submodule). Feature-based module which demonstrates example content type containing "Yandex Map" field and view to output maps.'),
+      t('<strong>For demo purposes only!</strong>'),
+      t('<strong>Yandex Maps Views</strong> (submodule). Enables integration with Views for "Yandex Map" field and provides "Yandex Maps" display plugin.'),
     );
     $output .= theme('item_list', array('items' => $modules));
 
@@ -170,8 +171,8 @@ function yamaps_help($path, $arg) {
     $reqirements = array(
       t('Requires core "block" and "field" modules.'),
       t("Modules doesn't contain specific installation / uninstallation instructions."),
-      t('Installing Drupal module') . ': ' . l('https://drupal.org/documentation/install/modules-themes/modules-7',
-        'https://drupal.org/documentation/install/modules-themes/modules-7', array('absolute' => TRUE)) . '.',
+      t('Installing Drupal module: !link.',
+      array('!link' => l('https://drupal.org/documentation/install/modules-themes/modules-7', 'https://drupal.org/documentation/install/modules-themes/modules-7'))),
     );
     $output .= yamaps_wrap_items($reqirements, '<p>', '</p>');
 
@@ -186,7 +187,8 @@ function yamaps_help($path, $arg) {
     $output .= yamaps_wrap_items($config_fields, '<p>', '</p>');
 
     $config_fields_options = array(
-      t('Navigate to !content_type and select content type.', array('!content_type' => l(t('"Content Types" page'), 'admin/structure/types'))),
+      t('Navigate to !content_type and select content type.',
+      array('!content_type' => l(t('"Content Types" page'), 'admin/structure/types'))),
       t('Navigate to admin/structure/types/manage/{CONTENT-TYPE}/fields ("Manage Fields" page) of the selected content type.'),
       t('Configure and add field of "Yandex map" type.'),
       t('Navigate to admin/structure/types/manage/{CONTENT-TYPE}/display ("Manage Display" page) of the selected content type.'),
@@ -203,10 +205,9 @@ function yamaps_help($path, $arg) {
 
     $config_blocks_options = array(
       t('Navigate to !yamaps_admin and set required amount of "Yandex Maps" blocks.',
-        array('!yamaps_admin' => l(t('"Yandex Maps" configuration page'), 'admin/config/services/yamaps'))),
-      t('Navigate to !blocks_page, scroll down to find "Disabled" section and find block called "Yandex Map #{NUMBER}".', array(
-        '!blocks_page' => l(t('"Blocks" page'), 'admin/structure/block'),
-      )),
+      array('!yamaps_admin' => l(t('"Yandex Maps" configuration page'), 'admin/config/services/yamaps'))),
+      t('Navigate to !blocks_page, scroll down to find "Disabled" section and find block called "Yandex Map #{NUMBER}".',
+      array('!blocks_page' => l(t('"Blocks" page'), 'admin/structure/block'))),
       t('Configure the block and pull it into the required region.'),
     );
     $output .= theme('item_list', array('items' => $config_blocks_options));
