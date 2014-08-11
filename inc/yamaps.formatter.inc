@@ -236,8 +236,8 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
 
   switch ($display['type']) {
     case 'field_yamaps_formatter_dynamic':
-      $summary[] = t('Show controls: @controls', array('@controls' => $settings['controls'] ? t('Yes') : t('No')));
-      $summary[] = t('Show traffic: @traffic', array('@traffic' => $settings['traffic'] ? t('Yes') : t('No')));
+      $summary[] = t('Show controls: @controls', array('@controls' => $settings['controls'] ? t('yes') : t('no')));
+      $summary[] = t('Show traffic: @traffic', array('@traffic' => $settings['traffic'] ? t('yes') : t('no')));
       $summary[] = t('Map size: @width x @height', array(
         '@width' => $settings['width'],
         '@height' => $settings['height'],
@@ -269,7 +269,7 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
       break;
 
     case 'field_yamaps_formatter_static':
-      $summary[] = t('Show traffic: @traffic', array('@traffic' => $settings['s_traffic'] ? t('Yes') : t('No')));
+      $summary[] = t('Show traffic: @traffic', array('@traffic' => $settings['s_traffic'] ? t('yes') : t('no')));
       $summary[] = t('Map size: @width x @height', array(
         '@width' => $settings['s_width'] . 'px',
         '@height' => $settings['s_height'] . 'px',
@@ -393,13 +393,17 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         );
       }
 
-
       // Adding map to js and load library.
-      $element[$delta]['map_container']['#attached']['js'][] = array(
+      $element['#attached']['js'][] = array(
         'data' => array('yamaps' => $maps),
         'type' => 'setting',
       );
-      $element[$delta]['map_container']['#attached']['library'][] = array('yamaps', 'yamaps.full');
+      $element['#attached']['library'][] = array('yamaps', 'yamaps.full');
+
+      // Fixing formatter rendered by Views module (display and preview modes).
+      $element['views']['#attached']['js'] = $element['#attached']['js'];
+      $element['views']['#attached']['library'] = $element['#attached']['library'];
+
       break;
 
     case 'field_yamaps_formatter_static':
