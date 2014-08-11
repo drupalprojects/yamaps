@@ -64,7 +64,6 @@
             rightTopControlGroup.unshift(traffic);
           };
 
-
           // Enable plugins.
           this.enableTools = function() {
             var mapTools = $.yaMaps.getMapTools(this);

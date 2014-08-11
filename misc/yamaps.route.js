@@ -9,7 +9,7 @@
       ymaps.ready(function() {
         // Add routes support to map.
         $.yaMaps.addMapTools(function(Map) {
-          // Start and end of route
+          // Start and end of route.
           var firstPoint = null;
           var secondPoint = null;
 
@@ -87,7 +87,7 @@
           // If map in edit mode set map click listener to adding route.
           var mapClick = function(event) {
             if (!firstPoint) {
-              // First click - create placemark
+              // First click - create placemark.
               firstPoint = new ymaps.Placemark(event.get('coordPosition'), {}, {
                 balloonCloseButton: true,
                 preset: 'twirl#carIcon'

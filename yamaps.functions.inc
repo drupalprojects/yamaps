@@ -13,11 +13,14 @@
  * @param array $form_state
  *   Field form state.
  */
-function yamaps_field_validate_pixels_percentage($element, &$form_state) {
+function yamaps_field_validate_pixels_percentage(array $element, array &$form_state) {
   $value = $element['#value'];
   if (!preg_match('/^[1-9]{1}[0-9]*(px|%)$/', $value)) {
-    form_error($element, t('%name must be a positive integer value and has "%" or "px" at the end.',
-      array('%name' => $element['#title'])));
+    form_error(
+      $element,
+      t('%name must be a positive integer value and has "%" or "px" at the end.',
+      array('%name' => $element['#title']))
+    );
   }
 }
 
@@ -91,7 +94,7 @@ function yamaps_var_to_float($val) {
  * @return string
  *   String with wrapped elements.
  */
-function yamaps_wrap_items($arr, $wrap_start, $wrap_end) {
+function yamaps_wrap_items(array $arr, $wrap_start, $wrap_end) {
   $items = array();
 
   foreach ($arr as $item) {
@@ -139,7 +142,7 @@ function yamaps_get_map_types() {
  * @param array $value
  *   Values of map.
  */
-function yamaps_cleanup_values(&$value) {
+function yamaps_cleanup_values(array &$value) {
   $value['coords'] = isset($value['coords']) ? $value['coords'] : NULL;
   $value['type'] = isset($value['type']) ? $value['type'] : 'yandex#map';
   $value['placemarks'] = isset($value['placemarks']) ? $value['placemarks'] : NULL;
@@ -158,7 +161,7 @@ function yamaps_cleanup_values(&$value) {
  * @return array
  *   Prepared values.
  */
-function yamaps_format_values_to_js($clean_values) {
+function yamaps_format_values_to_js(array $clean_values) {
   return array(
     'coords' => drupal_json_decode($clean_values['coords']),
     'type' => $clean_values['type'],

@@ -17,14 +17,17 @@ function yamaps_views_views_api() {
 function yamaps_views_page_alter(&$page) {
   if (substr_count(current_path(), 'admin/structure/views/view/')) {
     global $language;
-    $api_url = url(YAMAPS_API_URL, array('absolute' => TRUE, 'query' => array(
-      'load' => 'package.full',
-      'lang' => YAMAPS_API_LANGUAGE,
-      'wizard' => 'Drupal_yamaps_' . $language->language,
-    )));
+    $api_url = url(YAMAPS_API_URL, array(
+      'absolute' => TRUE,
+      'query' => array(
+        'load' => 'package.full',
+        'lang' => YAMAPS_API_LANGUAGE,
+        'wizard' => 'Drupal_yamaps_' . $language->language,
+      )
+    ));
 
-    // Load 'Yandex.Maps' API in views admin UI to make sure that it is fully loaded before calling it
-    // during views ajax operations.
+    // Load 'Yandex.Maps' API in views admin UI to make sure that it is
+    // fully loaded before calling it during views ajax operations.
     $page['content']['#attached']['js'][] = $api_url;
   }
 }

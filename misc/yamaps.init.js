@@ -150,7 +150,7 @@
         };
 
         $.yaMaps.BaseYamapsObjectCollection = {
-          // Export collection
+          // Export collection.
           export: function() {
             var data = [];
             this.elements.each(function(element) {

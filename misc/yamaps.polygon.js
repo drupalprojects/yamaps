@@ -119,7 +119,7 @@
                 e.preventDefault();
               },
               onSaveClick: function(e) {
-                // Save click
+                // Save click.
                 var polygon = e.data.properties.element;
                 // Set opacity.
                 e.data.properties.opacity = e.data.$opacity.val();

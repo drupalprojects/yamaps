@@ -521,8 +521,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           $views_output[]['open_button_text'] = array(
             '#type' => 'html_tag',
             '#tag' => 'div',
-            '#value' => t((isset($settings['yamaps_display_options']['open_button_text'])) ?
-              $settings['yamaps_display_options']['open_button_text'] : 'Open button'),
+            '#value' => t((isset($this->options['yamaps_display_options']['open_button_text'])) ?
+              $this->options['yamaps_display_options']['open_button_text'] : 'Open button'),
             '#attributes' => array(
               'id' => $open_button_id,
               'class' => array('open_yamap_button'),
