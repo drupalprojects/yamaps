@@ -9,11 +9,11 @@
       ymaps.ready(function() {
         $.extend({
           yaMaps: {
-            // maps on page.
+            // Maps on page.
             maps: {},
-            // map tools
+            // Map tools.
             _mapTools: [],
-            // Layouts
+            // Layouts.
             _layouts: {},
             addMapTools: function(button) {
               this._mapTools.push(button);
@@ -42,7 +42,7 @@
         });
 
         $.yaMaps.BaseYamapsObject = {
-          // Edit mode for line and polygin
+          // Edit mode for line and polygon.
           startEditing: function(active) {
             this.element.editor.startEditing();
             if (active) {
@@ -54,47 +54,47 @@
               }
             }, this);
           },
-          // Set line and polygon colors
+          // Set line and polygon colors.
           setColor: function(strokeColor, fillColor) {
             this.element.options.set('strokeColor', $.yaMaps.colors[strokeColor]);
             if (typeof fillColor != 'undefined') {
               this.element.options.set('fillColor', $.yaMaps.colors[fillColor]);
             }
           },
-          // Set balloon content
+          // Set balloon content.
           setContent: function(balloonContent) {
             this.element.properties.set('balloonContent', balloonContent);
           },
-          // Set opacity
+          // Set opacity.
           setOpacity: function(opacity) {
             this.element.options.set('opacity', opacity);
           },
-          // Set line width
+          // Set line width.
           setWidth: function(width) {
             this.element.options.set('strokeWidth', width);
           },
-          // Open balloon
+          // Open balloon.
           openBalloon: function() {
             this.element.balloon.open();
           },
-          // Close balloon
+          // Close balloon.
           closeBalloon: function() {
             this.element.balloon.close();
           },
-          // Remove line or polygon
+          // Remove line or polygon.
           remove: function() {
             this.getParent().remove(this);
             this.exportParent();
           },
-          // Set parent object
+          // Set parent object.
           setParent: function(Parent) {
             this.parent = Parent;
           },
-          // Get parent
+          // Get parent.
           getParent: function() {
             return this.parent;
           },
-          // Export line or polygon
+          // Export line or polygon.
           export: function() {
             var coords = this.element.geometry.getCoordinates();
             if (typeof coords[0] != 'object' || coords.length < 1) {
@@ -125,22 +125,22 @@
             }
             return data;
           },
-          // Export all lines or polygons on this map to html container
+          // Export all lines or polygons on this map to html container.
           exportParent: function() {
             var collection = this.getParent();
             if (collection) {
               collection.exportToHTML();
             }
           },
-          // Init object
+          // Init object.
           _init: function(element) {
             this.element = element;
             this.parent = null;
 
-            // Actions for export lines or polygons
+            // Actions for export lines or polygons.
             this.element.events.add(['geometrychange', 'propertieschange'], this.exportParent, this);
 
-            // Line or polygon initialization parameters
+            // Line or polygon initialization parameters.
             this.element.properties.set('element', this);
             var properties = this.element.properties.getAll();
             this.setColor(properties.strokeColor, properties.fillColor);
@@ -161,24 +161,24 @@
             });
             return data;
           },
-          // Export collection to HTML element
+          // Export collection to HTML element.
           exportToHTML: function() {
             var elements = this.export();
             var mapId = this.elements.getMap().container.getElement().parentElement.id;
             var $storage = $(this.storagePrefix + mapId);
             $storage.val(JSON.stringify(elements));
           },
-          // Add new line or polygon to collection
+          // Add new line or polygon to collection.
           add: function(Element) {
             Element.setParent(this);
             this.elements.add(Element.element);
             return Element;
           },
-          // Remove polygon or line from map
+          // Remove polygon or line from map.
           remove: function(Element) {
             this.elements.remove(Element.element);
           },
-          // Init object
+          // Init object.
           _init: function(options) {
             this.elements = new ymaps.GeoObjectCollection();
             this.elements.options.set(options);

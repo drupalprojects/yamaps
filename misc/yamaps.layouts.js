@@ -46,7 +46,7 @@
           '</select>'
         ].join('')));
 
-        // Stroke width layout
+        // Stroke width layout.
         $.yaMaps.addLayout('yamaps#StrokeWidthLayout', ymaps.templateLayoutFactory.createClass([
           '<label for="strokeWidth">' + Drupal.t('Stroke width') + '</label>',
           '<select id="strokeWidth">',
@@ -82,7 +82,7 @@
           }
         ));
 
-        // Ballon actions layout
+        // Ballon actions layout.
         $.yaMaps.addLayout('yamaps#ActionsButtons', ymaps.templateLayoutFactory.createClass(
           '<div class="actions"><a id="deleteButton" href="#">' +
             Drupal.t('Delete') +

@@ -7,12 +7,12 @@
   Drupal.behaviors.yamapsPlacemarks = {
     attach: function (context, settings) {
       ymaps.ready(function() {
-        // Class for one placemark
+        // Class for one placemark.
         $.yaMaps.YamapsPlacemark = function(geometry, properties, options) {
           this.placemark = new ymaps.Placemark(geometry, properties, options);
           this.parent = null;
 
-          // Set placemark icon and balloon content
+          // Set placemark icon and balloon content.
           this.setContent = function(iconContent, balloonContent) {
             this.placemark.properties.set('iconContent', iconContent);
             this.placemark.properties.set('balloonContentHeader', iconContent);
@@ -159,7 +159,7 @@
               build: function () {
                 this.constructor.superclass.build.call(this);
                 this.properties = this.getData().properties.getAll();
-                // Balloon HTML element
+                // Balloon HTML element.
                 var $element = $(this.getParentElement());
                 var _this = this;
 
@@ -233,7 +233,7 @@
           // Add collection to the map.
           Map.map.geoObjects.add(placemarksCollection.elements);
 
-          // If map in view mode exit
+          // If map in view mode exit.
           if (!Map.options.edit) {
             return;
           }
