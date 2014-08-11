@@ -101,8 +101,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       '#value' => '',
       '#attributes' => array(
         'id' => $id,
-        'class' => $open_map_button && $close_map_button ?
-            array('yamaps-map-container', 'element-invisible') : array('yamaps-map-container'),
+        'class' => $open_map_button && $close_map_button ? array('yamaps-map-container', 'element-invisible') : array('yamaps-map-container'),
         'style' => 'width: ' . $container_width . '; height: ' . $container_height . ';',
       ),
     );
@@ -188,8 +187,8 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     );
 
     // Add information about this map to js.
-    // Settings should be attached to each element, because element changes its ID when reloaded via Ajax
-    // in case of multi value field.
+    // Settings should be attached to each element, because element changes
+    // its ID when reloaded via Ajax in case of multi value field.
     $element['#attached']['js'][] = array(
       'data' => array('yamaps' => array($id => $map)),
       'type' => 'setting',

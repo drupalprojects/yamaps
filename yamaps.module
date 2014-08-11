@@ -277,9 +277,7 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
     ),
     '#default_value' => $settings['display_options']['display_type'],
     '#required' => FALSE,
-    '#description' => t('Configure how to display "Yandex Map" field while creating new / updating material.
-    This setting applies to admin UI only. To display map opening by button click for end users select appropriate option
-    in "Manage Display" section of the appropriate content type.'),
+    '#description' => t('Configure how to display "Yandex Map" field while creating new / updating material. Applies to admin UI only.'),
   );
 
   $form['display_options']['open_button_text'] = array(
@@ -287,9 +285,7 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
     '#title' => t('"Open" button text'),
     '#default_value' => isset($settings['display_options']['open_button_text']) ? $settings['display_options']['open_button_text'] : t(YAMAPS_DEFAULT_OPEN_MAP_TEXT),
     '#required' => FALSE,
-    '#description' => t('Specify text to display on button that opens map in case of "Map opened by button click" option.
-    This setting applies to admin UI only. To configure text on the button opening map for end users select appropriate
-    option in "Manage Display" section of the appropriate content type.'),
+    '#description' => t('Specify text to display on button that opens map in case of "Map opened by button click" option. Applies to admin UI only.'),
     '#states' => array(
       'visible' => array(
         ':input[name="field[settings][display_options][display_type]"]' => array(
@@ -304,9 +300,7 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
     '#title' => t('"Close" button text'),
     '#default_value' => isset($settings['display_options']['close_button_text']) ? $settings['display_options']['close_button_text'] : t('Close map'),
     '#required' => FALSE,
-    '#description' => t('Specify text to display on button that closes map in case of "Map opened by button click" option.
-    This setting applies to admin UI only. To configure text on the button closing map for end users select appropriate
-    option in "Manage Display" section of the appropriate content type.'),
+    '#description' => t('Specify text to display on button that closes map in case of "Map opened by button click" option. Applies to admin UI only.'),
     '#states' => array(
       'visible' => array(
         ':input[name="field[settings][display_options][display_type]"]' => array(
