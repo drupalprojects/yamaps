@@ -4,6 +4,7 @@
  * @file
  * Class yamaps_views_plugin_style_default_map.
  */
+
 class yamaps_views_plugin_style_default_map extends views_plugin_style {
   const PLACEMARK_TITLE = 'iconContent';
   const PLACEMARK_BALLON_HEADER = 'balloonContentHeader';
@@ -521,8 +522,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           $views_output[]['open_button_text'] = array(
             '#type' => 'html_tag',
             '#tag' => 'div',
-            '#value' => t((isset($this->options['yamaps_display_options']['open_button_text'])) ?
-              $this->options['yamaps_display_options']['open_button_text'] : 'Open button'),
+            '#value' => isset($this->options['yamaps_display_options']['open_button_text']) ? t($this->options['yamaps_display_options']['open_button_text']) : t(YAMAPS_DEFAULT_OPEN_MAP_TEXT),
             '#attributes' => array(
               'id' => $open_button_id,
               'class' => array('open_yamap_button'),
@@ -547,7 +547,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           $views_output['open_map_button'] = array(
             '#type' => 'html_tag',
             '#tag' => 'div',
-            '#value' => isset($this->options['yamaps_display_options']['open_button_text']) ? t($this->options['yamaps_display_options']['open_button_text']) : t('Open map'),
+            '#value' => isset($this->options['yamaps_display_options']['open_button_text']) ? t($this->options['yamaps_display_options']['open_button_text']) : t(YAMAPS_DEFAULT_OPEN_MAP_TEXT),
             '#attributes' => array(
               'id' => $open_button_id,
               'class' => array('open_yamap_button'),
@@ -698,8 +698,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           $views_output['open_button_text'] = array(
             '#type' => 'html_tag',
             '#tag' => 'div',
-            '#value' => t((isset($yandexmap_field_settings['yamaps_display_options_static']['open_button_text_static'])) ?
-              $yandexmap_field_settings['yamaps_display_options_static']['open_button_text_static'] : 'Open button'),
+            '#value' => isset($yandexmap_field_settings['yamaps_display_options_static']['open_button_text_static']) ? t($yandexmap_field_settings['yamaps_display_options_static']['open_button_text_static']) : t(YAMAPS_DEFAULT_OPEN_MAP_TEXT),
             '#attributes' => array(
               'id' => $open_button_id,
               'class' => array('open_yamap_button_static'),

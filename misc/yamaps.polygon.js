@@ -199,6 +199,6 @@
           return polygonButton;
         });
       });
-	  }
+    }
   }
 })(jQuery);

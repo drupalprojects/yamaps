@@ -306,6 +306,6 @@
           return pointButton;
         });
       });
-	  }
+    }
   }
 })(jQuery);

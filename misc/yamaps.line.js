@@ -182,6 +182,6 @@
           return lineButton;
         });
       });
-	  }
+    }
   }
 })(jQuery);

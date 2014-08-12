@@ -98,8 +98,7 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
       $element['yamaps_display_options']['close_button_text'] = array(
         '#type' => 'textfield',
         '#title' => t('"Close" button text'),
-        '#default_value' => isset($settings['yamaps_display_options']['close_button_text']) ?
-            $settings['yamaps_display_options']['close_button_text'] : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT),
+        '#default_value' => isset($settings['yamaps_display_options']['close_button_text']) ? $settings['yamaps_display_options']['close_button_text'] : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT),
         '#required' => FALSE,
         '#description' => t('Text of button that closes map for end user.'),
         '#states' => array(
@@ -183,8 +182,7 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
       $element['yamaps_display_options_static']['close_button_text_static'] = array(
         '#type' => 'textfield',
         '#title' => t('"Close" button text'),
-        '#default_value' => isset($settings['yamaps_display_options_static']['close_button_text_static']) ?
-            $settings['yamaps_display_options_static']['close_button_text_static'] : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT),
+        '#default_value' => isset($settings['yamaps_display_options_static']['close_button_text_static']) ? $settings['yamaps_display_options_static']['close_button_text_static'] : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT),
         '#required' => FALSE,
         '#description' => t('Text of button that closes map for end user.'),
         '#states' => array(
@@ -334,8 +332,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           $element[$delta]['open_button_text'] = array(
             '#type' => 'html_tag',
             '#tag' => 'div',
-            '#value' => isset($settings['yamaps_display_options']['open_button_text']) ?
-              t($settings['yamaps_display_options']['open_button_text']) : t('Open button'),
+            '#value' => isset($settings['yamaps_display_options']['open_button_text']) ? t($settings['yamaps_display_options']['open_button_text']) : t(YAMAPS_DEFAULT_OPEN_MAP_TEXT),
             '#attributes' => array(
               'id' => $open_button_id,
               'class' => array('open_yamap_button'),
@@ -346,8 +343,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           $element[$delta]['close_button_text'] = array(
             '#type' => 'html_tag',
             '#tag' => 'div',
-            '#value' => isset($settings['yamaps_display_options']['close_button_text']) ?
-              t($settings['yamaps_display_options']['close_button_text']) : t('Close button'),
+            '#value' => isset($settings['yamaps_display_options']['close_button_text']) ? t($settings['yamaps_display_options']['close_button_text']) : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT),
             '#attributes' => array(
               'id' => $close_button_id,
               'class' => array('close_yamap_button', 'element-invisible'),
@@ -544,8 +540,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           $element[$delta]['open_button_text'] = array(
             '#type' => 'html_tag',
             '#tag' => 'div',
-            '#value' => isset($settings['yamaps_display_options_static']['open_button_text_static']) ?
-              t($settings['yamaps_display_options_static']['open_button_text_static']) : t('Open button'),
+            '#value' => isset($settings['yamaps_display_options_static']['open_button_text_static']) ? t($settings['yamaps_display_options_static']['open_button_text_static']) : t(YAMAPS_DEFAULT_OPEN_MAP_TEXT),
             '#attributes' => array(
               'id' => $open_button_id,
               'class' => array('open_yamap_button'),
@@ -556,8 +551,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           $element[$delta]['close_button_text'] = array(
             '#type' => 'html_tag',
             '#tag' => 'div',
-            '#value' => isset($settings['yamaps_display_options_static']['close_button_text_static']) ?
-              t($settings['yamaps_display_options_static']['close_button_text_static']) : t('Close button'),
+            '#value' => isset($settings['yamaps_display_options_static']['close_button_text_static']) ? t($settings['yamaps_display_options_static']['close_button_text_static']) : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT),
             '#attributes' => array(
               'id' => $close_button_id,
               'class' => array('close_yamap_button', 'element-invisible'),

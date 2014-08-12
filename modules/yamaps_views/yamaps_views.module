@@ -23,7 +23,7 @@ function yamaps_views_page_alter(&$page) {
         'load' => 'package.full',
         'lang' => YAMAPS_API_LANGUAGE,
         'wizard' => 'Drupal_yamaps_' . $language->language,
-      )
+      ),
     ));
 
     // Load 'Yandex.Maps' API in views admin UI to make sure that it is

@@ -60,13 +60,11 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       }
     }
 
-    $container_width = isset($field['settings']['display_options']['width']) ?
-      $field['settings']['display_options']['width'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH;
-    $container_height = isset($field['settings']['display_options']['height']) ?
-      $field['settings']['display_options']['height'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT;
-
+    $container_width = isset($field['settings']['display_options']['width']) ? $field['settings']['display_options']['width'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH;
+    $container_height = isset($field['settings']['display_options']['height']) ? $field['settings']['display_options']['height'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT;
     $open_map_button = FALSE;
     $close_map_button = FALSE;
+
     if ($field['settings']['display_options']['display_type'] == 'map_button') {
       $element['open_map_button'] = array(
         '#type' => 'html_tag',
@@ -82,8 +80,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       $element['close_map_button'] = array(
         '#type' => 'html_tag',
         '#tag' => 'div',
-        '#value' => isset($field['settings']['display_options']['close_button_text']) ?
-            t($field['settings']['display_options']['close_button_text']) : t('Close map'),
+        '#value' => isset($field['settings']['display_options']['close_button_text']) ? t($field['settings']['display_options']['close_button_text']) : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT),
         '#attributes' => array(
           'id' => $close_button_id,
           'class' => array('close_yamap_button', 'element-invisible'),

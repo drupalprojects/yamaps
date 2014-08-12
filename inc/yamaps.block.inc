@@ -305,8 +305,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
       'behaviors' => $behaviors,
     ),
     'display_options' => array(
-      'display_type' => isset($block_form_display_options['display_type']) ?
-          $block_form_display_options['display_type'] : 'map',
+      'display_type' => isset($block_form_display_options['display_type']) ? $block_form_display_options['display_type'] : 'map',
     ),
     'controls' => 1,
     'traffic' => 0,

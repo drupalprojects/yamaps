@@ -298,7 +298,7 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
   $form['display_options']['close_button_text'] = array(
     '#type' => 'textfield',
     '#title' => t('"Close" button text'),
-    '#default_value' => isset($settings['display_options']['close_button_text']) ? $settings['display_options']['close_button_text'] : t('Close map'),
+    '#default_value' => isset($settings['display_options']['close_button_text']) ? $settings['display_options']['close_button_text'] : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT),
     '#required' => FALSE,
     '#description' => t('Specify text to display on button that closes map in case of "Map opened by button click" option. Applies to admin UI only.'),
     '#states' => array(
