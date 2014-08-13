@@ -104,7 +104,7 @@ function yamaps_update_7000() {
   foreach ($fields as $field_name => $field) {
     if ($field['type'] == 'field_yamaps' && $field['storage']['type'] == 'field_sql_storage') {
       $schema = yamaps_field_schema($field);
-      foreach ($field['storage']['details']['sql'] as $type => $table_info) {
+      foreach ($field['storage']['details']['sql'] as $table_info) {
         foreach ($table_info as $table_name => $columns) {
           $column_name = _field_sql_storage_columnname($field_name, 'hide');
           db_add_field($table_name, $column_name, $schema['columns']['hide']);

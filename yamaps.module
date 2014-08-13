@@ -86,11 +86,14 @@ function yamaps_library() {
   // Weight counter.
   $w = 10;
   // API url.
-  $api_url = url(YAMAPS_API_URL, array('absolute' => TRUE, 'query' => array(
-    'load' => 'package.full',
-    'lang' => YAMAPS_API_LANGUAGE,
-    'wizard' => 'Drupal_yamaps_' . $language->language,
-  )));
+  $api_url = url(YAMAPS_API_URL, array(
+    'absolute' => TRUE,
+    'query' => array(
+      'load' => 'package.full',
+      'lang' => YAMAPS_API_LANGUAGE,
+      'wizard' => 'Drupal_yamaps_' . $language->language,
+    )
+  ));
 
   $libraries['yamaps.full'] = array(
     'title' => 'Yandex maps. Version for dynamic map.',
@@ -135,21 +138,22 @@ function yamaps_help($path, $arg) {
     $output = '<h3>' . t('About') . '</h3>';
     $about = array(
       t('Project contains a set of modules for Drupal 7 that use Yandex.Maps service available at !link.',
-        array('!link' => l('http://maps.yandex.com/', 'http://maps.yandex.com/'))),
-      t('Uses !api (API 2.x).', array('!api' => l('http://api.yandex.ru/maps/', 'http://api.yandex.ru/maps/', array('absolute' => TRUE)))),
-      t('Project page') . ': ' . l('https://drupal.org/project/yamaps', 'https://drupal.org/project/yamaps', array('absolute' => TRUE)) . '.',
-      t('To submit bug reports and feature suggestions, or to track changes') . ': ' . l('https://drupal.org/project/issues/yamaps',
-        'https://drupal.org/project/issues/yamaps', array('absolute' => TRUE)) . '.',
+      array('!link' => l(t('http://maps.yandex.com/'), 'http://maps.yandex.com/'))),
+      t('Uses !api (API 2.x).',
+      array('!api' => l(t('http://api.yandex.ru/maps/'), 'http://api.yandex.ru/maps/'))),
+      t('Project page: !link.',
+      array('!link' => l(t('https://drupal.org/project/yamaps'), 'https://drupal.org/project/yamaps'))),
+      t('To submit bug reports and feature suggestions, or to track changes: !link.',
+      array('!link' => l(t('https://drupal.org/project/issues/yamaps'), 'https://drupal.org/project/issues/yamaps'))),
     );
     $output .= yamaps_wrap_items($about, '<p>', '</p>');
 
     $output .= '<h3>' . t('Modules') . '</h3>';
     $modules = array(
       t('<strong>Yandex Maps</strong> (main module, description provided below).'),
-      t('<strong>Yandex Maps Example</strong> (submodule). Feature-based module which demonstrates example content type containing
-      "Yandex Map" field and view to output maps. <strong>For demo purposes only!</strong>'),
-      t('<strong>Yandex Maps Views</strong> (submodule). Enables integration with Views for "Yandex Map" field and provides "Yandex Maps"
-      display plugin.'),
+      t('<strong>Yandex Maps Example</strong> (submodule). Feature-based module which demonstrates example content type containing "Yandex Map" field and view to output maps.'),
+      t('<strong>For demo purposes only!</strong>'),
+      t('<strong>Yandex Maps Views</strong> (submodule). Enables integration with Views for "Yandex Map" field and provides "Yandex Maps" display plugin.'),
     );
     $output .= theme('item_list', array('items' => $modules));
 
@@ -170,8 +174,8 @@ function yamaps_help($path, $arg) {
     $reqirements = array(
       t('Requires core "block" and "field" modules.'),
       t("Modules doesn't contain specific installation / uninstallation instructions."),
-      t('Installing Drupal module') . ': ' . l('https://drupal.org/documentation/install/modules-themes/modules-7',
-        'https://drupal.org/documentation/install/modules-themes/modules-7', array('absolute' => TRUE)) . '.',
+      t('Installing Drupal module: !link.',
+      array('!link' => l(t('https://drupal.org/documentation/install/modules-themes/modules-7'), 'https://drupal.org/documentation/install/modules-themes/modules-7'))),
     );
     $output .= yamaps_wrap_items($reqirements, '<p>', '</p>');
 
@@ -186,7 +190,8 @@ function yamaps_help($path, $arg) {
     $output .= yamaps_wrap_items($config_fields, '<p>', '</p>');
 
     $config_fields_options = array(
-      t('Navigate to !content_type and select content type.', array('!content_type' => l(t('"Content Types" page'), 'admin/structure/types'))),
+      t('Navigate to !content_type and select content type.',
+      array('!content_type' => l(t('"Content Types" page'), 'admin/structure/types'))),
       t('Navigate to admin/structure/types/manage/{CONTENT-TYPE}/fields ("Manage Fields" page) of the selected content type.'),
       t('Configure and add field of "Yandex map" type.'),
       t('Navigate to admin/structure/types/manage/{CONTENT-TYPE}/display ("Manage Display" page) of the selected content type.'),
@@ -203,18 +208,17 @@ function yamaps_help($path, $arg) {
 
     $config_blocks_options = array(
       t('Navigate to !yamaps_admin and set required amount of "Yandex Maps" blocks.',
-        array('!yamaps_admin' => l(t('"Yandex Maps" configuration page'), 'admin/config/services/yamaps'))),
-      t('Navigate to !blocks_page, scroll down to find "Disabled" section and find block called "Yandex Map #{NUMBER}".', array(
-        '!blocks_page' => l(t('"Blocks" page'), 'admin/structure/block'),
-      )),
+      array('!yamaps_admin' => l(t('"Yandex Maps" configuration page'), 'admin/config/services/yamaps'))),
+      t('Navigate to !blocks_page, scroll down to find "Disabled" section and find block called "Yandex Map #{NUMBER}".',
+      array('!blocks_page' => l(t('"Blocks" page'), 'admin/structure/block'))),
       t('Configure the block and pull it into the required region.'),
     );
     $output .= theme('item_list', array('items' => $config_blocks_options));
 
     $output .= '<h3>' . t('Information') . '</h3>';
     $information = array(
-      t('Demo: !link.', array('!link' => l('http://yandex.xyz.tom.ru/', 'http://yandex.xyz.tom.ru/'))),
-      t('Blog post: !link.', array('!link' => l('http://yandex.xyz.tom.ru/', 'http://yandex.xyz.tom.ru/'))),
+      t('Demo: !link.', array('!link' => l(t('http://yandex.xyz.tom.ru/'), 'http://yandex.xyz.tom.ru/'))),
+      t('Blog post: !link.', array('!link' => l(t('http://yandex.xyz.tom.ru/'), 'http://yandex.xyz.tom.ru/'))),
     );
     $output .= theme('item_list', array('items' => $information));
 
@@ -273,20 +277,15 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
     ),
     '#default_value' => $settings['display_options']['display_type'],
     '#required' => FALSE,
-    '#description' => t('Configure how to display "Yandex Map" field while creating new / updating material.
-    This setting applies to admin UI only. To display map opening by button click for end users select appropriate option
-    in "Manage Display" section of the appropriate content type.'),
+    '#description' => t('Configure how to display "Yandex Map" field while creating new / updating material. Applies to admin UI only.'),
   );
 
   $form['display_options']['open_button_text'] = array(
     '#type' => 'textfield',
     '#title' => t('"Open" button text'),
-    '#default_value' => isset($settings['display_options']['open_button_text']) ?
-        $settings['display_options']['open_button_text'] : t(YAMAPS_DEFAULT_OPEN_MAP_TEXT),
+    '#default_value' => isset($settings['display_options']['open_button_text']) ? $settings['display_options']['open_button_text'] : t(YAMAPS_DEFAULT_OPEN_MAP_TEXT),
     '#required' => FALSE,
-    '#description' => t('Specify text to display on button that opens map in case of "Map opened by button click" option.
-    This setting applies to admin UI only. To configure text on the button opening map for end users select appropriate
-    option in "Manage Display" section of the appropriate content type.'),
+    '#description' => t('Specify text to display on button that opens map in case of "Map opened by button click" option. Applies to admin UI only.'),
     '#states' => array(
       'visible' => array(
         ':input[name="field[settings][display_options][display_type]"]' => array(
@@ -299,12 +298,9 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
   $form['display_options']['close_button_text'] = array(
     '#type' => 'textfield',
     '#title' => t('"Close" button text'),
-    '#default_value' => isset($settings['display_options']['close_button_text']) ?
-        $settings['display_options']['close_button_text'] : t('Close map'),
+    '#default_value' => isset($settings['display_options']['close_button_text']) ? $settings['display_options']['close_button_text'] : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT),
     '#required' => FALSE,
-    '#description' => t('Specify text to display on button that closes map in case of "Map opened by button click" option.
-    This setting applies to admin UI only. To configure text on the button closing map for end users select appropriate
-    option in "Manage Display" section of the appropriate content type.'),
+    '#description' => t('Specify text to display on button that closes map in case of "Map opened by button click" option. Applies to admin UI only.'),
     '#states' => array(
       'visible' => array(
         ':input[name="field[settings][display_options][display_type]"]' => array(
@@ -318,8 +314,7 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
     '#title' => t('Map width in admin UI'),
     '#field_suffix' => ' ' . t('in pixels (px) or percentage (%).'),
     '#type' => 'textfield',
-    '#default_value' => isset($settings['display_options']['width'])
-        ? $settings['display_options']['width'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH,
+    '#default_value' => isset($settings['display_options']['width']) ? $settings['display_options']['width'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH,
     '#size' => 5,
     '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
     '#required' => TRUE,
@@ -330,8 +325,7 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
     '#title' => t('Map height in admin UI'),
     '#field_suffix' => ' ' . t('in pixels (px) or percentage (%).'),
     '#type' => 'textfield',
-    '#default_value' => isset($settings['display_options']['height']) ?
-        $settings['display_options']['height'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT,
+    '#default_value' => isset($settings['display_options']['height']) ? $settings['display_options']['height'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT,
     '#size' => 5,
     '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
     '#required' => TRUE,
@@ -346,7 +340,8 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
  */
 function yamaps_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
   if ($field['type'] == 'field_yamaps') {
-    // Perform validation on empty coordinates only for field attached to entity.
+    // Perform validation on empty coordinates only for field
+    // attached to entity.
     if ($entity_type && $entity) {
       if ($instance['required']) {
         $items_total = count($items);

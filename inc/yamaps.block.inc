@@ -91,8 +91,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
       'dynamic' => t('Dynamic Map'),
       'static' => t('Static Map'),
     ),
-    '#default_value' => (isset($block_display_options['map_type'])) ?
-        $block_display_options['map_type'] : 'dynamic',
+    '#default_value' => isset($block_display_options['map_type']) ? $block_display_options['map_type'] : 'dynamic',
     '#description' => t('Configure "Yandex Map" type for end user.'),
   );
 
@@ -103,8 +102,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
       'map' => t('Map'),
       'map_button' => t('Map opened by button click'),
     ),
-    '#default_value' => (isset($block_display_options['display_type'])) ?
-        $block_display_options['display_type'] : 'map',
+    '#default_value' => isset($block_display_options['display_type']) ? $block_display_options['display_type'] : 'map',
     '#required' => FALSE,
     '#description' => t('Configure how to display "Yandex Map" block for end user.'),
   );
@@ -112,8 +110,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
   $form[$delta . '_block_display_options']['open_button_text'] = array(
     '#type' => 'textfield',
     '#title' => t('"Open" button text'),
-    '#default_value' => isset($block_display_options['open_button_text']) ?
-        t($block_display_options['open_button_text']) : t(YAMAPS_DEFAULT_OPEN_MAP_TEXT),
+    '#default_value' => isset($block_display_options['open_button_text']) ? t($block_display_options['open_button_text']) : t(YAMAPS_DEFAULT_OPEN_MAP_TEXT),
     '#required' => FALSE,
     '#description' => t('Text of button that opens map for end user.'),
     '#states' => array(
@@ -128,8 +125,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
   $form[$delta . '_block_display_options']['close_button_text'] = array(
     '#type' => 'textfield',
     '#title' => t('"Close" button text'),
-    '#default_value' => isset($block_display_options['close_button_text']) ?
-        t($block_display_options['close_button_text']) : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT),
+    '#default_value' => isset($block_display_options['close_button_text']) ? t($block_display_options['close_button_text']) : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT),
     '#required' => FALSE,
     '#description' => t('Text of button that closes map for end user.'),
     '#states' => array(
@@ -223,10 +219,8 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
     $close_map_button = TRUE;
   }
 
-  $container_width = isset($block_form_display_options['width']) ?
-    $block_form_display_options['width'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH;
-  $container_height = isset($block_form_display_options['height']) ?
-    $block_form_display_options['height'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT;
+  $container_width = isset($block_form_display_options['width']) ? $block_form_display_options['width'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH;
+  $container_height = isset($block_form_display_options['height']) ? $block_form_display_options['height'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT;
 
   // Map container.
   $form['map'] = array(
@@ -235,8 +229,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
     '#value' => '',
     '#attributes' => array(
       'id' => $id,
-      'class' => $open_map_button && $close_map_button ?
-          array('yamaps-map-container', 'element-invisible') : array('yamaps-map-container'),
+      'class' => $open_map_button && $close_map_button ? array('yamaps-map-container', 'element-invisible') : array('yamaps-map-container'),
       'style' => 'width: ' . $container_width . '; height: ' . $container_height . ';',
     ),
   );
@@ -312,8 +305,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
       'behaviors' => $behaviors,
     ),
     'display_options' => array(
-      'display_type' => isset($block_form_display_options['display_type']) ?
-          $block_form_display_options['display_type'] : 'map',
+      'display_type' => isset($block_form_display_options['display_type']) ? $block_form_display_options['display_type'] : 'map',
     ),
     'controls' => 1,
     'traffic' => 0,
@@ -381,10 +373,8 @@ function yamaps_block_content($delta) {
   $id = drupal_html_id(implode('-', array('ymap', 'block', $delta)));
   $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
   $close_button_id = drupal_html_id(implode('-', array($id, 'close_button')));
-  $open_button_text = isset($display_options['open_button_text']) ?
-    t($display_options['open_button_text']) : t(YAMAPS_DEFAULT_OPEN_MAP_TEXT);
-  $close_button_text = isset($display_options['close_button_text']) ?
-    t($display_options['close_button_text']) : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT);
+  $open_button_text = isset($display_options['open_button_text']) ? t($display_options['open_button_text']) : t(YAMAPS_DEFAULT_OPEN_MAP_TEXT);
+  $close_button_text = isset($display_options['close_button_text']) ? t($display_options['close_button_text']) : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT);
 
   $width = variable_get($delta . '_block_width', YAMAPS_DEFAULT_BLOCK_MAP_WIDTH);
   $height = variable_get($delta . '_block_height', YAMAPS_DEFAULT_BLOCK_MAP_HEIGHT);
@@ -394,7 +384,7 @@ function yamaps_block_content($delta) {
 
   $block_type = variable_get($delta . '_block_type', 'yandex#map');
   $map_type = isset($display_options['map_type']) ? $display_options['map_type'] : 'dynamic';
-  $display_type = (isset($display_options['display_type'])) ? $display_options['display_type'] : 'map';
+  $display_type = isset($display_options['display_type']) ? $display_options['display_type'] : 'map';
 
   $placemarks = drupal_json_decode(variable_get($delta . '_block_placemarks', NULL));
   $lines = drupal_json_decode(variable_get($delta . '_block_lines', NULL));
@@ -458,8 +448,7 @@ function yamaps_block_content($delta) {
         '#attributes' => array(
           'id' => $id,
           'style' => 'width:' . $width . '; height:' . $height . ';',
-          'class' => $open_map_button && $close_map_button ?
-              array('yamaps-map-container', 'element-invisible') : array('yamaps-map-container'),
+          'class' => $open_map_button && $close_map_button ? array('yamaps-map-container', 'element-invisible') : array('yamaps-map-container'),
         ),
         '#value' => '',
       );
@@ -619,8 +608,7 @@ function yamaps_block_content($delta) {
         '#attributes' => array(
           'id' => $id,
           'style' => 'width:' . $width . 'px; height:' . $height . 'px;',
-          'class' => $open_map_button && $close_map_button ?
-              array('yamaps-map-container', 'element-invisible') : array('yamaps-map-container'),
+          'class' => $open_map_button && $close_map_button ? array('yamaps-map-container', 'element-invisible') : array('yamaps-map-container'),
         ),
         '#value' => theme('image', array(
           'path' => url(YAMAPS_STATIC_API_URL, array(

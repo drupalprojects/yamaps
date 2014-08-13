@@ -7,14 +7,6 @@
 
 /**
  * Form builder for admin settings form.
- *
- * @param array $form
- *   Form array.
- * @param array $form_state
- *   Form State array.
- *
- * @return array
- *   Form array.
  */
 function yamaps_settings_page($form, &$form_state) {
   // Set amount of blocks admin can create.

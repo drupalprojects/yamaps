@@ -7,26 +7,27 @@
   Drupal.behaviors.yamapsPolygon = {
     attach: function (context, settings) {
       ymaps.ready(function() {
-        // Class for one polygon
+        // Class for one polygon.
         $.yaMaps.YamapsPolygon = function(geometry, properties, options) {
           this._init(new ymaps.Polygon(geometry, properties, options));
         };
         $.yaMaps.YamapsPolygon.prototype = $.yaMaps.BaseYamapsObject;
 
-        // Class for polygons collection
+        // Class for polygons collection.
         $.yaMaps.YamapsPolygonCollection = function(options) {
           this._init(options);
-          // Selector "storagePrefix + MAP_ID" will be used for export collection data
+          // Selector "storagePrefix + MAP_ID" will be used
+          // for export collection data.
           this.storagePrefix = '.field-yamaps-polygons-';
 
-          // Create polygon and add to collection
+          // Create polygon and add to collection.
           this.createPolygon = function(geometry, properties, options) {
             return this.add(new $.yaMaps.YamapsPolygon(geometry, properties, options));
           };
         };
         $.yaMaps.YamapsPolygonCollection.prototype = $.yaMaps.BaseYamapsObjectCollection;
 
-        // Edit polygon balloon template
+        // Edit polygon balloon template.
         $.yaMaps.addLayout('yamaps#PolygonBalloonEditLayout',
           ymaps.templateLayoutFactory.createClass(
             [
@@ -56,11 +57,11 @@
               build: function () {
                 this.constructor.superclass.build.call(this);
                 this.properties = this.getData().properties.getAll();
-                // Balloon HTML element
+                // Balloon HTML element.
                 var $element = $(this.getParentElement());
                 var _this = this;
 
-                // Polygon background colorpicker
+                // Polygon background colorpicker.
                 this.$polyColors = $element.find('.poly-colors .yamaps-color');
                 this.$polyColors.each(function() {
                   var $this = $(this);
@@ -71,7 +72,7 @@
                 });
                 this.$polyColors.bind('click', this, this.fillColorClick);
 
-                // Polygon line colorpicker
+                // Polygon line colorpicker.
                 this.$lineColors = $element.find('.line-colors .yamaps-color');
                 this.$lineColors.each(function() {
                   var $this = $(this);
@@ -82,18 +83,18 @@
                 });
                 this.$lineColors.bind('click', this, this.strokeColorClick);
 
-                // Opacity
+                // Opacity.
                 this.$opacity = $element.find('.poly-opacity select');
                 this.$opacity.val(_this.properties.opacity);
 
-                // Stroke width
+                // Stroke width.
                 this.$width = $element.find('.line-width select');
                 this.$width.val(_this.properties.strokeWidth);
 
-                // Balloon content
+                // Balloon content.
                 this.$balloonContent = $element.find('#balloonContent');
 
-                // Actions
+                // Actions.
                 $('#deleteButton').bind('click', this, this.onDeleteClick);
                 $('#saveButton').bind('click', this, this.onSaveClick);
               },
@@ -105,30 +106,30 @@
                 $('#saveButton').unbind('click', this, this.onSaveClick);
               },
               fillColorClick: function(e) {
-                // Fill colorpicker click
+                // Fill colorpicker click.
                 e.data.properties.fillColor = $(this).children('div').attr('data-content');
               },
               strokeColorClick: function(e) {
-                // Stroke colorpicker click
+                // Stroke colorpicker click.
                 e.data.properties.strokeColor = $(this).children('div').attr('data-content');
               },
               onDeleteClick: function (e) {
-                // Delete click
+                // Delete click.
                 e.data.properties.element.remove();
                 e.preventDefault();
               },
               onSaveClick: function(e) {
-                // Save click
+                // Save click.
                 var polygon = e.data.properties.element;
-                // Set opacity
+                // Set opacity.
                 e.data.properties.opacity = e.data.$opacity.val();
                 polygon.setOpacity(e.data.properties.opacity);
-                // Set stroke width
+                // Set stroke width.
                 e.data.properties.strokeWidth = e.data.$width.val();
                 polygon.setWidth(e.data.properties.strokeWidth);
-                // Set colors
+                // Set colors.
                 polygon.setColor(e.data.properties.strokeColor, e.data.properties.fillColor);
-                // Set balloon content
+                // Set balloon content.
                 polygon.setContent(e.data.$balloonContent.val());
                 polygon.closeBalloon();
               }
@@ -136,9 +137,9 @@
           )
         );
 
-        // Add polygons support to map
+        // Add polygons support to map.
         $.yaMaps.addMapTools(function(Map) {
-          // Default options
+          // Default options.
           var options = {
             balloonMaxWidth: 300,
             balloonCloseButton: true,
@@ -146,18 +147,18 @@
             elements: {}
           };
           if (Map.options.edit) {
-            // If map in edit mode set edit mode to polygons options
+            // If map in edit mode set edit mode to polygons options.
             options.balloonContentBodyLayout = 'yamaps#PolygonBalloonEditLayout';
             options.draggable = true;
           }
 
-          // Create polygons collection
+          // Create polygons collection.
           var polygonsCollection = new $.yaMaps.YamapsPolygonCollection(options);
 
-          // Add empty collection to the map
+          // Add empty collection to the map.
           Map.map.geoObjects.add(polygonsCollection.elements);
 
-          // Add already created polygons to map
+          // Add already created polygons to map.
           for (var i in Map.options.polygons) {
             var Polygon = polygonsCollection.createPolygon(Map.options.polygons[i].coords, Map.options.polygons[i].params);
             if (Map.options.edit) {
@@ -165,18 +166,18 @@
             }
           }
 
-          // If map in view mode exit
+          // If map in view mode exit.
           if (!Map.options.edit) {
             return;
           }
 
-          // If map in edit mode set map click listener to adding new polygon
+          // If map in edit mode set map click listener to adding new polygon.
           var mapClick = function(event) {
             var Polygon = polygonsCollection.createPolygon([[event.get('coordPosition')]], {balloonContent: '', fillColor: 'lightblue', strokeColor: 'blue', opacity: 0.6, strokeWidth: 3});
             Polygon.startEditing(true);
           };
 
-          // Add new button
+          // Add new button.
           var polygonButton = new ymaps.control.Button({
             data: {
               content: '<ymaps class="ymaps-b-form-button__text"><ymaps class="ymaps-b-ico ymaps-b-ico_type_poly"></ymaps></ymaps>',
@@ -184,7 +185,7 @@
             }
           });
 
-          // Button actions
+          // Button actions.
           polygonButton.events
             .add('select', function(event) {
               Map.cursor = Map.map.cursors.push('pointer');
@@ -198,6 +199,6 @@
           return polygonButton;
         });
       });
-	  }
+    }
   }
 })(jQuery);

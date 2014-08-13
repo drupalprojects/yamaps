@@ -60,13 +60,11 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       }
     }
 
-    $container_width = isset($field['settings']['display_options']['width']) ?
-      $field['settings']['display_options']['width'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH;
-    $container_height = isset($field['settings']['display_options']['height']) ?
-      $field['settings']['display_options']['height'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT;
-
+    $container_width = isset($field['settings']['display_options']['width']) ? $field['settings']['display_options']['width'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH;
+    $container_height = isset($field['settings']['display_options']['height']) ? $field['settings']['display_options']['height'] : YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT;
     $open_map_button = FALSE;
     $close_map_button = FALSE;
+
     if ($field['settings']['display_options']['display_type'] == 'map_button') {
       $element['open_map_button'] = array(
         '#type' => 'html_tag',
@@ -82,8 +80,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       $element['close_map_button'] = array(
         '#type' => 'html_tag',
         '#tag' => 'div',
-        '#value' => isset($field['settings']['display_options']['close_button_text']) ?
-            t($field['settings']['display_options']['close_button_text']) : t('Close map'),
+        '#value' => isset($field['settings']['display_options']['close_button_text']) ? t($field['settings']['display_options']['close_button_text']) : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT),
         '#attributes' => array(
           'id' => $close_button_id,
           'class' => array('close_yamap_button', 'element-invisible'),
@@ -101,8 +98,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       '#value' => '',
       '#attributes' => array(
         'id' => $id,
-        'class' => $open_map_button && $close_map_button ?
-            array('yamaps-map-container', 'element-invisible') : array('yamaps-map-container'),
+        'class' => $open_map_button && $close_map_button ? array('yamaps-map-container', 'element-invisible') : array('yamaps-map-container'),
         'style' => 'width: ' . $container_width . '; height: ' . $container_height . ';',
       ),
     );
@@ -188,8 +184,8 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     );
 
     // Add information about this map to js.
-    // Settings should be attached to each element, because element changes its ID when reloaded via Ajax
-    // in case of multi value field.
+    // Settings should be attached to each element, because element changes
+    // its ID when reloaded via Ajax in case of multi value field.
     $element['#attached']['js'][] = array(
       'data' => array('yamaps' => array($id => $map)),
       'type' => 'setting',
