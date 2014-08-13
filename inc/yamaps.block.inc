@@ -390,6 +390,13 @@ function yamaps_block_content($delta) {
   $lines = drupal_json_decode(variable_get($delta . '_block_lines', NULL));
   $polygons = drupal_json_decode(variable_get($delta . '_block_polygons', NULL));
   $routes = drupal_json_decode(variable_get($delta . '_block_routes', NULL));
+  // Set default 'Open map' text and 'Close map' text.
+  if(!isset($display_options['open_button_text'])){
+    $display_options['open_button_text'] = YAMAPS_DEFAULT_OPEN_MAP_TEXT;
+  }
+  if(!isset($display_options['close_button_text'])){
+    $display_options['close_button_text'] = YAMAPS_DEFAULT_CLOSE_MAP_TEXT;
+  }
 
   switch ($map_type) {
     case 'dynamic':
