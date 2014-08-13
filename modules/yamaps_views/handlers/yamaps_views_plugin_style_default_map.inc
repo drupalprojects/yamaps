@@ -490,8 +490,6 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           'id' => $id,
           'display_options' => array(
             'display_type' => $yandexmap_field_settings['yamaps_display_options']['display_type'],
-            'open_button_text' => t($yandexmap_field_settings['yamaps_display_options']['open_button_text']),
-            'open_button_id' => $open_button_id,
           ),
           'controls' => $yandexmap_field_settings['controls'],
           'traffic' => $yandexmap_field_settings['traffic'],
@@ -518,8 +516,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           'yamaps.full',
         );
 
-        $hide_map = (isset($this->options['yamaps_display_options']['display_type']) &&
-          $this->options['yamaps_display_options']['display_type'] == 'map_button');
+        $hide_map = (isset($yandexmap_field_settings['yamaps_display_options']['display_type']) &&
+          $yandexmap_field_settings['yamaps_display_options']['display_type'] == 'map_button');
         $map_class = array('yamaps-map-container');
         $map_class[] = $hide_map ? 'element-invisible' : '';
         $views_output[] = array(
@@ -532,11 +530,11 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           ),
           '#value' => '',
         );
-        if (isset($this->options['yamaps_display_options']['display_type']) && $this->options['yamaps_display_options']['display_type'] == 'map_button') {
+        if (isset($yandexmap_field_settings['yamaps_display_options']['display_type']) && $yandexmap_field_settings['yamaps_display_options']['display_type'] == 'map_button') {
           $views_output['open_map_button'] = array(
             '#type' => 'html_tag',
             '#tag' => 'div',
-            '#value' => isset($this->options['yamaps_display_options']['open_button_text']) ? t($this->options['yamaps_display_options']['open_button_text']) : t(YAMAPS_DEFAULT_OPEN_MAP_TEXT),
+            '#value' => isset($yandexmap_field_settings['yamaps_display_options']['open_button_text']) ? t($yandexmap_field_settings['yamaps_display_options']['open_button_text']) : t(YAMAPS_DEFAULT_OPEN_MAP_TEXT),
             '#attributes' => array(
               'id' => $open_button_id,
               'class' => array('open_yamap_button'),
@@ -546,7 +544,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           $views_output['close_map_button'] = array(
             '#type' => 'html_tag',
             '#tag' => 'div',
-            '#value' => isset($this->options['yamaps_display_options']['close_button_text']) ? t($this->options['yamaps_display_options']['close_button_text']) : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT),
+            '#value' => isset($yandexmap_field_settings['yamaps_display_options']['close_button_text']) ? t($yandexmap_field_settings['yamaps_display_options']['close_button_text']) : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT),
             '#attributes' => array(
               'id' => $close_button_id,
               'class' => array('close_yamap_button', 'element-invisible'),
@@ -710,8 +708,6 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
         $maps[$id] = array(
           'display_options' => array(
             'display_type' => $yandexmap_field_settings['yamaps_display_options_static']['display_type_static'],
-            'open_button_text' => $yandexmap_field_settings['yamaps_display_options_static']['open_button_text_static'],
-            'open_button_id' => $open_button_id,
           ),
         );
 
