@@ -12,6 +12,8 @@ define('YAMAPS_API_URL', 'http://api-maps.yandex.ru/2.0/');
 define('YAMAPS_STATIC_API_URL', 'http://static-maps.yandex.ru/1.x/');
 define('YAMAPS_GEOCODER_URL', 'http://geocode-maps.yandex.ru/1.x/');
 define('YAMAPS_LEGAL_AGREEMENT_URL', 'http://legal.yandex.ru/maps_api/');
+define('YAMAPS_DYNAMIC_FORMATTER', 'field_yamaps_formatter_dynamic');
+define('YAMAPS_STATIC_FORMATTER', 'field_yamaps_formatter_static');
 define('YAMAPS_API_LANGUAGE', 'ru-RU');
 define('YAMAPS_DEFAULT_BLOCK_DELTA', 'yamaps');
 define('YAMAPS_DEFAULT_BLOCK_AMOUNT', 1);
@@ -234,7 +236,7 @@ function yamaps_field_info() {
     'field_yamaps' => array(
       'label' => t('Yandex map'),
       'default_widget' => 'yamaps_field',
-      'default_formatter' => 'field_yamaps_formatter_dynamic',
+      'default_formatter' => YAMAPS_DYNAMIC_FORMATTER,
       'settings' => array(
         'display_options' => array(
           'display_type' => 'map',

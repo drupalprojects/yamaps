@@ -360,7 +360,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     }
     $yandexmap_field_type = $this->view->field[$this->options['yandex_map_field']]->options['type'];
 
-    if ($yandexmap_field_type == 'field_yamaps_formatter_static' && !is_array($prepared_params['coords']['center'])) {
+    if ($yandexmap_field_type == YAMAPS_STATIC_FORMATTER && !is_array($prepared_params['coords']['center'])) {
       return t('The Static Yandex Maps style cannot be used without coordinates of center.');
     }
     $this->render_fields($this->view->result);
@@ -487,7 +487,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     }
     $views_output = array();
     switch ($yandexmap_field_type) {
-      case 'field_yamaps_formatter_dynamic':
+      case YAMAPS_DYNAMIC_FORMATTER:
         // Map initialization parameters.
         $map = array(
           'id' => $id,
@@ -556,7 +556,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           );
         }
         break;
-      case 'field_yamaps_formatter_static':
+      case YAMAPS_STATIC_FORMATTER:
         $params = array();
         $params['ll'] = end($prepared_params['coords']['center']) . ',' . reset($prepared_params['coords']['center']);
         $params['z'] = $prepared_params['coords']['zoom'];

@@ -11,7 +11,7 @@
 function yamaps_field_formatter_info() {
   return array(
     // Dynamic map formatter.
-    'field_yamaps_formatter_dynamic' => array(
+    YAMAPS_DYNAMIC_FORMATTER => array(
       'label' => t('Dynamic'),
       'field types' => array('field_yamaps'),
       'settings' => array(
@@ -35,7 +35,7 @@ function yamaps_field_formatter_info() {
       ),
     ),
     // Static map formatter.
-    'field_yamaps_formatter_static' => array(
+    YAMAPS_STATIC_FORMATTER => array(
       'label' => t('Static'),
       'field types' => array('field_yamaps'),
       'settings' => array(
@@ -61,7 +61,7 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
   $element = array();
 
   switch ($display['type']) {
-    case 'field_yamaps_formatter_dynamic':
+    case YAMAPS_DYNAMIC_FORMATTER:
       $element['yamaps_display_options'] = array(
         '#type' => 'fieldset',
         '#title' => t('Display options'),
@@ -151,7 +151,7 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
 
       break;
 
-    case 'field_yamaps_formatter_static':
+    case YAMAPS_STATIC_FORMATTER:
       $element['yamaps_display_options_static']['display_type_static'] = array(
         '#type' => 'radios',
         '#title' => t('Map display style for end user'),
@@ -233,7 +233,7 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
   $summary = array();
 
   switch ($display['type']) {
-    case 'field_yamaps_formatter_dynamic':
+    case YAMAPS_DYNAMIC_FORMATTER:
       $summary[] = t('Show controls: @controls', array('@controls' => $settings['controls'] ? t('yes') : t('no')));
       $summary[] = t('Show traffic: @traffic', array('@traffic' => $settings['traffic'] ? t('yes') : t('no')));
       $summary[] = t('Map size: @width x @height', array(
@@ -266,7 +266,7 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
       }
       break;
 
-    case 'field_yamaps_formatter_static':
+    case YAMAPS_STATIC_FORMATTER:
       $summary[] = t('Show traffic: @traffic', array('@traffic' => $settings['s_traffic'] ? t('yes') : t('no')));
       $summary[] = t('Map size: @width x @height', array(
         '@width' => $settings['s_width'] . 'px',
@@ -304,7 +304,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
   }
 
   switch ($display['type']) {
-    case 'field_yamaps_formatter_dynamic':
+    case YAMAPS_DYNAMIC_FORMATTER:
       $maps = array();
       foreach ($items as $delta => $item) {
         // Ensure that field with empty coordinates doesn't show up.
@@ -402,7 +402,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
 
       break;
 
-    case 'field_yamaps_formatter_static':
+    case YAMAPS_STATIC_FORMATTER:
       foreach ($items as $delta => $item) {
         // Ensure that field with empty coordinates doesn't show up.
         if (empty($item['coords']) || $item['hide'] == 1) {
