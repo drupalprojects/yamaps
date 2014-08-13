@@ -367,53 +367,59 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     foreach ($this->view->result as $row_index => $row) {
       // Fix yandex cart.
       foreach ($row->$yandexmap_field_name as $yandexmap_field_coords) {
-        // Preparing placemarks.
-        $decoded_placemarks = drupal_json_decode($yandexmap_field_coords['raw']['placemarks']);
+        if (isset($yandexmap_field_coords['raw']['placemarks'])) {
+          // Preparing placemarks.
+          $decoded_placemarks = drupal_json_decode($yandexmap_field_coords['raw']['placemarks']);
 
-        if (is_array($decoded_placemarks)) {
-          foreach ($decoded_placemarks as $placemark) {
-            if (isset($this->options['placemark_title']) && $this->options['placemark_title'] !== self::PLACEMARK_DEFAULT_FIELD) {
-              // Prepare placemark title.
-              $marker_title = $this->preparePlacemarkTitle($row_index);
-              $placemark['params'][self::PLACEMARK_TITLE] = $marker_title;
-            }
-            // Prepare Baloon title.
-            if ($this->options['baloon_title'] && $this->options['baloon_title'] !== self::PLACEMARK_DEFAULT_FIELD) {
-              $placemark['params'][self::PLACEMARK_BALLON_HEADER] = $this->rendered_fields[$row_index][$this->options['baloon_title']];
-            }
-            // Prepare Baloon body.
-            if (isset($this->options['baloon_body']) && is_array($this->options['baloon_body'])) {
-              foreach ($this->options['baloon_body'] as $bval) {
-                $ballon_body[] = $this->get_field($row_index, $bval);
+          if (is_array($decoded_placemarks)) {
+            foreach ($decoded_placemarks as $placemark) {
+              if (isset($this->options['placemark_title']) && $this->options['placemark_title'] !== self::PLACEMARK_DEFAULT_FIELD) {
+                // Prepare placemark title.
+                $marker_title = $this->preparePlacemarkTitle($row_index);
+                $placemark['params'][self::PLACEMARK_TITLE] = $marker_title;
               }
-              $placemark['params'][self::PLACEMARK_BALLON_BODY] = $this->prepareBody($ballon_body);
+              // Prepare Baloon title.
+              if ($this->options['baloon_title'] && $this->options['baloon_title'] !== self::PLACEMARK_DEFAULT_FIELD) {
+                $placemark['params'][self::PLACEMARK_BALLON_HEADER] = $this->rendered_fields[$row_index][$this->options['baloon_title']];
+              }
+              // Prepare Baloon body.
+              if (isset($this->options['baloon_body']) && is_array($this->options['baloon_body'])) {
+                foreach ($this->options['baloon_body'] as $bval) {
+                  $ballon_body[] = $this->get_field($row_index, $bval);
+                }
+                $placemark['params'][self::PLACEMARK_BALLON_BODY] = $this->prepareBody($ballon_body);
+              }
+              $this->view->row_index = $row_index;
+              unset($ballon_body);
+              $objects[] = $placemark;
             }
-            $this->view->row_index = $row_index;
-            unset($ballon_body);
-            $objects[] = $placemark;
           }
         }
-
         // Preparing lines.
-        $decoded_lines = drupal_json_decode($yandexmap_field_coords['raw']['lines']);
-        if (is_array($decoded_lines)) {
-          foreach ($decoded_lines as $lines) {
-            $prepared_lines[] = $lines;
+        if (isset($yandexmap_field_coords['raw']['lines'])) {
+          $decoded_lines = drupal_json_decode($yandexmap_field_coords['raw']['lines']);
+          if (is_array($decoded_lines)) {
+            foreach ($decoded_lines as $lines) {
+              $prepared_lines[] = $lines;
+            }
           }
         }
-
         // Preparing polygons.
-        $decoded_polygons = drupal_json_decode($yandexmap_field_coords['raw']['polygons']);
-        if (is_array($decoded_polygons)) {
-          foreach ($decoded_polygons as $polygons) {
-            $prepared_polygons[] = $polygons;
+        if (isset($yandexmap_field_coords['raw']['polygons'])) {
+          $decoded_polygons = drupal_json_decode($yandexmap_field_coords['raw']['polygons']);
+          if (is_array($decoded_polygons)) {
+            foreach ($decoded_polygons as $polygons) {
+              $prepared_polygons[] = $polygons;
+            }
           }
         }
         // Preparing routes.
-        $decoded_routes = drupal_json_decode($yandexmap_field_coords['raw']['routes']);
-        if (is_array($decoded_routes)) {
-          foreach ($decoded_routes as $route) {
-            $prepared_route[] = $route;
+        if (isset($yandexmap_field_coords['raw']['routes'])) {
+          $decoded_routes = drupal_json_decode($yandexmap_field_coords['raw']['routes']);
+          if (is_array($decoded_routes)) {
+            foreach ($decoded_routes as $route) {
+              $prepared_route[] = $route;
+            }
           }
         }
       }
