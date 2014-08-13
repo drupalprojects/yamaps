@@ -427,16 +427,6 @@ function yamaps_block_content($delta) {
           ),
         );
 
-        $block_output['close_map_button'] = array(
-          '#type' => 'html_tag',
-          '#tag' => 'div',
-          '#value' => t($display_options['close_button_text']),
-          '#attributes' => array(
-            'id' => $close_button_id,
-            'class' => array('close_yamap_button', 'element-invisible'),
-            'mapId' => $id,
-          ),
-        );
         $open_map_button = TRUE;
         $close_map_button = TRUE;
       }
@@ -452,6 +442,19 @@ function yamaps_block_content($delta) {
         ),
         '#value' => '',
       );
+      // Fix issue with block close button.
+      if (isset($display_options['display_type']) && $display_options['display_type'] == 'map_button') {
+        $block_output['close_map_button'] = array(
+          '#type' => 'html_tag',
+          '#tag' => 'div',
+          '#value' => t($display_options['close_button_text']),
+          '#attributes' => array(
+            'id' => $close_button_id,
+            'class' => array('close_yamap_button', 'element-invisible'),
+            'mapId' => $id,
+          ),
+        );
+      }
 
       // Adding map to js.
       $block_output['#attached']['js'][] = array(
