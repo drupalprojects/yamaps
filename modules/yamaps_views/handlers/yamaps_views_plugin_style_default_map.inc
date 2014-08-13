@@ -354,15 +354,19 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $prepared_lines = array();
     $prepared_polygons = array();
     $prepared_route = array();
-
+    $prepared_params = yamaps_format_values_to_js($this->options);
     if (empty($this->options['yandex_map_field'])) {
       return t('The Yandex Maps style cannot be used with a pager. Please add "Yandex Maps" field and chose it in views settings form.');
+    }
+    $yandexmap_field_type = $this->view->field[$this->options['yandex_map_field']]->options['type'];
+
+    if ($yandexmap_field_type == 'field_yamaps_formatter_static' && !is_array($prepared_params['coords']['center'])) {
+      return t('The Static Yandex Maps style cannot be used without coordinates of center.');
     }
     $this->render_fields($this->view->result);
 
     $yandexmap_field_name = 'field_' . $this->options['yandex_map_field'];
     $yandexmap_field_settings = $this->view->field[$this->options['yandex_map_field']]->options['settings'];
-    $yandexmap_field_type = $this->view->field[$this->options['yandex_map_field']]->options['type'];
 
     foreach ($this->view->result as $row_index => $row) {
       // Fix yandex cart.
@@ -441,7 +445,6 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
     $close_button_id = drupal_html_id(implode('-', array($id, 'close_button')));
     $this->options['coords'] = $this->getCoordinates();
-    $prepared_params = yamaps_format_values_to_js($this->options);
 
     switch ($this->options['yamaps_center_options']['map_center_type']) {
       case 'geolocation':
