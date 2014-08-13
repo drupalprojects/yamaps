@@ -439,6 +439,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     // Unique map id.
     $id = drupal_html_id(implode('-', $array_of_unique_params));
     $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
+    $close_button_id = drupal_html_id(implode('-', array($id, 'close_button')));
     $this->options['coords'] = $this->getCoordinates();
     $prepared_params = yamaps_format_values_to_js($this->options);
 
@@ -516,27 +517,18 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           'yamaps',
           'yamaps.full',
         );
-        if (isset($yandexmap_field_settings['yamaps_display_options']['display_type']) && $yandexmap_field_settings['yamaps_display_options']['display_type'] == 'map_button') {
-          $views_output[]['open_button_text'] = array(
-            '#type' => 'html_tag',
-            '#tag' => 'div',
-            '#value' => isset($this->options['yamaps_display_options']['open_button_text']) ? t($this->options['yamaps_display_options']['open_button_text']) : t(YAMAPS_DEFAULT_OPEN_MAP_TEXT),
-            '#attributes' => array(
-              'id' => $open_button_id,
-              'class' => array('open_yamap_button'),
-              'mapId' => $id,
-            ),
-          );
-        }
+
+        $hide_map = (isset($this->options['yamaps_display_options']['display_type']) &&
+          $this->options['yamaps_display_options']['display_type'] == 'map_button');
+        $map_class = array('yamaps-map-container');
+        $map_class[] = $hide_map ? 'element-invisible' : '';
         $views_output[] = array(
           '#type' => 'html_tag',
           '#tag' => 'div',
           '#attributes' => array(
             'style' => ' width: ' . $yandexmap_field_settings['width'] . '; height:' . $yandexmap_field_settings['height'] . ';',
             'id' => $id,
-            'class' => array(
-              'yamaps-map-container',
-            ),
+            'class' => $map_class,
           ),
           '#value' => '',
         );
@@ -548,6 +540,16 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
             '#attributes' => array(
               'id' => $open_button_id,
               'class' => array('open_yamap_button'),
+              'mapId' => $id,
+            ),
+          );
+          $views_output['close_map_button'] = array(
+            '#type' => 'html_tag',
+            '#tag' => 'div',
+            '#value' => isset($this->options['yamaps_display_options']['close_button_text']) ? t($this->options['yamaps_display_options']['close_button_text']) : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT),
+            '#attributes' => array(
+              'id' => $close_button_id,
+              'class' => array('close_yamap_button', 'element-invisible'),
               'mapId' => $id,
             ),
           );
