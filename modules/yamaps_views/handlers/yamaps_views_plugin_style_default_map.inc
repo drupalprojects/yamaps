@@ -675,7 +675,6 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
         $hide_map = (isset($yandexmap_field_settings['yamaps_display_options_static']['display_type_static']) &&
           $yandexmap_field_settings['yamaps_display_options_static']['display_type_static'] == 'map_button');
         $map_display_style = $hide_map ? '; display: none' : '';
-
         // Return map container div with image.
         $views_output['map_container'] = array(
           '#type' => 'html_tag',

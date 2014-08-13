@@ -354,7 +354,8 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
 
         $hide_map = (isset($settings['yamaps_display_options']['display_type']) &&
           $settings['yamaps_display_options']['display_type'] == 'map_button');
-        $map_class = $hide_map ? 'element-invisible' : '';
+        $map_class = array('yamaps-map-container');
+        $map_class[] = $hide_map ? 'element-invisible' : '';
 
         // Return map container div.
         $element[$delta]['map_container'] = array(
@@ -363,7 +364,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           '#attributes' => array(
             'id' => $id,
             'style' => 'width:' . $settings['width'] . '; height:' . $settings['height'] . ';',
-            'class' => array($map_class),
+            'class' => $map_class,
           ),
           '#value' => '',
         );
