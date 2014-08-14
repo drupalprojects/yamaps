@@ -373,8 +373,6 @@ function yamaps_block_content($delta) {
   $id = drupal_html_id(implode('-', array('ymap', 'block', $delta)));
   $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
   $close_button_id = drupal_html_id(implode('-', array($id, 'close_button')));
-  $open_button_text = isset($display_options['open_button_text']) ? t($display_options['open_button_text']) : t(YAMAPS_DEFAULT_OPEN_MAP_TEXT);
-  $close_button_text = isset($display_options['close_button_text']) ? t($display_options['close_button_text']) : t(YAMAPS_DEFAULT_CLOSE_MAP_TEXT);
 
   $width = variable_get($delta . '_block_width', YAMAPS_DEFAULT_BLOCK_MAP_WIDTH);
   $height = variable_get($delta . '_block_height', YAMAPS_DEFAULT_BLOCK_MAP_HEIGHT);
@@ -390,11 +388,12 @@ function yamaps_block_content($delta) {
   $lines = drupal_json_decode(variable_get($delta . '_block_lines', NULL));
   $polygons = drupal_json_decode(variable_get($delta . '_block_polygons', NULL));
   $routes = drupal_json_decode(variable_get($delta . '_block_routes', NULL));
+  
   // Set default 'Open map' text and 'Close map' text.
-  if(!isset($display_options['open_button_text'])){
+  if (!isset($display_options['open_button_text'])){
     $display_options['open_button_text'] = YAMAPS_DEFAULT_OPEN_MAP_TEXT;
   }
-  if(!isset($display_options['close_button_text'])){
+  if (!isset($display_options['close_button_text'])){
     $display_options['close_button_text'] = YAMAPS_DEFAULT_CLOSE_MAP_TEXT;
   }
 
@@ -589,7 +588,7 @@ function yamaps_block_content($delta) {
         $block_output['open_button_text'] = array(
           '#type' => 'html_tag',
           '#tag' => 'div',
-          '#value' => $open_button_text,
+          '#value' => t($display_options['open_button_text']),
           '#attributes' => array(
             'id' => $open_button_id,
             'class' => array('open_yamap_button'),
@@ -600,7 +599,7 @@ function yamaps_block_content($delta) {
         $block_output['close_button_text'] = array(
           '#type' => 'html_tag',
           '#tag' => 'div',
-          '#value' => $close_button_text,
+          '#value' => t($display_options['close_button_text']),
           '#attributes' => array(
             'id' => $close_button_id,
             'class' => array('close_yamap_button', 'element-invisible'),

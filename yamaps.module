@@ -94,7 +94,7 @@ function yamaps_library() {
       'load' => 'package.full',
       'lang' => YAMAPS_API_LANGUAGE,
       'wizard' => 'Drupal_yamaps_' . $language->language,
-    )
+    ),
   ));
 
   $libraries['yamaps.full'] = array(

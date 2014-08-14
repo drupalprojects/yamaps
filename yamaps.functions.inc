@@ -19,7 +19,7 @@ function yamaps_field_validate_pixels_percentage(array $element, array &$form_st
     form_error(
       $element,
       t('%name must be a positive integer value and has "%" or "px" at the end.',
-      array('%name' => $element['#title']))
+        array('%name' => $element['#title']))
     );
   }
 }

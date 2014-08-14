@@ -523,16 +523,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           $yandexmap_field_settings['yamaps_display_options']['display_type'] == 'map_button');
         $map_class = array('yamaps-map-container');
         $map_class[] = $hide_map ? 'element-invisible' : '';
-        $views_output[] = array(
-          '#type' => 'html_tag',
-          '#tag' => 'div',
-          '#attributes' => array(
-            'style' => ' width: ' . $yandexmap_field_settings['width'] . '; height:' . $yandexmap_field_settings['height'] . ';',
-            'id' => $id,
-            'class' => $map_class,
-          ),
-          '#value' => '',
-        );
+
         if (isset($yandexmap_field_settings['yamaps_display_options']['display_type']) && $yandexmap_field_settings['yamaps_display_options']['display_type'] == 'map_button') {
           $views_output['open_map_button'] = array(
             '#type' => 'html_tag',
@@ -555,6 +546,17 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
             ),
           );
         }
+
+        $views_output[] = array(
+          '#type' => 'html_tag',
+          '#tag' => 'div',
+          '#attributes' => array(
+            'style' => ' width: ' . $yandexmap_field_settings['width'] . '; height:' . $yandexmap_field_settings['height'] . ';',
+            'id' => $id,
+            'class' => $map_class,
+          ),
+          '#value' => '',
+        );
         break;
       case YAMAPS_STATIC_FORMATTER:
         $params = array();
