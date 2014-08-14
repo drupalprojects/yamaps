@@ -50,11 +50,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    *   Form structure array.
    * @param array $form_state
    *   Form state array.
-   *
-   * @return array
-   *   Form array.
    */
-  function options_form(&$form, &$form_state) {
+  function options_form(array &$form, array &$form_state) {
     parent::options_form($form, $form_state);
     $fields = $this->getFields();
     $yandex_fields = $this->getYandexMapsFields();
@@ -288,7 +285,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    * @return string
    *   Prepared body.
    */
-  function prepareBody($body_array) {
+  function prepareBody(array $body_array) {
     $output = '<div class="balloon-inner">';
     foreach ($body_array as $key => $val) {
       $output .= '<span class="' . $key . '">' . $val . '</span>';
@@ -335,7 +332,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       $errors[] = t('The Yandex Maps style cannot be used with a pager. Disable the "Use pager" option for this display.');
     }
     /*
-        // Checking for existans of yandex map field.
+        // Checking for existence of yandex map field.
         if (empty($this->options['yandex_map_field']) || $this->options['yandex_map_field'] == '<none>') {
           $errors[] = t('The Yandex Maps style cannot be used with a pager. Please add "Yandex Maps" field and chose it in views settings form.');
         }
@@ -558,6 +555,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           '#value' => '',
         );
         break;
+      
       case YAMAPS_STATIC_FORMATTER:
         $params = array();
         $params['ll'] = end($prepared_params['coords']['center']) . ',' . reset($prepared_params['coords']['center']);
