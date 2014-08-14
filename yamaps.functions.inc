@@ -163,7 +163,7 @@ function yamaps_cleanup_values(array &$value) {
  */
 function yamaps_format_values_to_js(array $clean_values) {
   return array(
-    'coords' => drupal_json_decode($clean_values['coords']),
+    'coords' => (isset($clean_values['coords'])) ? drupal_json_decode($clean_values['coords']) : array(),
     'type' => $clean_values['type'],
     'placemarks' => drupal_json_decode($clean_values['placemarks']),
     'lines' => drupal_json_decode($clean_values['lines']),
