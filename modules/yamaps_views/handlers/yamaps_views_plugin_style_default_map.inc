@@ -353,7 +353,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $prepared_route = array();
     $prepared_params = yamaps_format_values_to_js($this->options);
     if (empty($this->options['yandex_map_field'])) {
-      return t('The Yandex Maps style cannot be used with a pager. Please add "Yandex Maps" field and chose it in views settings form.');
+      return t('Please add "Yandex Maps" field and chose it in views settings form.');
     }
     $yandexmap_field_type = $this->view->field[$this->options['yandex_map_field']]->options['type'];
 
