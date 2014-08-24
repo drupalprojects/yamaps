@@ -55,6 +55,10 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       if (isset($element['#entity']) && $entity = $element['#entity']) {
         $default_value = field_get_default_value($element['#entity_type'], $entity, $field, $instance);
         $default_value = reset($default_value);
+
+        if (empty($default_value) || !is_array($default_value)) {
+          $default_value = array();
+        }
         yamaps_cleanup_values($default_value);
         $default_js = yamaps_format_values_to_js($default_value);
       }
@@ -166,8 +170,8 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     // Map initialization parameters.
     $map = array(
       'init' => array(
-        'center' => $default_js['coords']['center'],
-        'zoom' => $default_js['coords']['zoom'],
+        'center' => (isset($default_js['coords']['center'])) ? $default_js['coords']['center'] : NULL,
+        'zoom' => (isset($default_js['coords']['zoom'])) ? $default_js['coords']['zoom'] : NULL,
         'type' => $default_js['type'],
         'behaviors' => array('scrollZoom', 'dblClickZoom', 'drag'),
       ),
