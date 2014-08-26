@@ -357,7 +357,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     }
     $yandexmap_field_type = $this->view->field[$this->options['yandex_map_field']]->options['type'];
 
-    if ($yandexmap_field_type == YAMAPS_STATIC_FORMATTER && !is_array($prepared_params['coords']['center'])) {
+    if ($yandexmap_field_type == YAMAPS_STATIC_FORMATTER && (!isset($prepared_params['coords']['center']) || (isset($prepared_params['coords']['center']) && !is_array($prepared_params['coords']['center'])))) {
       return t('The Static Yandex Maps style cannot be used without coordinates of center.');
     }
     $this->render_fields($this->view->result);
