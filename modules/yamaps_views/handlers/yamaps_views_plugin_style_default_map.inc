@@ -457,7 +457,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
 
       case 'mini_map':
         // Merging placemark.
-        if (is_array($prepared_params['lines'])) {
+        if (is_array($prepared_params['placemarks'])) {
           foreach ($prepared_params['placemarks'] as $p) {
             $objects[] = $p;
           }
@@ -500,8 +500,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           'edit' => FALSE,
           'init' => array(
             'type' => $prepared_params['type'],
-            'center' => $prepared_params['coords']['center'],
-            'zoom' => $prepared_params['coords']['zoom'],
+            'center' => empty($prepared_params['coords']['center']) ? NULL : $prepared_params['coords']['center'],
+            'zoom' => empty($prepared_params['coords']['zoom']) ? NULL : $prepared_params['coords']['zoom'],
             'behaviors' => array_values(array_filter($yandexmap_field_settings['behaviors'])),
           ),
         );
