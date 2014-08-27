@@ -377,7 +377,31 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
               if (isset($this->options['placemark_title']) && $this->options['placemark_title'] !== self::PLACEMARK_DEFAULT_FIELD) {
                 // Prepare placemark title.
                 $marker_title = $this->preparePlacemarkTitle($row_index);
-                $placemark['params'][self::PLACEMARK_TITLE] = $marker_title;
+                $field_title_settings = $this->view->field[$this->options['placemark_title']];
+                switch ($field_title_settings->field_info['type']) {
+                  case 'image':
+                    // Special logic for image fields.
+                    
+                    // Placemark type.
+                    $placemark['options']['iconLayout'] = 'default#image';
+                    // Image href.
+                    $placemark['options']['iconImageHref'] = image_style_url($row->{'field_' . $this->options['placemark_title']}[0]['rendered']['#image_style'], $row->{'field_' . $this->options['placemark_title']}[0]['raw']['uri']);
+                    $image_dimensions = getimagesize($placemark['options']['iconImageHref']);
+                    // Placemark image size.
+                    $placemark['options']['iconImageSize'] = array(
+                      $image_dimensions[0],
+                      $image_dimensions[1],
+                    );
+                    // Icon image offset of upper left angle.
+                    $placemark['options']['iconImageOffset'] = array(
+                      -($image_dimensions[0] / 2),
+                      $image_dimensions[1] * 0.1 - $image_dimensions[1],
+                    );
+                    break;
+                  default:
+                    $placemark['params'][self::PLACEMARK_TITLE] = $marker_title;
+                    break;
+                }
               }
               // Prepare Baloon title.
               if ($this->options['baloon_title'] && $this->options['baloon_title'] !== self::PLACEMARK_DEFAULT_FIELD) {
