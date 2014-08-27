@@ -228,7 +228,7 @@
 
           // Add already created elements to collection.
           for (var i in Map.options.placemarks) {
-            placemarksCollection.add(new $.yaMaps.YamapsPlacemark(Map.options.placemarks[i].coords, Map.options.placemarks[i].params));
+            placemarksCollection.add(new $.yaMaps.YamapsPlacemark(Map.options.placemarks[i].coords, Map.options.placemarks[i].params, Map.options.placemarks[i].options));
           }
           // Add collection to the map.
           Map.map.geoObjects.add(placemarksCollection.elements);
