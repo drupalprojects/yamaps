@@ -347,7 +347,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    *   Rendered string.
    */
   function render() {
-    $objects = array();
+    $placemarks = array();
     $prepared_lines = array();
     $prepared_polygons = array();
     $prepared_route = array();
@@ -392,7 +392,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
               }
               $this->view->row_index = $row_index;
               unset($ballon_body);
-              $objects[] = $placemark;
+              $placemarks[] = $placemark;
             }
           }
         }
@@ -459,7 +459,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
         // Merging placemark.
         if (is_array($prepared_params['placemarks'])) {
           foreach ($prepared_params['placemarks'] as $p) {
-            $objects[] = $p;
+            $placemarks[] = $p;
           }
         }
         // Merging lines.
@@ -493,7 +493,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           ),
           'controls' => $yandexmap_field_settings['controls'],
           'traffic' => $yandexmap_field_settings['traffic'],
-          'placemarks' => empty($objects) ? NULL : $objects,
+          'placemarks' => empty($placemarks) ? NULL : $placemarks,
           'lines' => empty($prepared_lines) ? NULL : $prepared_lines,
           'polygons' => empty($prepared_polygons) ? NULL : $prepared_polygons,
           'routes' => empty($prepared_route) ? NULL : $prepared_route,
@@ -609,10 +609,10 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           'pink' => 'fd32fb',
         );
         // Placemarks.
-        if (!empty($objects)) {
+        if (!empty($placemarks)) {
           $pt = array();
 
-          foreach ($objects as $placemark) {
+          foreach ($placemarks as $placemark) {
             $pm = end($placemark['coords']) . ',' . reset($placemark['coords']) . ',';
             $pm .= 'pm2';
             $pm .= $colors21[$placemark['params']['color']];
