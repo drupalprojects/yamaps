@@ -43,25 +43,30 @@ function yamaps_geocoding($geolocation_string) {
     'format' => 'json',
     'geocode' => $geolocation_string,
     'results' => 1,
+    'lang' => 'ru',
   );
 
-  $geolocation_request = file_get_contents(url(YAMAPS_GEOCODER_URL, array(
-    'query' => $query,
-    'absolute' => TRUE,
-  )));
+  $geolocation_url = url(YAMAPS_GEOCODER_URL,
+    array('query' => $query, 'absolute' => TRUE));
+  $geolocation_request = drupal_http_request($geolocation_url);
 
-  $geolocation_request = json_decode($geolocation_request);
+  if (isset($geolocation_request['data'])) {
+    $geolocation_data = json_decode($geolocation_request['data']);
 
-  if ($geolocation_request->response->GeoObjectCollection->metaDataProperty->GeocoderResponseMetaData->found > 0) {
-    $map_center = $geolocation_request->response->GeoObjectCollection->featureMember[0]->GeoObject->Point->pos;
-    $bounded_by = array();
-    $bounded_by[] = array_map('yamaps_var_to_float', array_reverse(explode(' ', $geolocation_request->response->GeoObjectCollection->featureMember[0]->GeoObject->boundedBy->Envelope->lowerCorner)));
-    $bounded_by[] = array_map('yamaps_var_to_float', array_reverse(explode(' ', $geolocation_request->response->GeoObjectCollection->featureMember[0]->GeoObject->boundedBy->Envelope->upperCorner)));
-
-    return array(
-      'map_center' => array_map('yamaps_var_to_float', array_reverse(explode(' ', $map_center))),
-      'bounds' => $bounded_by,
-    );
+    if ($geolocation_data->response->GeoObjectCollection->metaDataProperty->GeocoderResponseMetaData->found > 0) {
+      $map_center = $geolocation_data->response->GeoObjectCollection->featureMember[0]->GeoObject->Point->pos;
+      $bounded_by = array(
+        array_map('yamaps_var_to_float', array_reverse(explode(' ', $geolocation_data->response->GeoObjectCollection->featureMember[0]->GeoObject->boundedBy->Envelope->lowerCorner))),
+        array_map('yamaps_var_to_float', array_reverse(explode(' ', $geolocation_data->response->GeoObjectCollection->featureMember[0]->GeoObject->boundedBy->Envelope->upperCorner))),
+      );
+      return array(
+        'map_center' => array_map('yamaps_var_to_float', array_reverse(explode(' ', $map_center))),
+        'bounds' => $bounded_by,
+      );
+    }
+    else {
+      return FALSE;
+    }
   }
   else {
     return FALSE;

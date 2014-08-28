@@ -6,6 +6,4 @@ package = Yandex
 dependencies[] = views
 dependencies[] = yamaps
 
-files[] = yamaps_views.module
-files[] = yamaps_views.views.inc
 files[] = handlers/yamaps_views_plugin_style_default_map.inc
