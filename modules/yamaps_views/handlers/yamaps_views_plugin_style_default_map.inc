@@ -410,6 +410,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
               }
               // Prepare Baloon body.
               if (isset($this->options['baloon_body']) && is_array($this->options['baloon_body'])) {
+                $ballon_body = array();
                 foreach ($this->options['baloon_body'] as $bval) {
                   $ballon_body[] = $this->get_field($row_index, $bval);
                 }
