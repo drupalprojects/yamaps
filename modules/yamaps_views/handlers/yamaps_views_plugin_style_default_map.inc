@@ -51,7 +51,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    * @param array $form_state
    *   Form state array.
    */
-  public function options_form( &$form, &$form_state) {
+  public function options_form(array &$form, array &$form_state) {
     parent::options_form($form, $form_state);
     $fields = $this->getFields();
     $yandex_fields = $this->getYandexMapsFields();
@@ -351,7 +351,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
     $prepared_lines = array();
     $prepared_polygons = array();
     $prepared_route = array();
-	$this->options['coords'] = $this->getCoordinates();	
+    $this->options['coords'] = $this->getCoordinates();
     $prepared_params = yamaps_format_values_to_js($this->options);
     if (empty($this->options['yandex_map_field'])) {
       return t('Please add "Yandex Maps" field and chose it in views settings form.');
@@ -383,7 +383,6 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
                 switch ($field_title_settings->field_info['type']) {
                   case 'image':
                     // Special logic for image fields.
-                    
                     // Placemark type.
                     $placemark['options']['iconLayout'] = 'default#image';
                     // Image href.
@@ -400,6 +399,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
                       $image_dimensions[1] * 0.1 - $image_dimensions[1],
                     );
                     break;
+
                   default:
                     $placemark['params'][self::PLACEMARK_TITLE] = $marker_title;
                     break;
@@ -581,7 +581,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           '#value' => '',
         );
         break;
-      
+
       case YAMAPS_STATIC_FORMATTER:
         $params = array();
         $params['ll'] = end($prepared_params['coords']['center']) . ',' . reset($prepared_params['coords']['center']);
