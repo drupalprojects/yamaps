@@ -375,7 +375,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
 
           if (is_array($decoded_placemarks)) {
             foreach ($decoded_placemarks as $placemark) {
-              if (isset($this->options['placemark_title']) && $this->options['placemark_title'] !== self::PLACEMARK_DEFAULT_FIELD) {
+              // Override placemark title.
+              if (isset($this->options['placemark_title'], $this->view->field[$this->options['placemark_title']]) && $this->options['placemark_title'] !== self::PLACEMARK_DEFAULT_FIELD) {
                 // Prepare placemark title.
                 $marker_title = $this->preparePlacemarkTitle($row_index);
                 $field_title_settings = $this->view->field[$this->options['placemark_title']];
