@@ -87,9 +87,11 @@ function yamaps_library() {
   $path = drupal_get_path('module', 'yamaps') . '/misc/';
   // Weight counter.
   $w = 10;
+
   // API url.
   $api_url = url(YAMAPS_API_URL, array(
     'absolute' => TRUE,
+    'https' => TRUE,
     'query' => array(
       'load' => 'package.full',
       'lang' => YAMAPS_API_LANGUAGE,
