@@ -8,7 +8,7 @@
 /**
  * Constants.
  */
-define('YAMAPS_API_URL', 'http://api-maps.yandex.ru/2.0/');
+define('YAMAPS_API_URL', 'api-maps.yandex.ru/2.0/');
 define('YAMAPS_STATIC_API_URL', 'http://static-maps.yandex.ru/1.x/');
 define('YAMAPS_GEOCODER_URL', 'http://geocode-maps.yandex.ru/1.x/');
 define('YAMAPS_LEGAL_AGREEMENT_URL', 'http://legal.yandex.ru/maps_api/');
@@ -87,9 +87,12 @@ function yamaps_library() {
   $path = drupal_get_path('module', 'yamaps') . '/misc/';
   // Weight counter.
   $w = 10;
+
   // API url.
   $api_url = url(YAMAPS_API_URL, array(
     'absolute' => TRUE,
+    'external' => FALSE,
+    'base_url' => '/',
     'query' => array(
       'load' => 'package.full',
       'lang' => YAMAPS_API_LANGUAGE,
