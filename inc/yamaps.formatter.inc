@@ -311,15 +311,23 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         if (empty($item['coords']) || $item['hide'] == 1) {
           continue;
         }
+        // Generating unique ud.
+        $unique_id = array(
+          'ymap'
+        );
+        if(isset($entity->type)) {
+          $unique_id [] = $entity->type;
+        }
+        if(isset($entity->field_name)) {
+          $unique_id [] = $entity->field_name;
+        }
+
+        $unique_id[] = $entity_id;
+        $unique_id[] = $field['field_name'];
+        $unique_id[] = $delta;
 
         // Map id.
-        $id = drupal_html_id(implode('-', array(
-          'ymap',
-          $entity->type,
-          $entity_id,
-          $field['field_name'],
-          $delta,
-        )));
+        $id = drupal_html_id(implode('-', $unique_id));
 
         // Unique map button id.
         $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
@@ -521,14 +529,23 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           $params['pl'] = implode('~', $pl);
         }
 
-        // Map id and parameters.
-        $id = drupal_html_id(implode('-', array(
-          'ymap',
-          $entity->type,
-          $entity_id,
-          $field['field_name'],
-          $delta,
-        )));
+        // Generating unique ud.
+        $unique_id = array(
+          'ymap'
+        );
+        if(isset($entity->type)) {
+          $unique_id [] = $entity->type;
+        }
+        if(isset($entity->field_name)) {
+          $unique_id [] = $entity->field_name;
+        }
+
+        $unique_id[] = $entity_id;
+        $unique_id[] = $field['field_name'];
+        $unique_id[] = $delta;
+
+        // Map id.
+        $id = drupal_html_id(implode('-', $unique_id));
 
         $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
         $close_button_id = drupal_html_id(implode('-', array($id, 'close_button')));
