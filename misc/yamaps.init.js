@@ -95,7 +95,7 @@
             return this.parent;
           },
           // Export line or polygon.
-          export: function() {
+          Export: function() {
             var coords = this.element.geometry.getCoordinates();
             if (typeof coords[0] != 'object' || coords.length < 1) {
               return;
@@ -151,10 +151,10 @@
 
         $.yaMaps.BaseYamapsObjectCollection = {
           // Export collection.
-          export: function() {
+          Export: function() {
             var data = [];
             this.elements.each(function(element) {
-              var content = element.properties.get('element').export();
+              var content = element.properties.get('element').Export();
               if (content) {
                 data.push(content);
               }
@@ -163,7 +163,7 @@
           },
           // Export collection to HTML element.
           exportToHTML: function() {
-            var elements = this.export();
+            var elements = this.Export();
             var mapId = this.elements.getMap().container.getElement().parentElement.id;
             var $storage = $(this.storagePrefix + mapId);
             $storage.val(JSON.stringify(elements));

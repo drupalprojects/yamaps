@@ -53,7 +53,7 @@
           };
 
           // Export placemark information.
-          this.export = function() {
+          this.Export = function() {
             var coords = this.placemark.geometry.getCoordinates();
             var props = this.placemark.properties.getAll();
             return {
@@ -72,7 +72,7 @@
             var collection = this.getParent();
             if (collection) {
               var mapId = collection.elements.getMap().container.getElement().parentElement.id;
-              var placemarks = collection.export();
+              var placemarks = collection.Export();
               var $storage = $('.field-yamaps-placemarks-' + mapId);
               $storage.val(JSON.stringify(placemarks));
             }
@@ -126,10 +126,10 @@
           };
 
           // Export collection.
-          this.export = function() {
+          this.Export = function() {
             var placemarks = [];
             this.each(function(Placemark) {
-              placemarks.push(Placemark.export());
+              placemarks.push(Placemark.Export());
             });
             return placemarks;
           };
