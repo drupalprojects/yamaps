@@ -15,7 +15,6 @@ function yamaps_block_info() {
   );
 
   $blocks_amount = variable_get('yamaps_blocks_amount', YAMAPS_DEFAULT_BLOCK_AMOUNT);
-  ++$blocks_amount;
 
   for ($block_number = 2; $block_number <= $blocks_amount; $block_number++) {
     $blocks[YAMAPS_DEFAULT_BLOCK_DELTA . '_' . $block_number] = array(
