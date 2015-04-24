@@ -312,14 +312,14 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           continue;
         }
         // Generating unique ud.
-        $unique_id = array(
-          'ymap'
-        );
-        if(isset($entity->type)) {
-          $unique_id [] = $entity->type;
+        $unique_id = array('ymap');
+
+        if (isset($entity->type)) {
+          $unique_id[] = $entity->type;
         }
-        if(isset($entity->field_name)) {
-          $unique_id [] = $entity->field_name;
+
+        if (isset($entity->field_name)) {
+          $unique_id[] = $entity->field_name;
         }
 
         $unique_id[] = $entity_id;
@@ -530,14 +530,14 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         }
 
         // Generating unique ud.
-        $unique_id = array(
-          'ymap'
-        );
-        if(isset($entity->type)) {
-          $unique_id [] = $entity->type;
+        $unique_id = array('ymap');
+
+        if (isset($entity->type)) {
+          $unique_id[] = $entity->type;
         }
-        if(isset($entity->field_name)) {
-          $unique_id [] = $entity->field_name;
+
+        if (isset($entity->field_name)) {
+          $unique_id[] = $entity->field_name;
         }
 
         $unique_id[] = $entity_id;

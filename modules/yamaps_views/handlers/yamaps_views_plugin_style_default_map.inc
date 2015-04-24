@@ -5,6 +5,9 @@
  * Class yamaps_views_plugin_style_default_map.
  */
 
+/**
+ * Class defines Yandex Maps style plugin handler.
+ */
 class yamaps_views_plugin_style_default_map extends views_plugin_style {
   const PLACEMARK_TITLE = 'iconContent';
   const PLACEMARK_BALLON_HEADER = 'balloonContentHeader';
@@ -51,7 +54,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    * @param array $form_state
    *   Form state array.
    */
-  public function options_form(&$form, &$form_state) {
+  public function options_form(array &$form, array &$form_state) {
     parent::options_form($form, $form_state);
     $fields = $this->getFields();
     $yandex_fields = $this->getYandexMapsFields();
@@ -327,16 +330,16 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
   function validate() {
     $errors = parent::validate();
 
-    // Checking of existanse of pager settings.
+    // Checking of existence of pager settings.
     if ($this->display->handler->use_pager()) {
       $errors[] = t('The Yandex Maps style cannot be used with a pager. Disable the "Use pager" option for this display.');
     }
-    /*
-        // Checking for existence of yandex map field.
-        if (empty($this->options['yandex_map_field']) || $this->options['yandex_map_field'] == '<none>') {
-          $errors[] = t('The Yandex Maps style cannot be used with a pager. Please add "Yandex Maps" field and chose it in views settings form.');
-        }
-    */
+
+    // Checking for existence of yandex map field.
+    // if (empty($this->options['yandex_map_field']) || $this->options['yandex_map_field'] == '<none>') {
+    //  $errors[] = t('The Yandex Maps style cannot be used with a pager. Please add "Yandex Maps" field and choose it in views settings form.');
+    // }
+
     return $errors;
   }
 
@@ -829,4 +832,5 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
       return '';
     }
   }
+
 }
