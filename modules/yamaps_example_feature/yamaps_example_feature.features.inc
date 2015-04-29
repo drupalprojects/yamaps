@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * yamaps_example_feature.features.inc
+ * Exports generic Drupal hooks.
  */
 
 /**

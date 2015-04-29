@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * yamaps_example_feature.views_default.inc
+ * Exports Yandex Map view configuration.
  */
 
 /**

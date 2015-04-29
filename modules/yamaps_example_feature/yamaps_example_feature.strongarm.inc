@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * yamaps_example_feature.strongarm.inc
+ * Exports Drupal variables.
  */
 
 /**

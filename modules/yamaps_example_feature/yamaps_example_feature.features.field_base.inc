@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * yamaps_example_feature.features.field_base.inc
+ * Exports Drupal fields.
  */
 
 /**
