@@ -51,7 +51,7 @@
             $('#' + mapId).removeClass('element-invisible');
             $(this).addClass('element-invisible');
             $('div[mapid="' + mapId + '"]' + selectorClose).removeClass('element-invisible');
-          })
+          });
 
           $('div' + selectorClose).click(function() {
             var mapId = $(this).attr('mapid');

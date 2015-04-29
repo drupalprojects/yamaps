@@ -60,7 +60,7 @@
               shown:true
             });
             traffic.getProvider().state.set('infoLayerShown', true);
-            traffic.state.set('expanded', false)
+            traffic.state.set('expanded', false);
             rightTopControlGroup.unshift(traffic);
           };
 

@@ -100,7 +100,7 @@
               },
               clear: function () {
                 this.constructor.superclass.build.call(this);
-                this.$polyColors.unbind('click', this, this.fillColorClick)
+                this.$polyColors.unbind('click', this, this.fillColorClick);
                 this.$lineColors.unbind('click', this, this.strokeColorClick);
                 $('#deleteButton').unbind('click', this, this.onDeleteClick);
                 $('#saveButton').unbind('click', this, this.onSaveClick);
