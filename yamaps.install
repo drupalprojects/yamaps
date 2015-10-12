@@ -71,8 +71,8 @@ function yamaps_uninstall() {
  * Cleans up variables after uninstalling module.
  */
 function yamaps_delete_blocks_variables() {
-  $blocks_amount = variable_get('yamaps_blocks_amount', YAMAPS_DEFAULT_BLOCK_AMOUNT);
-  $delta = YAMAPS_DEFAULT_BLOCK_DELTA;
+  $blocks_amount = variable_get('yamaps_blocks_amount', 1);
+  $delta = 'yamaps';
 
   for ($block_number = 1; $block_number <= $blocks_amount; $block_number++) {
     if ($block_number > 1) {
