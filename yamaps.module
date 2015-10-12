@@ -9,9 +9,9 @@
  * Constants.
  */
 define('YAMAPS_API_URL', 'api-maps.yandex.ru/2.0/');
-define('YAMAPS_STATIC_API_URL', 'http://static-maps.yandex.ru/1.x/');
-define('YAMAPS_GEOCODER_URL', 'http://geocode-maps.yandex.ru/1.x/');
-define('YAMAPS_LEGAL_AGREEMENT_URL', 'http://legal.yandex.ru/maps_api/');
+define('YAMAPS_STATIC_API_URL', _yamaps_static_api_url());
+define('YAMAPS_GEOCODER_URL', _yamaps_geocoder_url());
+define('YAMAPS_LEGAL_AGREEMENT_URL', _yamaps_legal_agreement_url());
 define('YAMAPS_DYNAMIC_FORMATTER', 'field_yamaps_formatter_dynamic');
 define('YAMAPS_STATIC_FORMATTER', 'field_yamaps_formatter_static');
 define('YAMAPS_API_LANGUAGE', 'ru-RU');
@@ -379,4 +379,31 @@ function yamaps_field_validate($entity_type, $entity, $field, $instance, $langco
       }
     }
   }
+}
+
+/**
+ * Provide static API url, use YAMAPS_STATIC_API_URL instead direct calling.
+ */
+function _yamaps_static_api_url() {
+  global $is_https;
+
+  return $is_https ? 'https://static-maps.yandex.ru/1.x/' : 'http://static-maps.yandex.ru/1.x/';
+}
+
+/**
+ * Provide geocoder url, use YAMAPS_GEOCODER_URL instead direct calling.
+ */
+function _yamaps_geocoder_url() {
+  global $is_https;
+
+  return $is_https ? 'https://geocode-maps.yandex.ru/1.x/' : 'http://geocode-maps.yandex.ru/1.x/';
+}
+
+/**
+ * Provide legal agreement url, use YAMAPS_LEGAL_AGREEMENT_URL instead direct calling.
+ */
+function _yamaps_legal_agreement_url() {
+  global $is_https;
+
+  return $is_https ? 'https://legal.yandex.ru/maps_api/' : 'http://legal.yandex.ru/maps_api/';
 }
