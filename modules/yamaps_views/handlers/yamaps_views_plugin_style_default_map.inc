@@ -54,7 +54,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    * @param array $form_state
    *   Form state array.
    */
-  public function options_form(array &$form, array &$form_state) {
+  public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     $fields = $this->getFields();
