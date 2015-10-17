@@ -329,7 +329,11 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
 
     // Checking of existence of pager settings.
     if ($this->display->handler->use_pager()) {
-      $errors[] = t('The Yandex Maps style cannot be used with a pager. Disable the "Use pager" option for this display.');
+      $showed = &drupal_static(__FUNCTION__, FALSE);
+      if (!$showed) {
+        $errors[] = t('The Yandex Maps style cannot be used with a pager. Disable the "Use pager" option for this display.');
+        $showed = TRUE;
+      }
     }
 
     return $errors;
