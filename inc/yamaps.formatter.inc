@@ -406,8 +406,8 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
       $element['#attached']['library'][] = array('yamaps', 'yamaps.full');
 
       // Fixing formatter rendered by Views module (display and preview modes).
-      $element['views']['#attached']['js'] = $element['#attached']['js'];
-      $element['views']['#attached']['library'] = $element['#attached']['library'];
+      $element[$delta]['#attached']['js'] = $element['#attached']['js'];
+      $element[$delta]['#attached']['library'] = $element['#attached']['library'];
 
       break;
 
