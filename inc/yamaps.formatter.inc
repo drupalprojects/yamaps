@@ -49,6 +49,23 @@ function yamaps_field_formatter_info() {
         ),
       ),
     ),
+    // Simple text formatter.
+    YAMAPS_TEXT_FORMATTER => array(
+      'label' => t('Yandex map formatter from the one-line address'),
+      'field types' => array('text'),
+      'settings' => array(
+        'width' => YAMAPS_DEFAULT_DYNAMIC_WIDTH,
+        'height' => YAMAPS_DEFAULT_DYNAMIC_HEIGHT,
+        'placemark' => array(
+          'placemark_display' => TRUE,
+          'placemark_text' => '[address]',
+          'placemark_color' => 'blue',
+        ),
+        'behaviors' => array_keys(yamaps_get_behaviors_list()),
+        'control' => TRUE,
+        'traffic' => FALSE,
+      ),
+    ),
   );
 }
 
@@ -147,6 +164,91 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#size' => 5,
         '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
         '#required' => TRUE,
+      );
+
+      break;
+
+    case YAMAPS_TEXT_FORMATTER:
+      $element['width'] = array(
+        '#title' => t('Map width'),
+        '#field_suffix' => ' ' . t('in pixels or in percentage'),
+        '#type' => 'textfield',
+        '#default_value' => $settings['width'],
+        '#size' => 5,
+        '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
+        '#required' => TRUE,
+      );
+
+      $element['behaviors'] = array(
+        '#title' => t('Available mouse events'),
+        '#type' => 'checkboxes',
+        '#options' => yamaps_get_behaviors_list(),
+        '#default_value' => $settings['behaviors'],
+      );
+
+      $element['height'] = array(
+        '#title' => t('Map height'),
+        '#field_suffix' => ' ' . t('in pixels or in percentage'),
+        '#type' => 'textfield',
+        '#default_value' => $settings['height'],
+        '#size' => 5,
+        '#element_validate' => array('yamaps_field_validate_pixels_percentage'),
+        '#required' => TRUE,
+      );
+      // Placemark options.
+      $element['placemark'] = array(
+        '#title' => t('Placemark options'),
+        '#type' => 'fieldset',
+      );
+
+      $element['placemark']['placemark_display'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Show placemark?'),
+        '#default_value' => $settings['placemark']['placemark_display'],
+      );
+
+      $element['placemark']['placemark_text'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Placemark text'),
+        '#description' => t('Print <strong>[address]</strong> to display address from the field'),
+        '#states' => array(
+          'visible' => array(
+            ':input[name="fields[' . $field['field_name'] . '][settings_edit_form][settings][placemark][placemark_display]"]' => array(
+              'checked' => TRUE
+            ),
+          ),
+        ),
+        '#default_value' => $settings['placemark']['placemark_text'],
+      );
+
+      foreach (array_keys(yamaps_get_colors()) as $color) {
+        $options[$color] = t($color);
+      }
+
+      $element['placemark']['placemark_color'] = array(
+        '#title' => 'Placemark color',
+        '#type' => 'radios',
+        '#options' => $options,
+        '#states' => array(
+          'visible' => array(
+            ':input[name="fields[' . $field['field_name'] . '][settings_edit_form][settings][placemark][placemark_display]"]' => array(
+              'checked' => TRUE
+            ),
+          )
+        ),
+        '#default_value' => $settings['placemark']['placemark_color'],
+      );
+
+      $element['control'] = array(
+        '#title' => t('Enable control'),
+        '#type' => 'checkbox',
+        '#default_value' => $settings['control'],
+      );
+
+      $element['traffic'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Show traffic?'),
+        '#default_value' => $settings['traffic'],
       );
 
       break;
@@ -279,7 +381,23 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
         $summary[] = t('"Open" button text: @text', array('@text' => $settings['yamaps_display_options_static']['open_button_text_static']));
         $summary[] = t('"Close" button text: @text', array('@text' => $settings['yamaps_display_options_static']['close_button_text_static']));
       }
+      break;
 
+    case YAMAPS_TEXT_FORMATTER:
+      $summary[] = t('Show controls: @controls', array('@controls' => $settings['control'] ? t('yes') : t('no')));
+      $summary[] = t('Show traffic: @traffic', array('@traffic' => $settings['traffic'] ? t('yes') : t('no')));
+      $summary[] = t('Map size: @width x @height', array(
+        '@width' => $settings['width'],
+        '@height' => $settings['height'],
+      ));
+
+      $summary[] = t('Display placemarks: @placemark', array('@placemark' => $settings['placemark']['placemark_display'] ? t('yes') : t('no')));
+      if ($settings['placemark']['placemark_display']) {
+        $summary[] = t('Text on placemark: @text', array('@text' => $settings['placemark']['placemark_text']));
+        $summary[] = t('Placemark color: @color', array('@color' => t($settings['placemark']['placemark_color'])));
+      }
+      $behaviors = implode(', ', $settings['behaviors']);
+      $summary[] = t('Available behaviors: @behaviors', array('@behaviors' => $behaviors));
       break;
   }
 
@@ -311,23 +429,15 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         if (empty($item['coords']) || $item['hide'] == 1) {
           continue;
         }
-        // Generating unique ud.
-        $unique_id = array('ymap');
-
-        if (isset($entity->type)) {
-          $unique_id[] = $entity->type;
-        }
-
-        if (isset($entity->field_name)) {
-          $unique_id[] = $entity->field_name;
-        }
-
-        $unique_id[] = $entity_id;
-        $unique_id[] = $field['field_name'];
-        $unique_id[] = $delta;
 
         // Map id.
-        $id = drupal_html_id(implode('-', $unique_id));
+        $id = drupal_html_id(implode('-', array(
+          'ymap',
+          $entity->type,
+          $entity_id,
+          $field['field_name'],
+          $delta,
+        )));
 
         // Unique map button id.
         $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
@@ -455,20 +565,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         );
 
         // 2.x to hex colors.
-        $colors = array(
-          'blue' => '006cff',
-          'lightblue' => '66c7ff',
-          'night' => '004056',
-          'darkblue' => '00339a',
-          'green' => '33cc00',
-          'white' => 'ffffff',
-          'red' => 'ff0000',
-          'orange' => 'ffb400',
-          'darkorange' => 'ff6600',
-          'yellow' => 'ffea00',
-          'violet' => 'b832fd',
-          'pink' => 'fd32fb',
-        );
+        $colors = yamaps_get_colors();
 
         // Placemarks.
         if ($item['placemarks']) {
@@ -529,23 +626,14 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           $params['pl'] = implode('~', $pl);
         }
 
-        // Generating unique ud.
-        $unique_id = array('ymap');
-
-        if (isset($entity->type)) {
-          $unique_id[] = $entity->type;
-        }
-
-        if (isset($entity->field_name)) {
-          $unique_id[] = $entity->field_name;
-        }
-
-        $unique_id[] = $entity_id;
-        $unique_id[] = $field['field_name'];
-        $unique_id[] = $delta;
-
-        // Map id.
-        $id = drupal_html_id(implode('-', $unique_id));
+        // Map id and parameters.
+        $id = drupal_html_id(implode('-', array(
+          'ymap',
+          $entity->type,
+          $entity_id,
+          $field['field_name'],
+          $delta,
+        )));
 
         $open_button_id = drupal_html_id(implode('-', array($id, 'open_button')));
         $close_button_id = drupal_html_id(implode('-', array($id, 'close_button')));
@@ -613,6 +701,91 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         $element[$delta]['map_container']['#attached']['library'][] = array('yamaps', 'yamaps.full');
       }
       break;
+
+    case YAMAPS_TEXT_FORMATTER:
+      $display_options = variable_get('yamaps_block_edit_display_options', array());
+      $active_behaviors = array_values(array_filter($settings['behaviors']));
+
+      // This options must be defined to avoid problems on map rendering.
+      $width = !empty($settings['width']) ? $settings['width'] : '100%';
+      $height = !empty($settings['height']) ? $settings['height'] : '400px';
+
+      foreach ($items as $delta => $item) {
+        $id = drupal_html_id('yamap-text');
+        $element[$delta]['container'] = array(
+          '#type' => 'html_tag',
+          '#tag' => 'div',
+          '#attributes' => array(
+            'id' => $id,
+            'style' => "width: $width; height: $height;",
+            'class' => array('yamaps-map-text-container'),
+            'data-address' => $item['safe_value'],
+          ),
+          '#value' => '',
+          '#attached' => array(
+            'js' => array(
+              drupal_get_path('module', 'yamaps') . '/misc/yamaps.text.js',
+              array(
+                'type' => 'setting',
+                'data' => array(
+                  'yamapsGeocoderUrl' => YAMAPS_GEOCODER_URL . '?format=json&results=1',
+                  'yamaps-row' => array(
+                    $id => array(
+                      'init' => array(
+                        // We will fill this one via JS.
+                        'center' => array(),
+                        'behaviors' => $active_behaviors,
+                        'type' => 'yandex#map',
+                      ),
+                      'controls' => (bool) $settings['control'],
+                      'traffic' => (bool) $settings['traffic'],
+                      'display_options' => array(
+                        'display_type' => isset($display_options['display_type'])
+                          ? $display_options['display_type']
+                          : 'map',
+                      ),
+                      // Placemarks will be filled later after settings checking.
+                      // We need an empty array here because it could be not
+                      // filled later to avoid one more "if" in JS.
+                      'placemarks' => array(),
+                      'edit' => FALSE,
+                      'lines' => NULL,
+                      'polygons' => NULL,
+                      'routes' => NULL,
+                    ),
+                  ),
+                  'yamaps' => array(),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        $element[$delta]['container']['#attached']['library'][] = array('yamaps', 'yamaps.full');
+        // Check if we should display placemark.
+        if ($settings['placemark']['placemark_display']) {
+          if (!empty($settings['placemark']['placemark_text'])) {
+            $settings['placemark']['placemark_text'] = str_replace(
+              '[address]',
+              $item['safe_value'],
+              $settings['placemark']['placemark_text']
+            );
+          }
+          // Add placemark information.
+          $element[$delta]['container']['#attached']['js'][1]['data']['yamaps-row'][$id]['placemarks'][] = array(
+            // We will full this field via JS.
+            'coords' => array(),
+            'params' => array(
+              // Placemark color
+              'color' => $settings['placemark']['placemark_color'],
+              // Placemark text.
+              'iconContent' => $settings['placemark']['placemark_text'],
+            ),
+          );
+        }
+      }
+      break;
   }
+
   return $element;
 }

@@ -12,19 +12,27 @@ define('YAMAPS_API_URL', 'api-maps.yandex.ru/2.0/');
 define('YAMAPS_STATIC_API_URL', _yamaps_static_api_url());
 define('YAMAPS_GEOCODER_URL', _yamaps_geocoder_url());
 define('YAMAPS_LEGAL_AGREEMENT_URL', _yamaps_legal_agreement_url());
+
 define('YAMAPS_DYNAMIC_FORMATTER', 'field_yamaps_formatter_dynamic');
 define('YAMAPS_STATIC_FORMATTER', 'field_yamaps_formatter_static');
+define('YAMAPS_TEXT_FORMATTER', 'field_yamaps_formatter_text');
+
 define('YAMAPS_API_LANGUAGE', 'ru-RU');
+
 define('YAMAPS_DEFAULT_BLOCK_DELTA', 'yamaps');
 define('YAMAPS_DEFAULT_BLOCK_AMOUNT', 1);
 define('YAMAPS_DEFAULT_BLOCK_MAP_WIDTH', '168px');
 define('YAMAPS_DEFAULT_BLOCK_MAP_HEIGHT', '200px');
+
 define('YAMAPS_DEFAULT_ADMIN_UI_MAP_WIDTH', '100%');
 define('YAMAPS_DEFAULT_ADMIN_UI_MAP_HEIGHT', '400px');
+
 define('YAMAPS_DEFAULT_DYNAMIC_WIDTH', '100%');
 define('YAMAPS_DEFAULT_DYNAMIC_HEIGHT', '400px');
+
 define('YAMAPS_DEFAULT_STATIC_WIDTH', 640);
 define('YAMAPS_DEFAULT_STATIC_HEIGHT', 400);
+
 define('YAMAPS_DEFAULT_OPEN_MAP_TEXT', 'Open map');
 define('YAMAPS_DEFAULT_CLOSE_MAP_TEXT', 'Close map');
 
@@ -406,4 +414,24 @@ function _yamaps_legal_agreement_url() {
   global $is_https;
 
   return $is_https ? 'https://legal.yandex.ru/maps_api/' : 'http://legal.yandex.ru/maps_api/';
+}
+
+/**
+ * Provides list of hex colors.
+ */
+function yamaps_get_colors() {
+  return array(
+    'blue' => '006cff',
+    'lightblue' => '66c7ff',
+    'night' => '004056',
+    'darkblue' => '00339a',
+    'green' => '33cc00',
+    'white' => 'ffffff',
+    'red' => 'ff0000',
+    'orange' => 'ffb400',
+    'darkorange' => 'ff6600',
+    'yellow' => 'ffea00',
+    'violet' => 'b832fd',
+    'pink' => 'fd32fb',
+  );
 }
