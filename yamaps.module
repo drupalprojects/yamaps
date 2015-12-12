@@ -8,7 +8,7 @@
 /**
  * Constants.
  */
-define('YAMAPS_API_URL', 'api-maps.yandex.ru/2.0/');
+define('YAMAPS_API_URL', _yamaps_api_url());
 define('YAMAPS_STATIC_API_URL', _yamaps_static_api_url());
 define('YAMAPS_GEOCODER_URL', _yamaps_geocoder_url());
 define('YAMAPS_LEGAL_AGREEMENT_URL', _yamaps_legal_agreement_url());
@@ -99,8 +99,6 @@ function yamaps_library() {
   // API url.
   $api_url = url(YAMAPS_API_URL, array(
     'absolute' => TRUE,
-    'external' => FALSE,
-    'base_url' => '/',
     'query' => array(
       'load' => 'package.full',
       'lang' => YAMAPS_API_LANGUAGE,
@@ -414,6 +412,15 @@ function _yamaps_legal_agreement_url() {
   global $is_https;
 
   return $is_https ? 'https://legal.yandex.ru/maps_api/' : 'http://legal.yandex.ru/maps_api/';
+}
+
+/**
+ * Provide api url, use YAMAPS_API_URL instead direct calling.
+ */
+function _yamaps_api_url() {
+  global $is_https;
+
+  return $is_https ? 'https://api-maps.yandex.ru/2.0/' : 'http://api-maps.yandex.ru/2.0/';
 }
 
 /**
