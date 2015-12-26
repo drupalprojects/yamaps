@@ -60,17 +60,7 @@ function yamaps_field_schema($field) {
  * Implements hook_uninstall().
  */
 function yamaps_uninstall() {
-  yamaps_delete_blocks_variables();
-  variable_del('yamaps_block_amount');
-
-  $t = get_t();
-  drupal_set_message($t('"Yandex Maps" module was unistalled successfully.'));
-}
-
-/**
- * Cleans up variables after uninstalling module.
- */
-function yamaps_delete_blocks_variables() {
+  // Delete block's settings.
   $blocks_amount = variable_get('yamaps_blocks_amount', 1);
   $delta = 'yamaps';
 
@@ -91,6 +81,8 @@ function yamaps_delete_blocks_variables() {
     variable_del($delta . '_block_polygons');
     variable_del($delta . '_block_routes');
   }
+
+  variable_del('yamaps_block_amount');
 }
 
 /**
