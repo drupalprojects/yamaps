@@ -155,6 +155,18 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
     '#default_value' => variable_get($delta . '_block_traffic', FALSE),
   );
 
+  $form[$delta . '_block_clusterer'] = array(
+    '#title' => t('Use clusterer'),
+    '#type' => 'checkbox',
+    '#default_value' => variable_get($delta . '_block_clusterer', FALSE),
+  );
+
+  $form[$delta . '_block_auto_zoom'] = array(
+    '#title' => t('Auto zoom'),
+    '#type' => 'checkbox',
+    '#default_value' => variable_get($delta . '_block_auto_zoom', FALSE),
+  );
+
   $form[$delta . '_block_behaviors'] = array(
     '#title' => t('Available mouse events'),
     '#type' => 'checkboxes',
@@ -308,6 +320,8 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
     ),
     'controls' => 1,
     'traffic' => 0,
+    'clusterer' => 0,
+    'auto_zoom' => 0,
     'placemarks' => $placemarks_array,
     'lines' => $lines_array,
     'polygons' => $polygons_array,
@@ -332,6 +346,8 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
 function yamaps_block_save($delta = YAMAPS_DEFAULT_BLOCK_DELTA, $edit = array()) {
   variable_set($delta . '_block_controls', $edit[$delta . '_block_controls']);
   variable_set($delta . '_block_traffic', $edit[$delta . '_block_traffic']);
+  variable_set($delta . '_block_clusterer', $edit[$delta . '_block_clusterer']);
+  variable_set($delta . '_block_auto_zoom', $edit[$delta . '_block_auto_zoom']);
   variable_set($delta . '_block_behaviors', $edit[$delta . '_block_behaviors']);
   variable_set($delta . '_block_width', $edit[$delta . '_block_width']);
   variable_set($delta . '_block_height', $edit[$delta . '_block_height']);
@@ -377,6 +393,8 @@ function yamaps_block_content($delta) {
   $height = variable_get($delta . '_block_height', YAMAPS_DEFAULT_BLOCK_MAP_HEIGHT);
 
   $traffic = variable_get($delta . '_block_traffic', FALSE);
+  $auto_zoom = variable_get($delta . '_block_auto_zoom', FALSE);
+  $clusterer = variable_get($delta . '_block_clusterer', FALSE);
   $controls = variable_get($delta . '_block_controls', TRUE);
 
   $block_type = variable_get($delta . '_block_type', 'yandex#map');
@@ -411,6 +429,8 @@ function yamaps_block_content($delta) {
         ),
         'controls' => $controls,
         'traffic' => $traffic,
+        'clusterer' => $clusterer,
+        'auto_zoom' => $auto_zoom,
         'placemarks' => $placemarks,
         'lines' => $lines,
         'polygons' => $polygons,

@@ -178,6 +178,8 @@ function yamaps_help($path, $arg) {
       t('Draw polygons, chose colors and line width, fill color, transparency, texts.'),
       t('Add a route.'),
       t('Displays traffic jams.'),
+      t('Auto zoom.'),
+      t('Use clusterer.'),
     );
     $output .= theme('item_list', array('items' => $options));
 

@@ -17,6 +17,8 @@ function yamaps_field_formatter_info() {
       'settings' => array(
         'controls' => TRUE,
         'traffic' => TRUE,
+        'clusterer' => FALSE,
+        'auto_zoom' => FALSE,
         'width' => YAMAPS_DEFAULT_DYNAMIC_WIDTH,
         'height' => YAMAPS_DEFAULT_DYNAMIC_HEIGHT,
         'behaviors' => array(
@@ -40,6 +42,8 @@ function yamaps_field_formatter_info() {
       'field types' => array('field_yamaps'),
       'settings' => array(
         's_traffic' => FALSE,
+        's_clusterer' => FALSE,
+        's_auto_zoom' => FALSE,
         's_width' => YAMAPS_DEFAULT_STATIC_WIDTH,
         's_height' => YAMAPS_DEFAULT_STATIC_HEIGHT,
         'yamaps_display_options_static' => array(
@@ -64,6 +68,8 @@ function yamaps_field_formatter_info() {
         'behaviors' => array_keys(yamaps_get_behaviors_list()),
         'control' => TRUE,
         'traffic' => FALSE,
+        'clusterer' => FALSE,
+        'auto_zoom' => FALSE,
       ),
     ),
   );
@@ -137,6 +143,18 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#title' => t('Show traffic'),
         '#type' => 'checkbox',
         '#default_value' => $settings['traffic'],
+      );
+
+      $element['clusterer'] = array(
+        '#title' => t('Use clusterer'),
+        '#type' => 'checkbox',
+        '#default_value' => $settings['clusterer'],
+      );
+
+      $element['auto_zoom'] = array(
+        '#title' => t('Auto zoom'),
+        '#type' => 'checkbox',
+        '#default_value' => $settings['auto_zoom'],
       );
 
       $element['behaviors'] = array(
@@ -251,6 +269,18 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#default_value' => $settings['traffic'],
       );
 
+      $element['clusterer'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Use clusterer?'),
+        '#default_value' => $settings['clusterer'],
+      );
+
+      $element['auto_zoom'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Auto zoom'),
+        '#default_value' => $settings['auto_zoom'],
+      );
+
       break;
 
     case YAMAPS_STATIC_FORMATTER:
@@ -302,6 +332,18 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#default_value' => $settings['s_traffic'],
       );
 
+      $element['s_clusterer'] = array(
+        '#title' => t('Use clusterer'),
+        '#type' => 'checkbox',
+        '#default_value' => $settings['s_clusterer'],
+      );
+
+      $element['s_auto_zoom'] = array(
+        '#title' => t('Auto zoom'),
+        '#type' => 'checkbox',
+        '#default_value' => $settings['s_auto_zoom'],
+      );
+
       $element['s_width'] = array(
         '#title' => t('Map width'),
         '#field_suffix' => ' ' . t('pixels'),
@@ -338,6 +380,8 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
     case YAMAPS_DYNAMIC_FORMATTER:
       $summary[] = t('Show controls: @controls', array('@controls' => $settings['controls'] ? t('yes') : t('no')));
       $summary[] = t('Show traffic: @traffic', array('@traffic' => $settings['traffic'] ? t('yes') : t('no')));
+      $summary[] = t('Use clusterer: @clusterer', array('@clusterer' => $settings['clusterer'] ? t('yes') : t('no')));
+      $summary[] = t('Auto zoom: @auto_zoom', array('@auto_zoom' => $settings['auto_zoom'] ? t('yes') : t('no')));
       $summary[] = t('Map size: @width x @height', array(
         '@width' => $settings['width'],
         '@height' => $settings['height'],
@@ -370,6 +414,8 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
 
     case YAMAPS_STATIC_FORMATTER:
       $summary[] = t('Show traffic: @traffic', array('@traffic' => $settings['s_traffic'] ? t('yes') : t('no')));
+      $summary[] = t('Use clusterer: @clusterer', array('@clusterer' => $settings['s_clusterer'] ? t('yes') : t('no')));
+      $summary[] = t('Auto zoom: @auto_zoom', array('@auto_zoom' => $settings['s_auto_zoom'] ? t('yes') : t('no')));
       $summary[] = t('Map size: @width x @height', array(
         '@width' => $settings['s_width'] . 'px',
         '@height' => $settings['s_height'] . 'px',
@@ -386,6 +432,8 @@ function yamaps_field_formatter_settings_summary($field, $instance, $view_mode) 
     case YAMAPS_TEXT_FORMATTER:
       $summary[] = t('Show controls: @controls', array('@controls' => $settings['control'] ? t('yes') : t('no')));
       $summary[] = t('Show traffic: @traffic', array('@traffic' => $settings['traffic'] ? t('yes') : t('no')));
+      $summary[] = t('Use clusterer: @clusterer', array('@clusterer' => $settings['clusterer'] ? t('yes') : t('no')));
+      $summary[] = t('Auto zoom: @auto_zoom', array('@auto_zoom' => $settings['auto_zoom'] ? t('yes') : t('no')));
       $summary[] = t('Map size: @width x @height', array(
         '@width' => $settings['width'],
         '@height' => $settings['height'],
@@ -500,6 +548,8 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
           ),
           'controls' => $settings['controls'],
           'traffic' => $settings['traffic'],
+          'clusterer' => $settings['clusterer'],
+          'auto_zoom' => $settings['auto_zoom'],
           'placemarks' => drupal_json_decode($item['placemarks']),
           'lines' => drupal_json_decode($item['lines']),
           'polygons' => drupal_json_decode($item['polygons']),
@@ -739,6 +789,8 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
                       ),
                       'controls' => (bool) $settings['control'],
                       'traffic' => (bool) $settings['traffic'],
+                      'clusterer' => (bool) $settings['clusterer'],
+                      'auto_zoom' => (bool) $settings['auto_zoom'],
                       'display_options' => array(
                         'display_type' => isset($display_options['display_type'])
                           ? $display_options['display_type']

@@ -180,6 +180,8 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       ),
       'controls' => 1,
       'traffic' => 0,
+      'clusterer' => 0,
+      'auto_zoom' => 0,
       'placemarks' => $default_js['placemarks'],
       'lines' => $default_js['lines'],
       'polygons' => $default_js['polygons'],

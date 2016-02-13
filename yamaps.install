@@ -72,6 +72,8 @@ function yamaps_uninstall() {
     variable_del($delta . '_block_controls');
     variable_del($delta . '_block_behaviors');
     variable_del($delta . '_block_traffic');
+    variable_del($delta . '_block_clusterer');
+    variable_del($delta . '_block_auto_zoom');
     variable_del($delta . '_block_width');
     variable_del($delta . '_block_height');
     variable_del($delta . '_block_coords');

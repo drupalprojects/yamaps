@@ -225,13 +225,50 @@
 
           // Create new collection.
           var placemarksCollection = new $.yaMaps.YamapsPlacemarkCollection(options);
-
-          // Add already created elements to collection.
-          for (var i in Map.options.placemarks) {
-            placemarksCollection.add(new $.yaMaps.YamapsPlacemark(Map.options.placemarks[i].coords, Map.options.placemarks[i].params, Map.options.placemarks[i].options));
+          if (Map.options.placemarks != null) {
+            // Add cluster.
+            if (Map.options.clusterer == 1) {
+              var clusterer = new ymaps.Clusterer({
+                clusterHideIconOnBalloonOpen: true,
+                geoObjectHideIconOnBalloonOpen: true
+              });
+              var clustererArray = [];
+              for (var i = 0; i < Map.options.placemarks.length; i++) {
+                clustererArray.push(new ymaps.Placemark(
+                  [Map.options.placemarks[i].coords[0], Map.options.placemarks[i].coords[1]],
+                  {
+                    balloonContent: Map.options.placemarks[i].params.balloonContentBody
+                  },
+                  {
+                    preset: 'twirl#' + Map.options.placemarks[i].params.color + 'DotIcon'
+                  }
+                ));
+              }
+              clusterer.add(clustererArray);
+              Map.map.geoObjects.add(clusterer);
+              Map.map.geoObjects.add(placemarksCollection.elements);
+              if (Map.options.auto_zoom == 1) {
+                 Map.map.setBounds(clusterer.getBounds(), {checkZoomRange: true});
+              }
+            }
+            else {
+              // Add already created elements to collection.
+              for (var i in Map.options.placemarks) {
+                placemarksCollection.add(new $.yaMaps.YamapsPlacemark(
+                  Map.options.placemarks[i].coords,
+                  Map.options.placemarks[i].params,
+                  Map.options.placemarks[i].options
+                ));
+              }
+              Map.map.geoObjects.add(placemarksCollection.elements);
+              if (Map.options.auto_zoom == 1) {
+                Map.map.setBounds(placemarksCollection.elements.getBounds(), {checkZoomRange: true});
+              }
+            }
           }
-          // Add collection to the map.
-          Map.map.geoObjects.add(placemarksCollection.elements);
+          else {
+            Map.map.geoObjects.add(placemarksCollection.elements);
+          }
 
           // If map in view mode exit.
           if (!Map.options.edit) {
