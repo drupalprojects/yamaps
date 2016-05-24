@@ -33,7 +33,6 @@ and view to output maps. For demo purposes only!
 
 -- REQUIREMENTS, INSTALLATION AND UNINSTALLATION --
 
-Requires core 'block' and 'field' modules.
 Install and uninstall as usual.
 See http://drupal.org/documentation/install/modules-themes/modules-7
 for further information.
@@ -56,7 +55,7 @@ To add "Yandex Maps" field perform following steps:
 * Configure field format.
 
 Provides configurable amount of "Yandex Maps" blocks to display maps
-in any regions of the website.
+in any regions of the website (module "Block" must be enabled for using it).
 Block may also present map as a "Dynamic" (interactive object)
 or "Static" (image).
 To add "Yandex Maps" block perform following steps:
