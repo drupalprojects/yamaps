@@ -128,6 +128,22 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       '#description' => implode(' ', $coords_description),
     );
 
+    if ($field['settings']['display_options']['display_type'] == 'map_without_fields') {
+      $element['coords']['#attributes']['class'][] = 'element-hidden';
+      $element['coords']['#title_display'] = 'none';
+      $element['coords']['#description'] = '';
+    }
+
+    if ($field['settings']['display_options']['display_type'] != 'map_without_fields') {
+      $element['hide'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Hide field'),
+        '#default_value' => $value['hide'],
+        '#description' => t("Hide field containing map from the end user.
+    Can be useful when administrator uses field as optional and doesn't intend to display map."),
+      );
+    }
+
     // Hidden elements to saving map information.
     $element['type'] = array(
       '#type' => 'hidden',
@@ -157,14 +173,6 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
       '#type' => 'hidden',
       '#default_value' => $value['routes'],
       '#attributes' => array('class' => array('field-yamaps-routes-' . $id)),
-    );
-
-    $element['hide'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Hide field'),
-      '#default_value' => $value['hide'],
-      '#description' => t("Hide field containing map from the end user.
-    Can be useful when administrator uses field as optional and doesn't intend to display map."),
     );
 
     // Map initialization parameters.

@@ -287,6 +287,7 @@ function yamaps_field_settings_form($field, $instance, $has_data) {
     '#options' => array(
       'map' => t('Map'),
       'map_button' => t('Map opened by button click'),
+      'map_without_fields' => t('Map without additional (search, coordinates, etc) fields.'),
     ),
     '#default_value' => $settings['display_options']['display_type'],
     '#required' => FALSE,

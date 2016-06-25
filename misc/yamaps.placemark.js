@@ -276,44 +276,46 @@
           }
 
           // If map in edit mode add search form.
-          var $searchForm = $([
-            '<form class="yamaps-search-form">',
-            '<input type="text" class="form-text" placeholder="' + Drupal.t('Search on the map') + '" value=""/>',
-            '<input type="submit" class="form-submit" value="' + Drupal.t('Search') + '"/>',
-            '</form>'].join(''));
+          if (Map.options.display_options.display_type != 'map_without_fields') {
+            var $searchForm = $([
+              '<form class="yamaps-search-form">',
+              '<input type="text" class="form-text" placeholder="' + Drupal.t('Search on the map') + '" value=""/>',
+              '<input type="submit" class="form-submit" value="' + Drupal.t('Search') + '"/>',
+              '</form>'].join(''));
 
-          $searchForm.bind('submit', function (e) {
-            var searchQuery = $searchForm.children('input').val();
-            // Find one element.
-            ymaps.geocode(searchQuery, {results: 1}, {results: 100}).then(function (res) {
-              var geoObject = res.geoObjects.get(0);
-              if (!geoObject) {
-                alert(Drupal.t('Not found'));
-                return;
-              }
-              var coordinates = geoObject.geometry.getCoordinates();
-              var params = geoObject.properties.getAll();
-              // Create new placemark.
-              var Placemark = new $.yaMaps.YamapsPlacemark(coordinates, {
-                iconContent: params.name,
-                balloonHeaderContent: params.name,
-                balloonContentBody: params.description,
-                color: 'white'
+            $searchForm.bind('submit', function (e) {
+              var searchQuery = $searchForm.children('input').val();
+              // Find one element.
+              ymaps.geocode(searchQuery, {results: 1}, {results: 100}).then(function (res) {
+                var geoObject = res.geoObjects.get(0);
+                if (!geoObject) {
+                  alert(Drupal.t('Not found'));
+                  return;
+                }
+                var coordinates = geoObject.geometry.getCoordinates();
+                var params = geoObject.properties.getAll();
+                // Create new placemark.
+                var Placemark = new $.yaMaps.YamapsPlacemark(coordinates, {
+                  iconContent: params.name,
+                  balloonHeaderContent: params.name,
+                  balloonContentBody: params.description,
+                  color: 'white'
+                });
+                placemarksCollection.add(Placemark);
+                Placemark.openBalloon();
+                // Pan to new placemark.
+                Map.map.panTo(coordinates, {
+                  checkZoomRange: false,
+                  delay: 0,
+                  duration: 1000,
+                  flying: true
+                });
               });
-              placemarksCollection.add(Placemark);
-              Placemark.openBalloon();
-              // Pan to new placemark.
-              Map.map.panTo(coordinates, {
-                checkZoomRange: false,
-                delay: 0,
-                duration: 1000,
-                flying: true
-              });
+              e.preventDefault();
             });
-            e.preventDefault();
-          });
-          // Add search form after current map.
-          $searchForm.insertAfter('#' + Map.mapId);
+            // Add search form after current map.
+            $searchForm.insertAfter('#' + Map.mapId);
+          }
 
           // Map click listener to adding new placemark.
           var mapClick = function(event) {
