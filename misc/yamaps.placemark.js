@@ -233,14 +233,21 @@
                 geoObjectHideIconOnBalloonOpen: true
               });
               var clustererArray = [];
+              var presetType;
               for (var i = 0; i < Map.options.placemarks.length; i++) {
+                presetType = Map.options.placemarks[i].params.iconContent !== '' ? 'StretchyIcon' : 'DotIcon';
                 clustererArray.push(new ymaps.Placemark(
-                  [Map.options.placemarks[i].coords[0], Map.options.placemarks[i].coords[1]],
+                  [
+                    Map.options.placemarks[i].coords[0],
+                    Map.options.placemarks[i].coords[1]
+                  ],
                   {
-                    balloonContent: Map.options.placemarks[i].params.balloonContentBody
+                    iconContent: Map.options.placemarks[i].params.iconContent,
+                    balloonContentBody: Map.options.placemarks[i].params.balloonContentBody,
+                    balloonContentHeader: Map.options.placemarks[i].params.balloonContentHeader
                   },
                   {
-                    preset: 'twirl#' + Map.options.placemarks[i].params.color + 'DotIcon'
+                    preset: 'twirl#' + Map.options.placemarks[i].params.color + presetType
                   }
                 ));
               }
