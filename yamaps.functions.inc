@@ -50,8 +50,8 @@ function yamaps_geocoding($geolocation_string) {
     array('query' => $query, 'absolute' => TRUE));
   $geolocation_request = drupal_http_request($geolocation_url);
 
-  if (isset($geolocation_request['data'])) {
-    $geolocation_data = json_decode($geolocation_request['data']);
+  if (!empty($geolocation_request->data)) {
+    $geolocation_data = json_decode($geolocation_request->data);
 
     if ($geolocation_data->response->GeoObjectCollection->metaDataProperty->GeocoderResponseMetaData->found > 0) {
       $map_center = $geolocation_data->response->GeoObjectCollection->featureMember[0]->GeoObject->Point->pos;
