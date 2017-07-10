@@ -483,7 +483,7 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
         // Map id.
         $id = drupal_html_id(implode('-', array(
           'ymap',
-          $entity->type,
+          $entity_type,
           $entity_id,
           $field['field_name'],
           $delta,
