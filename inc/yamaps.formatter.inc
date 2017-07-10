@@ -232,12 +232,14 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#states' => array(
           'visible' => array(
             ':input[name="fields[' . $field['field_name'] . '][settings_edit_form][settings][placemark][placemark_display]"]' => array(
-              'checked' => TRUE
+              'checked' => TRUE,
             ),
           ),
         ),
         '#default_value' => $settings['placemark']['placemark_text'],
       );
+
+      $options = [];
 
       foreach (array_keys(yamaps_get_colors()) as $color) {
         $options[$color] = t($color);
@@ -250,9 +252,9 @@ function yamaps_field_formatter_settings_form($field, $instance, $view_mode, $fo
         '#states' => array(
           'visible' => array(
             ':input[name="fields[' . $field['field_name'] . '][settings_edit_form][settings][placemark][placemark_display]"]' => array(
-              'checked' => TRUE
+              'checked' => TRUE,
             ),
-          )
+          ),
         ),
         '#default_value' => $settings['placemark']['placemark_color'],
       );
@@ -792,13 +794,14 @@ function yamaps_field_formatter_view($entity_type, $entity, $field, $instance, $
                       'clusterer' => (bool) $settings['clusterer'],
                       'auto_zoom' => (bool) $settings['auto_zoom'],
                       'display_options' => array(
-                        'display_type' => isset($display_options['display_type'])
-                          ? $display_options['display_type']
-                          : 'map',
+                        'display_type' => isset($display_options['display_type']) ?
+                          $display_options['display_type'] : 'map',
                       ),
-                      // Placemarks will be filled later after settings checking.
-                      // We need an empty array here because it could be not
-                      // filled later to avoid one more "if" in JS.
+                      /**
+                       * Placemarks will be filled later after settings checking.
+                       * We need an empty array here because it could be not
+                       * filled later to avoid one more "if" in JS.
+                       */
                       'placemarks' => array(),
                       'edit' => FALSE,
                       'lines' => NULL,

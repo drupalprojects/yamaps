@@ -208,7 +208,7 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           ':input[name="style_options[yamaps_center_options][map_center_type]"]' => array('value' => 'mini_map'),
         ),
       ),
-      '#description' => t('Search for object on the map to fill this field or leave it blank (if field is not required).'),
+      '#description' => t('Search for an object on the map to fill this field or leave it blank (if field is not required).'),
     );
     // Hidden elements to save map information.
     $form['type'] = array(

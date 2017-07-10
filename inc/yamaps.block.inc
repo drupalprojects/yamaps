@@ -253,7 +253,7 @@ function yamaps_block_configure($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
       'class' => array('field-yamaps-coords-' . $id),
       'style' => 'width: 100%;',
     ),
-    '#description' => t('Search for object on the map to fill this field.'),
+    '#description' => t('Search for an object on the map to fill this field.'),
     '#required' => TRUE,
   );
 

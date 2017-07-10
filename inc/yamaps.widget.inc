@@ -108,7 +108,7 @@ function yamaps_field_widget_form(&$form, &$form_state, $field, $instance, $lang
     );
 
     $coords_description = array(
-      t('Search for object on the map to fill this field automatically or leave it blank (if field is not required).'),
+      t('Search for an object on the map to fill this field automatically or leave it blank (if field is not required).'),
       '<strong>' . t('Leave this field blank to remove field item.') . '</strong>',
       l(
         t('Terms of service «API Yandex.Maps»'),
