@@ -383,41 +383,8 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
           if (is_array($decoded_placemarks)) {
             foreach ($decoded_placemarks as $placemark) {
               // Override placemark title.
-              if (isset($this->options['placemark_title'], $this->view->field[$this->options['placemark_title']]) && $this->options['placemark_title'] !== self::PLACEMARK_DEFAULT_FIELD) {
-                // Prepare placemark title.
-                $marker_title = $this->preparePlacemarkTitle($row_index);
-                $field_title_settings = $this->view->field[$this->options['placemark_title']];
+              $this->overridePlacemarkTitle($placemark, $row_index, $row);
 
-                if (isset($field_title_settings->field_info['type'])) {
-                  switch ($field_title_settings->field_info['type']) {
-                    case 'image':
-                      // Special logic for image fields.
-                      // Placemark type.
-                      $placemark['options']['iconLayout'] = 'default#image';
-                      // Image href.
-                      $placemark['options']['iconImageHref'] = image_style_url($row->{'field_' . $this->options['placemark_title']}[0]['rendered']['#image_style'], $row->{'field_' . $this->options['placemark_title']}[0]['raw']['uri']);
-                      $image_dimensions = getimagesize($placemark['options']['iconImageHref']);
-                      // Placemark image size.
-                      $placemark['options']['iconImageSize'] = array(
-                        $image_dimensions[0],
-                        $image_dimensions[1],
-                      );
-                      // Icon image offset of upper left angle.
-                      $placemark['options']['iconImageOffset'] = array(
-                        -($image_dimensions[0] / 2),
-                        $image_dimensions[1] * 0.1 - $image_dimensions[1],
-                      );
-                      break;
-
-                    default:
-                      $placemark['params'][self::PLACEMARK_TITLE] = $marker_title;
-                      break;
-                  }
-                }
-                else {
-                  $placemark['params'][self::PLACEMARK_TITLE] = $marker_title;
-                }
-              }
               // Prepare Baloon title.
               if ($this->options['baloon_title'] && $this->options['baloon_title'] !== self::PLACEMARK_DEFAULT_FIELD) {
                 $placemark['params'][self::PLACEMARK_BALLON_HEADER] = $this->rendered_fields[$row_index][$this->options['baloon_title']];
@@ -811,7 +778,61 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
   }
 
   /**
-   * Prepares placemark for the map.
+   * Override Placemark title.
+   *
+   * @param integer $placemark
+   *   Placemark.
+   * @param integer $row_index
+   *   Row index.
+   * @param array $row
+   *   Row.
+   */
+  private function overridePlacemarkTitle(&$placemark, $row_index, $row) {
+    if (isset($this->options['placemark_title'], $this->view->field[$this->options['placemark_title']]) && $this->options['placemark_title'] !== self::PLACEMARK_DEFAULT_FIELD) {
+      // Prepare placemark title.
+      $marker_title = $this->preparePlacemarkTitle($row_index);
+      $field_title_settings = $this->view->field[$this->options['placemark_title']];
+
+      if (isset($field_title_settings->field_info['type'])) {
+        switch ($field_title_settings->field_info['type']) {
+          case 'image':
+            if (isset($row->{'field_' . $this->options['placemark_title']}[0]['rendered']['#image_style'], $row->{'field_' . $this->options['placemark_title']}[0]['raw']['uri'])) {
+              // Special logic for image fields.
+              // Placemark type.
+              $placemark['options']['iconLayout'] = 'default#image';
+              // Image href.
+              $placemark['options']['iconImageHref'] = image_style_url($row->{'field_' . $this->options['placemark_title']}[0]['rendered']['#image_style'], $row->{'field_' . $this->options['placemark_title']}[0]['raw']['uri']);
+              $image_dimensions = getimagesize($placemark['options']['iconImageHref']);
+              // Placemark image size.
+              $placemark['options']['iconImageSize'] = array(
+                $image_dimensions[0],
+                $image_dimensions[1],
+              );
+
+              // Icon image offset of upper left angle.
+              $placemark['options']['iconImageOffset'] = array(
+                -($image_dimensions[0] / 2),
+                $image_dimensions[1] * 0.1 - $image_dimensions[1],
+              );
+            }
+            else {
+              $this->prepareDefaultPlacemarkTitle($placemark, $marker_title);
+            }
+            break;
+
+          default:
+            $this->prepareDefaultPlacemarkTitle($placemark, $marker_title);
+            break;
+        }
+      }
+      else {
+        $this->prepareDefaultPlacemarkTitle($placemark, $marker_title);
+      }
+    }
+  }
+
+  /**
+   * Prepare placemark for the map.
    *
    * @param int $row_index
    *   Row index value.
@@ -819,10 +840,22 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
    * @return string
    *   Prepared string.
    */
-  public function preparePlacemarkTitle($row_index) {
+  private function preparePlacemarkTitle($row_index) {
     $title = $this->get_field($row_index, $this->options['placemark_title']);
 
     return check_plain(strip_tags($title));
+  }
+
+  /**
+   * Prepare default placemark.
+   *
+   * @param array $placemark
+   *   Placemark.
+   * @param $marker_title
+   *   Marker title.
+   */
+  private function prepareDefaultPlacemarkTitle(&$placemark, $marker_title) {
+    $placemark['params'][self::PLACEMARK_TITLE] = $marker_title;
   }
 
   /**
