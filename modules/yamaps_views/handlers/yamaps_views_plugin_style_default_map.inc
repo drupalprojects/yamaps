@@ -388,23 +388,31 @@ class yamaps_views_plugin_style_default_map extends views_plugin_style {
                 $marker_title = $this->preparePlacemarkTitle($row_index);
                 $field_title_settings = $this->view->field[$this->options['placemark_title']];
 
-                if (!empty($field_title_settings->field_info['type']) && $field_title_settings->field_info['type'] == 'image') {
-                  // Special logic for image fields.
-                  // Placemark type.
-                  $placemark['options']['iconLayout'] = 'default#image';
-                  // Image href.
-                  $placemark['options']['iconImageHref'] = image_style_url($row->{'field_' . $this->options['placemark_title']}[0]['rendered']['#image_style'], $row->{'field_' . $this->options['placemark_title']}[0]['raw']['uri']);
-                  $image_dimensions = getimagesize($placemark['options']['iconImageHref']);
-                  // Placemark image size.
-                  $placemark['options']['iconImageSize'] = array(
-                    $image_dimensions[0],
-                    $image_dimensions[1],
-                  );
-                  // Icon image offset of upper left angle.
-                  $placemark['options']['iconImageOffset'] = array(
-                    -($image_dimensions[0] / 2),
-                    $image_dimensions[1] * 0.1 - $image_dimensions[1],
-                  );
+                if (isset($field_title_settings->field_info['type'])) {
+                  switch ($field_title_settings->field_info['type']) {
+                    case 'image':
+                      // Special logic for image fields.
+                      // Placemark type.
+                      $placemark['options']['iconLayout'] = 'default#image';
+                      // Image href.
+                      $placemark['options']['iconImageHref'] = image_style_url($row->{'field_' . $this->options['placemark_title']}[0]['rendered']['#image_style'], $row->{'field_' . $this->options['placemark_title']}[0]['raw']['uri']);
+                      $image_dimensions = getimagesize($placemark['options']['iconImageHref']);
+                      // Placemark image size.
+                      $placemark['options']['iconImageSize'] = array(
+                        $image_dimensions[0],
+                        $image_dimensions[1],
+                      );
+                      // Icon image offset of upper left angle.
+                      $placemark['options']['iconImageOffset'] = array(
+                        -($image_dimensions[0] / 2),
+                        $image_dimensions[1] * 0.1 - $image_dimensions[1],
+                      );
+                      break;
+
+                    default:
+                      $placemark['params'][self::PLACEMARK_TITLE] = $marker_title;
+                      break;
+                  }
                 }
                 else {
                   $placemark['params'][self::PLACEMARK_TITLE] = $marker_title;
