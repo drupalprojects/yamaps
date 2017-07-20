@@ -2,5 +2,6 @@ name = Yandex Maps
 description = Provides configurable "Yandex Map" field and blocks to display interactive maps based on "Yandex.Maps API".
 core = 7.x
 package = Yandex
+php = 5.4
 
 configure = admin/config/services/yamaps

@@ -48,17 +48,17 @@ module_load_include('inc', 'yamaps', 'inc/yamaps.block');
  * Implements hook_menu().
  */
 function yamaps_menu() {
-  $items['admin/config/services/yamaps'] = array(
-    'title' => 'Yandex Maps configuration',
-    'description' => 'Yandex Maps configuration',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('yamaps_settings_page'),
-    'access arguments' => array('administer yamaps settings'),
-    'file' => 'yamaps.admin.inc',
-    'type' => MENU_LOCAL_TASK,
+  return array(
+    'admin/config/services/yamaps' => [
+      'title' => 'Yandex Maps configuration',
+      'description' => 'Yandex Maps configuration',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('yamaps_settings_page'),
+      'access arguments' => array('administer yamaps settings'),
+      'file' => 'yamaps.admin.inc',
+      'type' => MENU_LOCAL_TASK,
+    ],
   );
-
-  return $items;
 }
 
 /**
