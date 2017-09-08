@@ -376,7 +376,7 @@ function yamaps_block_view($delta = YAMAPS_DEFAULT_BLOCK_DELTA) {
  * @see yamaps_block_view()
  */
 function yamaps_block_content($delta) {
-  $block_output = '';
+  $block_output = array();
   $display_options = variable_get($delta . '_block_display_options', array());
 
   // Map information.
